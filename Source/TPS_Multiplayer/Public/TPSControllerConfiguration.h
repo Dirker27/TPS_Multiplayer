@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 
-#include "TPSCharacterConfiguration.generated.h"
+#include "TPSControllerConfiguration.generated.h"
 
 // "Controller" configuration?
 USTRUCT(BlueprintType)
-struct TPS_MULTIPLAYER_API FTPSCharacterConfiguration
+struct TPS_MULTIPLAYER_API FTPSControllerConfiguration
 {
 	GENERATED_USTRUCT_BODY()
 public:

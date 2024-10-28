@@ -6,7 +6,7 @@
 #include "GameFramework/GameMode.h"
 
 #include "TPSPlayerController.h"
-#include "TPSConfiguration.h"
+#include "TPSGameConfiguration.h"
 
 #include "TPSGameMode.generated.h"
 
@@ -43,14 +43,14 @@ public:
 
 
 	UFUNCTION(BlueprintCallable)
-	static FTPSConfiguration GetConfiguration() {
+	static FTPSGameConfiguration GetGameConfiguration() {
 		return *configuration;
 	}
 
-	static void UpdateConfiguration(FTPSConfiguration* configuration);
+	static void UpdateGameConfiguration(FTPSGameConfiguration* configuration);
 
 private:
-	static FTPSConfiguration* configuration;
+	static FTPSGameConfiguration* configuration;
 
 	int globalDebugMode;
 };

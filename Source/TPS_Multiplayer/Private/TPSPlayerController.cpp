@@ -3,13 +3,16 @@
 
 #include "TPSPlayerController.h"
 
+//~ ====================================================================== ~//
+//- CONSOLE CONFIGURATION
+//~ ====================================================================== ~//
+
 static TAutoConsoleVariable<int32> CVarLocalPlayerDebugMode(
 	TEXT("TPS.LocalPlayerDebugMode"),
 	0,
 	TEXT("Shows debug mode for local player.\n")
 	TEXT("<=0: OFF\n")
 	TEXT("  1: ON\n"));
-
 static TAutoConsoleVariable<int32> CVarLocalPlayerGodMode(
 	TEXT("TPS.LocalPlayerGodMode"),
 	0,
@@ -20,27 +23,31 @@ static TAutoConsoleVariable<int32> CVarLocalPlayerGodMode(
 void _OnControllerConfiugrationConsoleInput(IConsoleVariable* Var) {
 	UE_LOG(LogTemp, Log, TEXT("Performing CONFIG Update..."));
 
-	FTPSCharacterConfiguration configuration = {
+	FTPSControllerConfiguration configuration = {
 		CVarLocalPlayerDebugMode->GetInt(),
 		CVarLocalPlayerGodMode->GetBool()
 	};
 	UE_LOG(LogTemp, Log, TEXT("INPUT CharacterDEBUG: %i\nINPUT GodMode: %b"),
 		configuration.localCharacterDebugMode, configuration.godModeEnabled);
-	ATPSPlayerController::UpdateConfiguration(&configuration);
+	ATPSPlayerController::UpdateControllerConfiguration(&configuration);
 }
 void ATPSPlayerController::BindConsoleCallbacks() {
 	CVarLocalPlayerDebugMode.AsVariable()
-		->SetOnChangedCallback(FConsoleVariableDelegate::CreateStatic(&_OnControllerConfiugrationConsoleInput));
+		->SetOnChangedCallback(FConsoleVariableDelegate::CreateLambda(&_OnControllerConfiugrationConsoleInput));
 	CVarLocalPlayerGodMode.AsVariable()
 		->SetOnChangedCallback(FConsoleVariableDelegate::CreateStatic(&_OnControllerConfiugrationConsoleInput));
 
 	_OnControllerConfiugrationConsoleInput(nullptr); // <- perform initial read (hacky)
 }
-FTPSCharacterConfiguration* ATPSPlayerController::configuration = new FTPSCharacterConfiguration();
-void ATPSPlayerController::UpdateConfiguration(FTPSCharacterConfiguration* config) {
+FTPSControllerConfiguration* ATPSPlayerController::configuration = new FTPSControllerConfiguration();
+void ATPSPlayerController::UpdateControllerConfiguration(FTPSControllerConfiguration* config) {
 	configuration->localCharacterDebugMode = config->localCharacterDebugMode;
 	configuration->godModeEnabled = config->godModeEnabled;
 }
+
+//~ ====================================================================== ~//
+//- State Overrides
+//~ ====================================================================== ~//
 
 void ATPSPlayerController::TPS_OverrideCurrentCharacterStateFromString(FString input) {
 	ETPSCharacterState newState = ETPSCharacterStateFromString(TCHAR_TO_ANSI(*input));
@@ -55,9 +62,4 @@ void ATPSPlayerController::TPS_OverrideCurrentCharacterStateFromInt(int32 input)
 
 void ATPSPlayerController::TPS_ShowDebugForLocalPlayer() {
 	UE_LOG(LogTemp, Log, TEXT("DebugForLocalPlayer: %i"), CVarLocalPlayerDebugMode.GetValueOnGameThread());
-}
-
-void ATPSPlayerController::OnDebugInputDelegate(IConsoleVariable* Var) {
-	UE_LOG(LogTemp, Log, TEXT("-DEBUG INPUT-: %i"), Var->GetInt());
-	OnDebugInput();
 }

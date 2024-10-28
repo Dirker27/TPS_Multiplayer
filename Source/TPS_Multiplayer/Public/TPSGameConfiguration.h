@@ -4,10 +4,10 @@
 
 #include "CoreMinimal.h"
 
-#include "TPSConfiguration.generated.h"
+#include "TPSGameConfiguration.generated.h"
 
 USTRUCT(BlueprintType)
-struct TPS_MULTIPLAYER_API FTPSConfiguration
+struct TPS_MULTIPLAYER_API FTPSGameConfiguration
 {
 	GENERATED_USTRUCT_BODY()
 public:

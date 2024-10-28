@@ -2,6 +2,10 @@
 
 #include "TPSGameMode.h"
 
+//~ ====================================================================== ~//
+//- CONSOLE CONFIGURATION
+//~ ====================================================================== ~//
+
 static TAutoConsoleVariable<int32> CVarGlobalCharacterDebugMode(
 	TEXT("TPS.GlobalCharacterDebugMode"),
 	0,
@@ -20,13 +24,13 @@ static TAutoConsoleVariable<int32> CVarGlobalFogDensity(
 void _OnGameConfiugrationConsoleInput(IConsoleVariable* Var) {
 	UE_LOG(LogTemp, Log, TEXT("Performing CONFIG Update..."));
 
-	FTPSConfiguration configuration = {
+	FTPSGameConfiguration configuration = {
 		CVarGlobalCharacterDebugMode->GetInt(),
 		CVarGlobalFogDensity->GetFloat()
 	};
 	UE_LOG(LogTemp, Log, TEXT("INPUT CharacterDEBUG: %i\nINPUT FogDensity: %f"),
 		configuration.globalCharacterDebugMode, configuration.globalFogDensity);
-	ATPSGameMode::UpdateConfiguration(&configuration);
+	ATPSGameMode::UpdateGameConfiguration(&configuration);
 }
 void ATPSGameMode::BindConsoleCallbacks() {
 	CVarGlobalFogDensity.AsVariable()
@@ -36,24 +40,24 @@ void ATPSGameMode::BindConsoleCallbacks() {
 
 	_OnGameConfiugrationConsoleInput(nullptr); // <- perform initial read (hacky)
 }
-FTPSConfiguration* ATPSGameMode::configuration = new FTPSConfiguration(); //{ 0, 0.2f };
-void ATPSGameMode::UpdateConfiguration(FTPSConfiguration* config) {
+FTPSGameConfiguration* ATPSGameMode::configuration = new FTPSGameConfiguration(); //{ 0, 0.2f };
+void ATPSGameMode::UpdateGameConfiguration(FTPSGameConfiguration* config) {
 	configuration->globalCharacterDebugMode = config->globalCharacterDebugMode;
 	configuration->globalFogDensity = config->globalFogDensity;
 }
 
 
-ATPSGameMode::ATPSGameMode() {
-	//configuration = { 0, 0.2f };
-}
+//~ ====================================================================== ~//
+//- CONSTRUCTORS
+//~ ====================================================================== ~//
+
+ATPSGameMode::ATPSGameMode() { }
 ATPSGameMode::~ATPSGameMode() { }
 
 
-void ATPSGameMode::ShowDebugForAll() {
-	UE_LOG(LogTemp, Log, TEXT("Debug Mode for ALL Characters: %i"), CVarGlobalCharacterDebugMode.GetValueOnGameThread());
-}
-
-
+//~ ====================================================================== ~//
+//- Operations
+//~ ====================================================================== ~//
 
 bool ATPSGameMode::RequestRespawn() {
 	return true;
@@ -64,3 +68,10 @@ void ATPSGameMode::PerformRespawn(ATPSPlayerController playerController) {
 }
 
 
+//~ ====================================================================== ~//
+//- Utilities
+//~ ====================================================================== ~//
+
+void ATPSGameMode::ShowDebugForAll() {
+	UE_LOG(LogTemp, Log, TEXT("Debug Mode for ALL Characters: %i"), CVarGlobalCharacterDebugMode.GetValueOnGameThread());
+}
