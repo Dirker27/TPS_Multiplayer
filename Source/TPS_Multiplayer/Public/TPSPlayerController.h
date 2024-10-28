@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 
 #include "TPSCharacterState.h"
+#include "TPSCharacterConfiguration.h"
 
 #include "TPSPlayerController.generated.h"
 
@@ -36,6 +37,13 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnCharacterStateOverride(ETPSCharacterState state);
 
+	static FTPSCharacterConfiguration GetCharacterConfiguration() {
+		return *configuration;
+	}
+	static void UpdateConfiguration(FTPSCharacterConfiguration* config);
+
 private:
 	void OnDebugInputDelegate(IConsoleVariable* Var);
+
+	static FTPSCharacterConfiguration* configuration;
 };
