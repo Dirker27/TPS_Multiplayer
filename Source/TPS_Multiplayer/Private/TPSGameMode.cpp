@@ -72,6 +72,10 @@ void ATPSGameMode::PerformRespawn(ATPSPlayerController playerController) {
 //- Utilities
 //~ ====================================================================== ~//
 
-void ATPSGameMode::ShowDebugForAll() {
-	UE_LOG(LogTemp, Log, TEXT("Debug Mode for ALL Characters: %i"), CVarGlobalCharacterDebugMode.GetValueOnGameThread());
+void ATPSGameMode::TPS_ShowDebugForAllCharacters() {
+	configuration->globalCharacterDebugMode = 1;
+	IsDebugEnabled = true;
+}
+void ATPSGameMode::DebugGlobal() {
+	TPS_ShowDebugForAllCharacters();
 }

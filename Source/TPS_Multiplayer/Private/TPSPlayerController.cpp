@@ -59,7 +59,25 @@ void ATPSPlayerController::TPS_OverrideCurrentCharacterStateFromInt(int32 input)
 	UE_LOG(LogTemp, Log, TEXT("DEBUG OVERRIDE: CharacterState -> [%i]-[%i]"), input, newState);
 	OnCharacterStateOverride(newState);
 }
+void ATPSPlayerController::Kill() {
+	OnCharacterStateOverride(Incapacitated);
+}
+void ATPSPlayerController::Injure() {
+	OnCharacterStateOverride(Injured);
+}
+void ATPSPlayerController::EnterCombat() {
+	OnCharacterStateOverride(Combat);
+}
+void ATPSPlayerController::ExitCombat() {
+	OnCharacterStateOverride(Casual);
+}
 
 void ATPSPlayerController::TPS_ShowDebugForLocalPlayer() {
 	UE_LOG(LogTemp, Log, TEXT("DebugForLocalPlayer: %i"), CVarLocalPlayerDebugMode.GetValueOnGameThread());
+	
+	configuration->localCharacterDebugMode = 1;
+	IsDebugEnabled = true;
+}
+void ATPSPlayerController::DebugLocal() {
+	TPS_ShowDebugForLocalPlayer();
 }

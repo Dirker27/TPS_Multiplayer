@@ -31,26 +31,30 @@ public:
 	void PerformRespawn(ATPSPlayerController playerController);
 
 
-	//- Console Commands --------------------------------------------=
+	//~ ==================================================================== ~//
+	//  CONSOLE COMMANDS (Developer-only API)
+	//~ ==================================================================== ~//
+
+	//- Visual Debugging ------------------------------------------=
 	//
-	UFUNCTION(Exec)
-	void ShowDebugForAll();
+	UFUNCTION(Exec, Category = "Debug.Visibility")
+	void TPS_ShowDebugForAllCharacters();
+	UFUNCTION(Exec, Category = "Debug.Visibility")
+	void DebugGlobal();
 
-
+	//~ ==================================================================== ~//
+	//  CONFIGURATION
+	//~ ==================================================================== ~//
 
 	UFUNCTION(BlueprintCallable)
 	void BindConsoleCallbacks();
-
 
 	UFUNCTION(BlueprintCallable)
 	static FTPSGameConfiguration GetGameConfiguration() {
 		return *configuration;
 	}
-
 	static void UpdateGameConfiguration(FTPSGameConfiguration* configuration);
 
 private:
 	static FTPSGameConfiguration* configuration;
-
-	int globalDebugMode;
 };
