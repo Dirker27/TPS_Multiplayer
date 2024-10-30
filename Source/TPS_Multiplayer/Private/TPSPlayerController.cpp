@@ -72,12 +72,12 @@ void ATPSPlayerController::ExitCombat() {
 	OnCharacterStateOverride(Casual);
 }
 
-void ATPSPlayerController::TPS_ShowDebugForLocalPlayer() {
-	UE_LOG(LogTemp, Log, TEXT("DebugForLocalPlayer: %i"), CVarLocalPlayerDebugMode.GetValueOnGameThread());
-	
-	configuration->localCharacterDebugMode = 1;
-	IsDebugEnabled = true;
+void ATPSPlayerController::TPS_ToggleDebugForLocalPlayer() {	
+	IsDebugEnabled = (!IsDebugEnabled);
+	configuration->localCharacterDebugMode = (configuration->localCharacterDebugMode == 1)
+		? 0
+		: 1;
 }
 void ATPSPlayerController::DebugLocal() {
-	TPS_ShowDebugForLocalPlayer();
+	TPS_ToggleDebugForLocalPlayer();
 }

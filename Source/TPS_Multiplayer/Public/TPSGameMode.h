@@ -38,7 +38,7 @@ public:
 	//- Visual Debugging ------------------------------------------=
 	//
 	UFUNCTION(Exec, Category = "Debug.Visibility")
-	void TPS_ShowDebugForAllCharacters();
+	void TPS_ToggleDebugForAllCharacters();
 	UFUNCTION(Exec, Category = "Debug.Visibility")
 	void DebugGlobal();
 

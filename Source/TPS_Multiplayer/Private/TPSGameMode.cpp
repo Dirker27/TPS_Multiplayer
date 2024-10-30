@@ -72,10 +72,12 @@ void ATPSGameMode::PerformRespawn(ATPSPlayerController playerController) {
 //- Utilities
 //~ ====================================================================== ~//
 
-void ATPSGameMode::TPS_ShowDebugForAllCharacters() {
-	configuration->globalCharacterDebugMode = 1;
-	IsDebugEnabled = true;
+void ATPSGameMode::TPS_ToggleDebugForAllCharacters() {
+	IsDebugEnabled = (!IsDebugEnabled);
+	configuration->globalCharacterDebugMode = (configuration->globalCharacterDebugMode == 1)
+		? 0
+		: 1;
 }
 void ATPSGameMode::DebugGlobal() {
-	TPS_ShowDebugForAllCharacters();
+	TPS_ToggleDebugForAllCharacters();
 }

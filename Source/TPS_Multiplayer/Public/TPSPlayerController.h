@@ -48,7 +48,7 @@ public:
 	//- Visual Debugging --------------------------------------------=
 	//
 	UFUNCTION(Exec, Category="Debug.Visibility")
-	void TPS_ShowDebugForLocalPlayer();
+	void TPS_ToggleDebugForLocalPlayer();
 	//
 	UFUNCTION(Exec, Category = "Debug.Visibility")
 	void DebugLocal();
