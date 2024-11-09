@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 
-#include "TPSCharacterState.h"
+#include "Character/TPSCharacterState.h"
 #include "TPSControllerConfiguration.h"
 
 #include "TPSPlayerController.generated.h"

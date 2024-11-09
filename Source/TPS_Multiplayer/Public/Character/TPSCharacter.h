@@ -5,15 +5,21 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 
-#include "TPSLocomotionState.h"
-#include "TPSCharacterState.h"
-#include "TPSCharacterBodyType.h"
+#include "AbilitySystemInterface.h"
+#include "AbilitySystemComponent.h"
+
+#include "Character/TPSLocomotionState.h"
+#include "Character/TPSCharacterState.h"
+#include "Character/TPSCharacterBodyType.h"
 #include "TPSWeaponType.h"
+
+#include "Character/Attributes/StandardAttributeSet.h"
+#include "Character/AbilitySet.h"
 
 #include "TPSCharacter.generated.h"
 
 UCLASS()
-class TPS_MULTIPLAYER_API ATPSCharacter : public ACharacter
+class TPS_MULTIPLAYER_API ATPSCharacter : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -132,4 +138,44 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	AActor* LineTrace(const UObject* WorldContextObject);
+
+
+
+	//~ ABILITY SYSTEM TUTORIAL ============================================= ~/
+
+
+public:
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override; // IAbilitySystemInterface
+
+	void SetupInitialAbilitiesAndEffects();
+
+	UPROPERTY(VisibleAnywhere, Category = "Abilities")
+	UStandardAttributeSet* StandardAttributes{ nullptr };
+
+protected:
+	void AbilityInputBindingPressedHandler(EAbilityInput abilityInput);
+	void AbilityInputBindingReleasedHandler(EAbilityInput abilityInput);
+
+	void OnHealthAttributeChanged(const FOnAttributeChangeData&);
+	void OnMovementAttributeChanged(const FOnAttributeChangeData&);
+
+protected:
+	UPROPERTY(EditAnywhere, Category="Input|Binding")
+	UInputMappingContext* InputMappingContext{ nullptr };
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input|Binding")
+	FAbilityInputBindings AbilityInputBindings;
+
+	// <Input Actions>
+
+	UPROPERTY(Visibleanywhere, Category="Abilities")
+	UAbilitySystemComponent* AbilitySystemComponent{ nullptr };
+
+	UPROPERTY(EditDefaultsOnly, Category="Abilities")
+	UAbilitySet* InitialAbilitySet{ nullptr };
+
+	UPROPERTY(EditDefaultsOnly, Category="Abilities")
+	TSubclassOf<UGameplayEffect> InitialGameplayEffect;
+
+	TArray<FGameplayAbilitySpecHandle> InitiallyGrantedAbilitySpecHandles;
 };

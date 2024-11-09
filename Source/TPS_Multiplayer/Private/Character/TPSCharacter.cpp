@@ -1,9 +1,10 @@
 // (C) ToasterCat Studios 2024
 
+#include "Character/TPSCharacter.h"
 
-#include "TPSCharacter.h"
 #include <Kismet/KismetSystemLibrary.h>
 #include "EnhancedInputSubsystems.h"
+#include "EnhancedInputComponent.h"
 
 // Sets default values
 ATPSCharacter::ATPSCharacter()
@@ -11,6 +12,8 @@ ATPSCharacter::ATPSCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+	StandardAttributes = CreateDefaultSubobject<UStandardAttributeSet>(TEXT("StandardAttributeSet"));
 }
 
 // Called when the game starts or when spawned
@@ -18,19 +21,45 @@ void ATPSCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (HasAuthority())
+	{
+		SetupInitialAbilitiesAndEffects();
+	}
 }
 
 // Called every frame
 void ATPSCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	//GetCharacterMovement()->Set
 }
 
 // Called to bind functionality to input
-void ATPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ATPSCharacter::SetupPlayerInputComponent(UInputComponent* playerInputComponent)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	Super::SetupPlayerInputComponent(playerInputComponent);
 
+	if (UEnhancedInputComponent* playerEnhancedInputComponent = Cast<UEnhancedInputComponent>(playerInputComponent)) {
+		for (const FAbilityInputToInputActionBinding& binding : AbilityInputBindings.Bindings)
+		{
+			//playerEnhancedInputComponent->BindAction(binding.InputAction, ETriggerEvent::Triggered, this, &ThisClass::AbilityInputBindingPressedHandler, binding.AbilityInput);
+			playerEnhancedInputComponent->BindAction(binding.InputAction, ETriggerEvent::Started, this, &ThisClass::AbilityInputBindingPressedHandler, binding.AbilityInput);
+			
+			playerEnhancedInputComponent->BindAction(binding.InputAction, ETriggerEvent::Completed, this, &ThisClass::AbilityInputBindingReleasedHandler, binding.AbilityInput);
+			//playerEnhancedInputComponent->BindAction(binding.InputAction, ETriggerEvent::Canceled, this, &ThisClass::AbilityInputBindingReleasedHandler, binding.AbilityInput);
+		}
+	}
+}
+
+// EnhancedInput -> GAS plumbing
+void ATPSCharacter::AbilityInputBindingPressedHandler(EAbilityInput abilityInput) {
+	//UE_LOG(LogTemp, Log, TEXT("OnInputPressed[%i]"), abilityInput);
+	AbilitySystemComponent->AbilityLocalInputPressed(static_cast<uint32>(abilityInput));
+}
+void ATPSCharacter::AbilityInputBindingReleasedHandler(EAbilityInput abilityInput) {
+	//UE_LOG(LogTemp, Log, TEXT("OnInputReleased[%i]"), abilityInput);
+	AbilitySystemComponent->AbilityLocalInputReleased(static_cast<uint32>(abilityInput));
 }
 
 void ATPSCharacter::GetActorEyesViewPoint(FVector& Location, FRotator& Rotation) const
@@ -267,4 +296,48 @@ AActor* ATPSCharacter::LineTrace(const UObject* WorldContextObject) {
 	}
 
 	return hitActor;
+}
+
+
+
+
+
+UAbilitySystemComponent* ATPSCharacter::GetAbilitySystemComponent() const {
+	return AbilitySystemComponent;
+}
+
+
+void ATPSCharacter::SetupInitialAbilitiesAndEffects()
+{
+	if (IsValid(AbilitySystemComponent) == false || IsValid(StandardAttributes) == false) {
+		return;
+	}
+
+	if (IsValid(InitialAbilitySet)) {
+		InitiallyGrantedAbilitySpecHandles.Append(InitialAbilitySet->GrantAbilitiesToAbilitySystem(AbilitySystemComponent));
+	}
+
+	if (IsValid(InitialGameplayEffect)) {
+		AbilitySystemComponent->ApplyGameplayEffectToSelf(
+			InitialGameplayEffect->GetDefaultObject<UGameplayEffect>(), 
+			0, 
+			AbilitySystemComponent->MakeEffectContext());
+	}
+
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UStandardAttributeSet::GetHealthAttribute())
+		.AddUObject(this, &ThisClass::OnHealthAttributeChanged);
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UStandardAttributeSet::GetHealthMaxAttribute())
+		.AddUObject(this, &ThisClass::OnHealthAttributeChanged);
+
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UStandardAttributeSet::GetMovementSpeedMaxAttribute())
+		.AddUObject(this, &ThisClass::OnMovementAttributeChanged);
+}
+
+
+void ATPSCharacter::OnHealthAttributeChanged(const FOnAttributeChangeData& data) {
+	UE_LOG(LogTemp, Log, TEXT("OnHealthChange"));
+}
+
+void ATPSCharacter::OnMovementAttributeChanged(const FOnAttributeChangeData& data) {
+	UE_LOG(LogTemp, Log, TEXT("OnMovementChange"));
 }
