@@ -53,6 +53,7 @@ public:
 	// Overrides
 	void GetActorEyesViewPoint(FVector& Location, FRotator& Rotation) const override;
 	void FellOutOfWorld(const class UDamageType& dmgType) override;
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -60,6 +61,10 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	bool IsDebugEnabled = false;
+
+	//~ ======================================================== ~//
+	//  STATE
+	//~ ======================================================== ~//
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float CurrentHealth;
@@ -73,12 +78,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TEnumAsByte<ETPSCharacterBodyType> CharacterBodyType;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	TEnumAsByte<ETPSCharacterState> CurrentCharacterState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TEnumAsByte<ETPSCharacterState> PreviousCharacterState;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	TEnumAsByte<ETPSLocomotionState> CurrentLocomotionState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TEnumAsByte<ETPSLocomotionState> PreviousLocomotionState;
@@ -90,8 +95,8 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool IsCrouching() const;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool isBoosting;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
+	bool IsBoosting;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool isCrouchInputReceived;
@@ -99,15 +104,18 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool isProneInputReceived;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool isAiming;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
+	bool IsAiming;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool isFiring;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
+	bool IsFiring;
+
+	//~ ======================================================== ~//
+	//  Blueprint Logic
+	//~ ======================================================== ~//
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnFellOutOfWorld();
-
 
 	UFUNCTION(BlueprintCallable)
 	ETPSLocomotionState EvaluateLocomotionStateForCurrentInput();
@@ -138,7 +146,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	AActor* LineTrace(const UObject* WorldContextObject);
-
 
 
 	//~ ABILITY SYSTEM TUTORIAL ============================================= ~/

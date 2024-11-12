@@ -5,6 +5,7 @@
 #include <Kismet/KismetSystemLibrary.h>
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 ATPSCharacter::ATPSCharacter()
@@ -14,6 +15,16 @@ ATPSCharacter::ATPSCharacter()
 
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 	StandardAttributes = CreateDefaultSubobject<UStandardAttributeSet>(TEXT("StandardAttributeSet"));
+}
+
+void ATPSCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ATPSCharacter, CurrentLocomotionState);
+	DOREPLIFETIME(ATPSCharacter, CurrentCharacterState);
+	DOREPLIFETIME(ATPSCharacter, IsAiming);
+	DOREPLIFETIME(ATPSCharacter, IsFiring);
+	DOREPLIFETIME(ATPSCharacter, IsBoosting);
 }
 
 // Called when the game starts or when spawned
@@ -43,12 +54,9 @@ void ATPSCharacter::SetupPlayerInputComponent(UInputComponent* playerInputCompon
 	if (UEnhancedInputComponent* playerEnhancedInputComponent = Cast<UEnhancedInputComponent>(playerInputComponent)) {
 		for (const FAbilityInputToInputActionBinding& binding : AbilityInputBindings.Bindings)
 		{
-			//playerEnhancedInputComponent->BindAction(binding.InputAction, ETriggerEvent::Triggered, this, &ThisClass::AbilityInputBindingPressedHandler, binding.AbilityInput);
-			playerEnhancedInputComponent->BindAction(binding.InputAction, ETriggerEvent::Started, this, &ThisClass::AbilityInputBindingPressedHandler, binding.AbilityInput);
-			
+						playerEnhancedInputComponent->BindAction(binding.InputAction, ETriggerEvent::Started, this, &ThisClass::AbilityInputBindingPressedHandler, binding.AbilityInput);
 			playerEnhancedInputComponent->BindAction(binding.InputAction, ETriggerEvent::Completed, this, &ThisClass::AbilityInputBindingReleasedHandler, binding.AbilityInput);
-			//playerEnhancedInputComponent->BindAction(binding.InputAction, ETriggerEvent::Canceled, this, &ThisClass::AbilityInputBindingReleasedHandler, binding.AbilityInput);
-		}
+					}
 	}
 }
 
@@ -176,7 +184,7 @@ ETPSLocomotionState ATPSCharacter::EvaluateLocomotionStateForCurrentInput()
 			if (isCrouchInputReceived) {
 				ApplyLocomotionState(Crouching);
 			}
-			else if (isBoosting) {
+			else if (IsBoosting) {
 				ApplyLocomotionState(Sprinting);
 			}
 			break;
@@ -191,7 +199,7 @@ ETPSLocomotionState ATPSCharacter::EvaluateLocomotionStateForCurrentInput()
 			ApplyLocomotionState(Crouching);
 			break;
 		case Sprinting:
-			if (!isBoosting || IsActionActive()) {
+			if (!IsBoosting || IsActionActive()) {
 				ApplyLocomotionState(Standing);
 			}
 			else if (isCrouchInputReceived) {
@@ -216,7 +224,7 @@ ETPSLocomotionState ATPSCharacter::EvaluateLocomotionStateForCurrentInput()
 		else if (isProneInputReceived) {
 			ApplyLocomotionState(Prone);
 		}
-		else if (isBoosting) {
+		else if (IsBoosting) {
 			ApplyLocomotionState(Sprinting);
 		}
 		break;
@@ -241,7 +249,7 @@ ETPSLocomotionState ATPSCharacter::EvaluateLocomotionStateForCurrentInput()
 		break;
 
 	case Sprinting:
-		if (!isBoosting || IsActionActive()) {
+		if (!IsBoosting || IsActionActive()) {
 			ApplyLocomotionState(Standing);
 		}
 		else if (isCrouchInputReceived) {
@@ -261,7 +269,7 @@ ETPSLocomotionState ATPSCharacter::EvaluateLocomotionStateForCurrentInput()
 }
 
 bool ATPSCharacter::IsActionActive() const {
-	return isAiming || isFiring;
+	return IsAiming || IsFiring;
 }
 
 
