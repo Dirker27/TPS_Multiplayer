@@ -62,32 +62,44 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	bool IsDebugEnabled = false;
 
-	//~ ======================================================== ~//
+	//~ ========================================================= ~//
 	//  STATE
-	//~ ======================================================== ~//
+	//~ ========================================================= ~//
 
+	//- Identity -----------------------------------------=
+	//
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float CurrentHealth;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float MaxHealth;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	float CurrentMaxWalkSpeed;
-
+	float Name;
+	//
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TEnumAsByte<ETPSCharacterBodyType> CharacterBodyType;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
-	TEnumAsByte<ETPSCharacterState> CurrentCharacterState;
+	//- Attributes ----------------------------------------=
+	//  (sync'd from GAS attributes)
+	//
+	// Health
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float CurrentHealth;
+	//
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MaxHealth;
+	//
+	// Movement Speed
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float CurrentMaxWalkSpeed;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Replicated)
+	TEnumAsByte<ETPSCharacterState> CurrentCharacterState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TEnumAsByte<ETPSCharacterState> PreviousCharacterState;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Replicated)
 	TEnumAsByte<ETPSLocomotionState> CurrentLocomotionState;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TEnumAsByte<ETPSLocomotionState> PreviousLocomotionState;
 
+	//- Weapon State --------------------------------------=
+	//
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TEnumAsByte<ETPSWeaponType> EquippedWeaponType;
 
@@ -95,24 +107,23 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool IsCrouching() const;
 
+	//- Controller Input ----------------------------------=
+	//
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	bool IsBoosting;
-
+	//
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool isCrouchInputReceived;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool isProneInputReceived;
-
+	bool IsCrouchInputReceived;
+	//
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	bool IsAiming;
-
+	//
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	bool IsFiring;
 
-	//~ ======================================================== ~//
+	//~ =========================================================== ~//
 	//  Blueprint Logic
-	//~ ======================================================== ~//
+	//~ =========================================================== ~//
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnFellOutOfWorld();
@@ -148,8 +159,10 @@ public:
 	AActor* LineTrace(const UObject* WorldContextObject);
 
 
-	//~ ABILITY SYSTEM TUTORIAL ============================================= ~/
 
+	//~ =========================================================== ~//
+	//  ABILITY SYSTEM TUTORIAL
+	//~ =========================================================== ~//
 
 public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override; // IAbilitySystemInterface

@@ -87,12 +87,18 @@ bool ATPSCharacter::IsCrouching() const
 
 void ATPSCharacter::ApplyLocomotionState(const ETPSLocomotionState LocomotionState)
 {
+	if (CurrentLocomotionState == LocomotionState) { return; } // swallow redundant state changes
+
+	//UE_LOG(LogTemp, Log, TEXT("Applying LocomotionState[%i]"), LocomotionState);
 	PreviousLocomotionState = CurrentLocomotionState;
 	CurrentLocomotionState = LocomotionState;
 }
 
 void ATPSCharacter::ApplyCharacterState(const ETPSCharacterState CharacterState)
 {
+	if (CurrentCharacterState == CharacterState) { return; } // swallow redundant state changes
+
+	//UE_LOG(LogTemp, Log, TEXT("Applying CharacterState[%i]"), CharacterState);
 	PreviousCharacterState = CurrentCharacterState;
 	CurrentCharacterState = CharacterState;
 }
@@ -181,7 +187,7 @@ ETPSLocomotionState ATPSCharacter::EvaluateLocomotionStateForCurrentInput()
 		
 		switch (CurrentLocomotionState) {
 		case Standing:
-			if (isCrouchInputReceived) {
+			if (IsCrouchInputReceived) {
 				ApplyLocomotionState(Crouching);
 			}
 			else if (IsBoosting) {
@@ -190,7 +196,7 @@ ETPSLocomotionState ATPSCharacter::EvaluateLocomotionStateForCurrentInput()
 			break;
 
 		case Crouching:
-			if (!isCrouchInputReceived) {
+			if (!IsCrouchInputReceived) {
 				ApplyLocomotionState(Standing);
 			}
 			break;
@@ -202,7 +208,7 @@ ETPSLocomotionState ATPSCharacter::EvaluateLocomotionStateForCurrentInput()
 			if (!IsBoosting || IsActionActive()) {
 				ApplyLocomotionState(Standing);
 			}
-			else if (isCrouchInputReceived) {
+			else if (IsCrouchInputReceived) {
 				ApplyLocomotionState(Crouching);
 			}
 			break;
@@ -218,11 +224,8 @@ ETPSLocomotionState ATPSCharacter::EvaluateLocomotionStateForCurrentInput()
 	//
 	switch (CurrentLocomotionState) {
 	case Standing:
-		if (isCrouchInputReceived) {
+		if (IsCrouchInputReceived) {
 			ApplyLocomotionState(Crouching);
-		}
-		else if (isProneInputReceived) {
-			ApplyLocomotionState(Prone);
 		}
 		else if (IsBoosting) {
 			ApplyLocomotionState(Sprinting);
@@ -230,33 +233,22 @@ ETPSLocomotionState ATPSCharacter::EvaluateLocomotionStateForCurrentInput()
 		break;
 
 	case Crouching:
-		if (!isCrouchInputReceived) {
+		if (!IsCrouchInputReceived) {
 			ApplyLocomotionState(Standing);
-		}
-		else if (isProneInputReceived) {
-			ApplyLocomotionState(Prone);
 		}
 		break;
 
 	case Prone:
-		if (!isProneInputReceived) {
-			if (isCrouchInputReceived) {
-				ApplyLocomotionState(Crouching);
-				break;
-			}
-			ApplyLocomotionState(Standing);
-		}
+		// STUB - just switch to Crouching for now.
+		ApplyLocomotionState(Crouching);
 		break;
 
 	case Sprinting:
 		if (!IsBoosting || IsActionActive()) {
 			ApplyLocomotionState(Standing);
 		}
-		else if (isCrouchInputReceived) {
+		else if (IsCrouchInputReceived) {
 			ApplyLocomotionState(Crouching);
-		}
-		else if (isProneInputReceived) {
-			ApplyLocomotionState(Prone);
 		}
 		break;
 
