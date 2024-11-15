@@ -42,8 +42,6 @@ void ATPSCharacter::BeginPlay()
 void ATPSCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	//GetCharacterMovement()->Set
 }
 
 // Called to bind functionality to input
@@ -62,11 +60,9 @@ void ATPSCharacter::SetupPlayerInputComponent(UInputComponent* playerInputCompon
 
 // EnhancedInput -> GAS plumbing
 void ATPSCharacter::AbilityInputBindingPressedHandler(EAbilityInput abilityInput) {
-	//UE_LOG(LogTemp, Log, TEXT("OnInputPressed[%i]"), abilityInput);
 	AbilitySystemComponent->AbilityLocalInputPressed(static_cast<uint32>(abilityInput));
 }
 void ATPSCharacter::AbilityInputBindingReleasedHandler(EAbilityInput abilityInput) {
-	//UE_LOG(LogTemp, Log, TEXT("OnInputReleased[%i]"), abilityInput);
 	AbilitySystemComponent->AbilityLocalInputReleased(static_cast<uint32>(abilityInput));
 }
 

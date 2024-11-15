@@ -23,24 +23,46 @@ class TPS_MULTIPLAYER_API UStandardAttributeSet : public UAttributeSet
 
 public:
 
+    //- Health -------------------------------------------=
+    //
+    // Current
     UPROPERTY(BlueprintReadOnly, Category = "Health", ReplicatedUsing=OnRep_Health)
     FGameplayAttributeData Health;
     ATTRIBUTE_ACCESSORS(UStandardAttributeSet, Health);
-
+    //
+    // Max
     UPROPERTY(BlueprintReadOnly, Category = "Health", ReplicatedUsing=OnRep_HealthMax)
     FGameplayAttributeData HealthMax;
     ATTRIBUTE_ACCESSORS(UStandardAttributeSet, HealthMax);
-
-    // server-side only
+    //
+    // Damage
+    //  (server-side only)
     UPROPERTY(BlueprintReadOnly, Category = "Damage")
     FGameplayAttributeData Damage;
     ATTRIBUTE_ACCESSORS(UStandardAttributeSet, Damage);
 
+
+    //- Movement -----------------------------------------=
+    //
+    // TOOD: Delete
     UPROPERTY(BlueprintReadOnly, Category = "Movement", ReplicatedUsing = OnRep_MovementSpeedMax)
     FGameplayAttributeData MovementSpeedMax;
     ATTRIBUTE_ACCESSORS(UStandardAttributeSet, MovementSpeedMax);
+    //
+    // Modifier
+    UPROPERTY(BlueprintReadOnly, Category = "Movement", ReplicatedUsing = OnRep_MovementSpeedModifier)
+    FGameplayAttributeData MovementSpeedModifier;
+    ATTRIBUTE_ACCESSORS(UStandardAttributeSet, MovementSpeedModifier);
 
-    UPROPERTY(BlueprintReadOnly, Category = "PrimaryAmmunition", ReplicatedUsing = OnRep_PrimaryAmmunition)
+
+    //- Weapons ------------------------------------------=
+    //
+    // Accuracy Modifier
+    UPROPERTY(BlueprintReadOnly, Category = "Weapons", ReplicatedUsing = OnRep_AccuracyModifier)
+    FGameplayAttributeData AccuracyModifier;
+    ATTRIBUTE_ACCESSORS(UStandardAttributeSet, AccuracyModifier);
+    //
+    UPROPERTY(BlueprintReadOnly, Category = "Weapons.Ammunition", ReplicatedUsing = OnRep_PrimaryAmmunition)
     FGameplayAttributeData PrimaryAmmunition;
     ATTRIBUTE_ACCESSORS(UStandardAttributeSet, PrimaryAmmunition);
 
@@ -55,8 +77,15 @@ public:
     UFUNCTION()
     void OnRep_HealthMax(const FGameplayAttributeData& OldHealthMax);
 
+    // TODO: Delete
     UFUNCTION()
     void OnRep_MovementSpeedMax(const FGameplayAttributeData& OldMovementSpeedMax);
+
+    UFUNCTION()
+    void OnRep_MovementSpeedModifier(const FGameplayAttributeData& OldMovementSpeedModifier);
+
+    UFUNCTION()
+    void OnRep_AccuracyModifier(const FGameplayAttributeData& OldAccuracyModifier);
 
     UFUNCTION()
     void OnRep_PrimaryAmmunition(const FGameplayAttributeData& OldPrimaryAmmunition);

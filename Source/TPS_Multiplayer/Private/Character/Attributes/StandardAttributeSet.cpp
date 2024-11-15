@@ -42,6 +42,14 @@ void UStandardAttributeSet::OnRep_MovementSpeedMax(const FGameplayAttributeData&
     GAMEPLAYATTRIBUTE_REPNOTIFY(UStandardAttributeSet, MovementSpeedMax, OldMovementSpeedMax);
 }
 
+void UStandardAttributeSet::OnRep_MovementSpeedModifier(const FGameplayAttributeData& OldMovementSpeedModifier) {
+    GAMEPLAYATTRIBUTE_REPNOTIFY(UStandardAttributeSet, MovementSpeedModifier, OldMovementSpeedModifier);
+}
+
+void UStandardAttributeSet::OnRep_AccuracyModifier(const FGameplayAttributeData& OldAccuracyModifier) {
+    GAMEPLAYATTRIBUTE_REPNOTIFY(UStandardAttributeSet, AccuracyModifier, OldAccuracyModifier);
+}
+
 void UStandardAttributeSet::OnRep_PrimaryAmmunition(const FGameplayAttributeData& OldPrimaryAmmunition) {
     GAMEPLAYATTRIBUTE_REPNOTIFY(UStandardAttributeSet, PrimaryAmmunition, OldPrimaryAmmunition);
 }
