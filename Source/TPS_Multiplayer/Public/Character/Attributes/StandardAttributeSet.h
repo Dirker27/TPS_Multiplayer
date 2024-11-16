@@ -21,75 +21,106 @@ class TPS_MULTIPLAYER_API UStandardAttributeSet : public UAttributeSet
 {
     GENERATED_BODY()
 
+    //~ ============================================================ ~//
+    //  ATTRIBUTES
+    //~ ============================================================ ~//
+
 public:
 
     //- Health -------------------------------------------=
     //
-    // Current
+    //- Current Health
     UPROPERTY(BlueprintReadOnly, Category = "Health", ReplicatedUsing=OnRep_Health)
     FGameplayAttributeData Health;
     ATTRIBUTE_ACCESSORS(UStandardAttributeSet, Health);
     //
-    // Max
+    UFUNCTION()
+    void OnRep_Health(const FGameplayAttributeData& OldHealth);
+    //
+    //- Max Health
     UPROPERTY(BlueprintReadOnly, Category = "Health", ReplicatedUsing=OnRep_HealthMax)
     FGameplayAttributeData HealthMax;
     ATTRIBUTE_ACCESSORS(UStandardAttributeSet, HealthMax);
     //
-    // Damage
-    //  (server-side only)
-    UPROPERTY(BlueprintReadOnly, Category = "Damage")
+    UFUNCTION()
+    void OnRep_HealthMax(const FGameplayAttributeData& OldHealthMax);
+    //
+    //- Current Armor
+    UPROPERTY(BlueprintReadOnly, Category = "Health.Armor", ReplicatedUsing = OnRep_Armor)
+    FGameplayAttributeData Armor;
+    ATTRIBUTE_ACCESSORS(UStandardAttributeSet, Armor);
+    //
+    UFUNCTION()
+    void OnRep_Armor(const FGameplayAttributeData& OldArmor);
+    //
+    //- Max Armor
+    UPROPERTY(BlueprintReadOnly, Category = "Health.Armor", ReplicatedUsing = OnRep_ArmorMax)
+    FGameplayAttributeData ArmorMax;
+    ATTRIBUTE_ACCESSORS(UStandardAttributeSet, ArmorMax);
+    //
+    UFUNCTION()
+    void OnRep_ArmorMax(const FGameplayAttributeData& OldArmorhMax);
+    //
+    //- Damage
+    //   (server-side only)
+    UPROPERTY(BlueprintReadOnly, Category = "Health.Damage")
     FGameplayAttributeData Damage;
     ATTRIBUTE_ACCESSORS(UStandardAttributeSet, Damage);
 
 
+    //- Stamina -------------------------------------------=
+    //
+    //- Current Stamina
+    UPROPERTY(BlueprintReadOnly, Category = "Stamina", ReplicatedUsing = OnRep_Stamina)
+    FGameplayAttributeData Stamina;
+    ATTRIBUTE_ACCESSORS(UStandardAttributeSet, Stamina);
+    //
+    UFUNCTION()
+    void OnRep_Stamina(const FGameplayAttributeData& OldStamina);
+    //
+    //- Max Stamina
+    UPROPERTY(BlueprintReadOnly, Category = "Stamina", ReplicatedUsing = OnRep_StaminaMax)
+    FGameplayAttributeData StaminaMax;
+    ATTRIBUTE_ACCESSORS(UStandardAttributeSet, StaminaMax);
+    //
+    UFUNCTION()
+    void OnRep_StaminaMax(const FGameplayAttributeData& OldStaminaMax);
+    //
+    //- Stamina Regeneration
+    //   (server-side only)
+    UPROPERTY(BlueprintReadOnly, Category = "Stamina.Regen", ReplicatedUsing = OnRep_StaminaRegen)
+    FGameplayAttributeData StaminaRegen;
+    ATTRIBUTE_ACCESSORS(UStandardAttributeSet, StaminaRegen);
+
+
     //- Movement -----------------------------------------=
     //
-    // TOOD: Delete
-    UPROPERTY(BlueprintReadOnly, Category = "Movement", ReplicatedUsing = OnRep_MovementSpeedMax)
-    FGameplayAttributeData MovementSpeedMax;
-    ATTRIBUTE_ACCESSORS(UStandardAttributeSet, MovementSpeedMax);
-    //
-    // Modifier
+    //- Movement Speed Modifier
     UPROPERTY(BlueprintReadOnly, Category = "Movement", ReplicatedUsing = OnRep_MovementSpeedModifier)
     FGameplayAttributeData MovementSpeedModifier;
     ATTRIBUTE_ACCESSORS(UStandardAttributeSet, MovementSpeedModifier);
-
-
-    //- Weapons ------------------------------------------=
     //
-    // Accuracy Modifier
+    UFUNCTION()
+    void OnRep_MovementSpeedModifier(const FGameplayAttributeData& OldMovementSpeedModifier);
+
+
+    //- Weapon Handling ----------------------------------=
+    // 
+    //- Accuracy Modifier
     UPROPERTY(BlueprintReadOnly, Category = "Weapons", ReplicatedUsing = OnRep_AccuracyModifier)
     FGameplayAttributeData AccuracyModifier;
     ATTRIBUTE_ACCESSORS(UStandardAttributeSet, AccuracyModifier);
     //
-    UPROPERTY(BlueprintReadOnly, Category = "Weapons.Ammunition", ReplicatedUsing = OnRep_PrimaryAmmunition)
-    FGameplayAttributeData PrimaryAmmunition;
-    ATTRIBUTE_ACCESSORS(UStandardAttributeSet, PrimaryAmmunition);
-
-
-    virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
-    virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
-
-
-    UFUNCTION()
-    void OnRep_Health(const FGameplayAttributeData& OldHealth);
-
-    UFUNCTION()
-    void OnRep_HealthMax(const FGameplayAttributeData& OldHealthMax);
-
-    // TODO: Delete
-    UFUNCTION()
-    void OnRep_MovementSpeedMax(const FGameplayAttributeData& OldMovementSpeedMax);
-
-    UFUNCTION()
-    void OnRep_MovementSpeedModifier(const FGameplayAttributeData& OldMovementSpeedModifier);
-
     UFUNCTION()
     void OnRep_AccuracyModifier(const FGameplayAttributeData& OldAccuracyModifier);
+    
 
-    UFUNCTION()
-    void OnRep_PrimaryAmmunition(const FGameplayAttributeData& OldPrimaryAmmunition);
-
+    //~ ============================================================ ~//
+    //  GAS PLUMBING
+    //~ ============================================================ ~//
+public:
+    virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+    virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
     virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };

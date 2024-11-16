@@ -62,9 +62,9 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	bool IsDebugEnabled = false;
 
-	//~ ========================================================= ~//
+	//~ ============================================================ ~//
 	//  STATE
-	//~ ========================================================= ~//
+	//~ ============================================================ ~//
 
 	//- Identity -----------------------------------------=
 	//
@@ -121,21 +121,42 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	bool IsFiring;
 
-	//~ =========================================================== ~//
-	//  Blueprint Logic
-	//~ =========================================================== ~//
+	//~ ============================================================ ~//
+	//  Blueprint Extensions
+	//~ ============================================================ ~//
 
+	// From UE Demo
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnFellOutOfWorld();
 
-	UFUNCTION(BlueprintCallable)
-	ETPSLocomotionState EvaluateLocomotionStateForCurrentInput();
+	//- Ability Extensions ------------------------------=
+	//
+	// Aim
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnAimAbilityStart();
+	//
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnAimAbilityEnd();
+	//
+	// Fire Weapon
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnFireWeaponAbilityStart();
+	//
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnFireWeaponAbilityEnd();
+
+	//~ ============================================================ ~//
+	//  Character Logic
+	//~ ============================================================ ~//
 
 	UFUNCTION(BlueprintCallable)
 	void ApplyCharacterState(const ETPSCharacterState CharacterState);
 
 	UFUNCTION(BlueprintCallable)
 	void ApplyLocomotionState(const ETPSLocomotionState LocomotionState);
+
+	UFUNCTION(BlueprintCallable)
+	ETPSLocomotionState EvaluateLocomotionStateForCurrentInput();
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	float GetBaseSpeedForCharacterState(const ETPSCharacterState CharacterState);
@@ -157,7 +178,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	AActor* LineTrace(const UObject* WorldContextObject);
-
 
 
 	//~ =========================================================== ~//

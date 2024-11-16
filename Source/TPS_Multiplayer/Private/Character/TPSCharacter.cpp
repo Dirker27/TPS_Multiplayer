@@ -52,9 +52,9 @@ void ATPSCharacter::SetupPlayerInputComponent(UInputComponent* playerInputCompon
 	if (UEnhancedInputComponent* playerEnhancedInputComponent = Cast<UEnhancedInputComponent>(playerInputComponent)) {
 		for (const FAbilityInputToInputActionBinding& binding : AbilityInputBindings.Bindings)
 		{
-						playerEnhancedInputComponent->BindAction(binding.InputAction, ETriggerEvent::Started, this, &ThisClass::AbilityInputBindingPressedHandler, binding.AbilityInput);
+			playerEnhancedInputComponent->BindAction(binding.InputAction, ETriggerEvent::Started, this, &ThisClass::AbilityInputBindingPressedHandler, binding.AbilityInput);
 			playerEnhancedInputComponent->BindAction(binding.InputAction, ETriggerEvent::Completed, this, &ThisClass::AbilityInputBindingReleasedHandler, binding.AbilityInput);
-					}
+		}
 	}
 }
 
@@ -170,7 +170,7 @@ void ATPSCharacter::UpdateInputContextForCurrentState()
 void ATPSCharacter::ApplyCharacterAttributesForCurrentState()
 {
 	UpdateCharacterSpeedForCurrentState();
-	UpdateInputContextForCurrentState();	
+	UpdateInputContextForCurrentState();
 }
 
 
@@ -325,7 +325,7 @@ void ATPSCharacter::SetupInitialAbilitiesAndEffects()
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UStandardAttributeSet::GetHealthMaxAttribute())
 		.AddUObject(this, &ThisClass::OnHealthAttributeChanged);
 
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UStandardAttributeSet::GetMovementSpeedMaxAttribute())
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UStandardAttributeSet::GetMovementSpeedModifierAttribute())
 		.AddUObject(this, &ThisClass::OnMovementAttributeChanged);
 }
 
