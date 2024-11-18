@@ -88,7 +88,7 @@ public:
     //
     //- Stamina Regeneration
     //   (server-side only)
-    UPROPERTY(BlueprintReadOnly, Category = "Stamina.Regen", ReplicatedUsing = OnRep_StaminaRegen)
+    UPROPERTY(BlueprintReadOnly, Category = "Stamina.Regen")
     FGameplayAttributeData StaminaRegen;
     ATTRIBUTE_ACCESSORS(UStandardAttributeSet, StaminaRegen);
 

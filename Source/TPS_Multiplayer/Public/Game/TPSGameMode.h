@@ -5,8 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameMode.h"
 
-#include "TPSPlayerController.h"
-#include "TPSGameConfiguration.h"
+#include "Player/TPSPlayerController.h"
+#include "Game/TPSGameConfiguration.h"
 
 #include "TPSGameMode.generated.h"
 

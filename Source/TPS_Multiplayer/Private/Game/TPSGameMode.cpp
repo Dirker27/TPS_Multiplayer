@@ -1,6 +1,6 @@
 // (C) ToasterCat Studios 2024
 
-#include "TPSGameMode.h"
+#include "Game/TPSGameMode.h"
 
 //~ ====================================================================== ~//
 //- CONSOLE CONFIGURATION

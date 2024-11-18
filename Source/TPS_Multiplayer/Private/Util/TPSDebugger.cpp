@@ -1,7 +1,7 @@
 // (C) ToasterCat Studios 2024
 
 
-#include "TPSDebugger.h"
+#include "Util/TPSDebugger.h"
 
 // Sets default values
 ATPSDebugger::ATPSDebugger()

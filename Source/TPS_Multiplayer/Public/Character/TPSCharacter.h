@@ -11,7 +11,8 @@
 #include "Character/TPSLocomotionState.h"
 #include "Character/TPSCharacterState.h"
 #include "Character/TPSCharacterBodyType.h"
-#include "TPSWeaponType.h"
+#include "Weapon/TPSWeapon.h"
+#include "Weapon/TPSWeaponType.h"
 
 #include "Character/Attributes/StandardAttributeSet.h"
 #include "Character/AbilitySet.h"
@@ -102,6 +103,9 @@ public:
 	//
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TEnumAsByte<ETPSWeaponType> EquippedWeaponType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	ATPSWeapon* EquippedWeapon	{ nullptr };
 
 	// True if Crouching OR Prone.
 	UFUNCTION(BlueprintCallable, BlueprintPure)

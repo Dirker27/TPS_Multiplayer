@@ -1,7 +1,7 @@
 // (C) ToasterCat Studios 2024
 
 
-#include "TPSPlayerController.h"
+#include "Player/TPSPlayerController.h"
 
 //~ ====================================================================== ~//
 //- CONSOLE CONFIGURATION

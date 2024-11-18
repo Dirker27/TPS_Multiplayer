@@ -1,4 +1,4 @@
-#include "Character/Attributes/WeaponAttributeSet.h"
+#include "Weapon/Attributes/WeaponAttributeSet.h"
 
 #include "GameplayEffectExtension.h"
 
