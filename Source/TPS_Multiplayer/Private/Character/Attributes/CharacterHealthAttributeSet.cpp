@@ -12,6 +12,18 @@ void UCharacterHealthAttributeSet::PreAttributeChange(const FGameplayAttribute& 
     {
         NewValue = FMath::Clamp(NewValue, 0, GetHealthMax());
     }
+
+    // Update Armor (between 0 and Max)
+    if (Attribute == GetArmorAttribute())
+    {
+        NewValue = FMath::Clamp(NewValue, 0, GetArmorMax());
+    }
+
+    // Update Stamina (between 0 and Max)
+    if (Attribute == GetStaminaAttribute())
+    {
+        NewValue = FMath::Clamp(NewValue, 0, GetStaminaMax());
+    }
 }
 
 void UCharacterHealthAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)

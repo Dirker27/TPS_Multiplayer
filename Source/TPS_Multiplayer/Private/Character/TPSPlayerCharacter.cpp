@@ -32,11 +32,18 @@ void ATPSPlayerCharacter::InitPlayer() {
 }
 void ATPSPlayerCharacter::PossessedBy(AController* NewController) { // server
 	Super::PossessedBy(NewController);
+	
+	// Initialize GAS
 	InitPlayer();
+	SetupInitialAbilitiesAndEffects();
+	SyncAttributesFromGAS();
 }
 void ATPSPlayerCharacter::OnRep_PlayerState() { // client
 	Super::OnRep_PlayerState();
+	
+	// Initialize GAS
 	InitPlayer();
+	SyncAttributesFromGAS();
 }
 
 

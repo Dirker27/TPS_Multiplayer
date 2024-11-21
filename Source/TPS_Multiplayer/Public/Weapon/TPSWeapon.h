@@ -2,8 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "Components/ArrowComponent.h"
-//#include "UObject/ObjectMacros.h"
-//#include "UObject/UObjectGlobals.h"
 
 #include "AbilitySystemInterface.h"
 #include "AbilitySystemComponent.h"

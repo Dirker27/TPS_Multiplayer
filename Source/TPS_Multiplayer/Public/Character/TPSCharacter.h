@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/Widget.h"
+#include "Components/WidgetComponent.h"
 #include "GameFramework/Character.h"
 
 #include "AbilitySystemInterface.h"
@@ -36,14 +36,17 @@ protected:
 //  COMPONENTS
 //~ ============================================================= ~//
 public:
-	//TObjectPtr<UWidget> UnitFrameWidget;
-	//TObjectPtr<UWidget> DebugFrameWidget;
-
+	//- Display Widgets --------------------------------------=
+	//
+	//- Widgets
+	//TObjectPtr<UWidgetComponent> UnitFrameWidget;
+	//TObjectPtr<UWidgetComponent> DebugFrameWidget;
+	//
+	//- Broadcast Delegate
 	UDELEGATE(BlueprintAuthorityOnly)
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FUpdateAttributeDisplay);
 	UPROPERTY(BlueprintAssignable)
-	FUpdateAttributeDisplay updateDelegate;
-	//updateDelegate.BindSP()
+	FUpdateAttributeDisplay NotifyDisplayWidgets;
  
 
 // UE Implementables
@@ -54,8 +57,8 @@ public:
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FName EyeSocketName;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Mesh Configuration")
+    FName EyeSocketName;
 
 //~ ============================================================= ~//
 //  STATE
@@ -66,6 +69,7 @@ public:
 	
 	//- Identity -----------------------------------------=
 	//
+	//- Name
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString Name;
 	//
@@ -76,19 +80,19 @@ public:
 	//  (sync'd from GAS attributes)
 	//
 	//- Health
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	float CurrentHealth;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MaxHealth;
 	//
 	//- Armor
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	float CurrentArmor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MaxArmor;
 	//
 	//- Movement Speed
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Replicated)
 	float MovementSpeedModifier;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float CurrentMaxWalkSpeed;
@@ -111,7 +115,7 @@ public:
 	//
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TEnumAsByte<ETPSWeaponType> EquippedWeaponType;
-
+	//
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	ATPSWeapon* EquippedWeapon	{ nullptr };
 
@@ -124,7 +128,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	bool IsBoosting;
 	//
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	bool IsCrouchInputReceived;
 	//
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
@@ -137,9 +141,6 @@ public:
 //  Blueprint Extensions
 //~ ============================================================= ~//
 public:
-	// From UE Demo
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnFellOutOfWorld();
 
 	//- Ability Extensions ------------------------------=
 	//
@@ -165,6 +166,11 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnFireWeaponAbilityEnd();
 
+	//- Behavior Overrides --------------------------------=
+	//
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnFellOutOfWorld();
+
 	//- Transforms -------------------------------------------=
 	//
 	//- CharacterState
@@ -184,37 +190,43 @@ public:
 //~ ================================================================ ~//
 
 public:
-	UFUNCTION(BlueprintCallable)
-	void ApplyCharacterState(const ETPSCharacterState CharacterState);
-
-	UFUNCTION(BlueprintCallable)
-	void RevertCharacterState();
-
-	UFUNCTION(BlueprintCallable)
-	void ApplyLocomotionState(const ETPSLocomotionState LocomotionState);
-
-	UFUNCTION(BlueprintCallable)
-	void RevertLocomotionState();
-
-
-
+	// Call after every action that modifies state.
 	UFUNCTION(BlueprintCallable)
 	void EvaluateStateAndApplyUpdates();
 
+	//- Modify Behavioral States --------------------------=
+	//
+	//- CharacterState
+	UFUNCTION(BlueprintCallable)
+	void ApplyCharacterState(const ETPSCharacterState CharacterState);
+	UFUNCTION(BlueprintCallable)
+	void RevertCharacterState();
+	//
+	//- LocomotionState
+	UFUNCTION(BlueprintCallable)
+	void ApplyLocomotionState(const ETPSLocomotionState LocomotionState);
+	UFUNCTION(BlueprintCallable)
+	void RevertLocomotionState();
 
-
+protected:
+	//- Logic ---------------------------------------------=
+	// 
+	//- Determine what state we should be in.
 	UFUNCTION(BlueprintCallable)
 	ETPSLocomotionState EvaluateLocomotionStateForCurrentInput();
-
+	//
+	//- Calculate Speed
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	float GetBaseSpeedForCharacterState(const ETPSCharacterState CharacterState);
-
+	//
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	float GetSpeedModifierForLocomotionState(const ETPSLocomotionState LocomotionState);
-
+	//
+	//- Apply calculated MovementSpeed
 	UFUNCTION(BlueprintCallable)
 	float UpdateCharacterSpeedForCurrentState();
-
+	//
+	//- Swap out available Input Actions
 	UFUNCTION(BlueprintCallable)
 	void UpdateInputContextForCurrentState();
 
@@ -230,6 +242,9 @@ public:
 public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override; // IAbilitySystemInterface
 
+	UFUNCTION(BlueprintCallable)
+	void SyncAttributesFromGAS();
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Abilities")
 	UAbilitySet* InitialAbilitySet{ nullptr };
@@ -239,7 +254,7 @@ protected:
 
 	TArray<FGameplayAbilitySpecHandle> InitiallyGrantedAbilitySpecHandles;
 
-private:
+protected:
 	void SetupInitialAbilitiesAndEffects();
 	void OnArmorAttributeChanged(const FOnAttributeChangeData&);
 	void OnHealthAttributeChanged(const FOnAttributeChangeData&);

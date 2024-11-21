@@ -11,48 +11,54 @@
 
 #include "Player/TPSPlayerState.h"
 
-// Sets default values
 ATPSCharacter::ATPSCharacter()
 {
  	PrimaryActorTick.bCanEverTick = true;
 
-	//UnitFrameWidget = CreateDefaultSubobject<UWidget>(TEXT("UnitFrameWidget"));
-	//DebugFrameWidget = CreateDefaultSubobject<UWidget>(TEXT("DebugFrameWidget"));
+	//UnitFrameWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("UnitFrameWidget"));
+	//DebugFrameWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("DebugFrameWidget"));
 }
 
 void ATPSCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
+	DOREPLIFETIME(ATPSCharacter, CurrentHealth);
+	DOREPLIFETIME(ATPSCharacter, CurrentArmor);
+
 	DOREPLIFETIME(ATPSCharacter, CurrentLocomotionState);
 	DOREPLIFETIME(ATPSCharacter, CurrentCharacterState);
+
+	DOREPLIFETIME(ATPSCharacter, MovementSpeedModifier);
+
 	DOREPLIFETIME(ATPSCharacter, IsAiming);
 	DOREPLIFETIME(ATPSCharacter, IsFiring);
 	DOREPLIFETIME(ATPSCharacter, IsBoosting);
+	DOREPLIFETIME(ATPSCharacter, IsCrouchInputReceived);
 }
 
-// Called when the game starts or when spawned
 void ATPSCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
 	if (HasAuthority())
 	{
-		SetupInitialAbilitiesAndEffects();
+		// Init
 	}
 }
 
-// Called every frame
 void ATPSCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
+// AI Enhancement - Detection FOV is rooted to Character's HEAD.
 void ATPSCharacter::GetActorEyesViewPoint(FVector& Location, FRotator& Rotation) const
 {
 	Location = GetMesh()->GetSocketLocation(EyeSocketName);
 	Rotation = GetMesh()->GetSocketRotation(EyeSocketName);
 }
 
+// Blueprint Hook for on-fallout death animation.
 void ATPSCharacter::FellOutOfWorld(const class UDamageType& dmgType) {
 	OnFellOutOfWorld();
 }
@@ -107,6 +113,9 @@ float ATPSCharacter::GetBaseSpeedForCharacterState(const ETPSCharacterState Char
 }
 
 /**
+ * We actually set this with GameplayEffects. Leaving this here for legacy context
+ *   and documentation link:
+ * 
  * https://www.notion.so/Game-Design-Document-GDD-670fda60cfeb41a089970b8fd240acaa?pvs=4#c31b4f8df636457b9783b951d60ecf03 
  */
 float ATPSCharacter::GetSpeedModifierForLocomotionState(const ETPSLocomotionState LocomotionState)
@@ -131,6 +140,7 @@ float ATPSCharacter::UpdateCharacterSpeedForCurrentState()
 	float baseSpeed = GetBaseSpeedForCharacterState(CurrentCharacterState);
 	//float locomotionStateModifier = GetSpeedModifierForLocomotionState(CurrentLocomotionState);
 
+	// Set by GAS
 	CurrentMaxWalkSpeed = baseSpeed * MovementSpeedModifier;
 
 	UCharacterMovementComponent* characterMovement = GetCharacterMovement();
@@ -168,11 +178,13 @@ void ATPSCharacter::UpdateInputContextForCurrentState()
 
 void ATPSCharacter::EvaluateStateAndApplyUpdates()
 {
+	UE_LOG(LogTemp, Log, TEXT("EVAL-CHARACTER"));
+
 	EvaluateLocomotionStateForCurrentInput();
 	UpdateCharacterSpeedForCurrentState();
 	UpdateInputContextForCurrentState();
 
-	updateDelegate.Broadcast();
+	NotifyDisplayWidgets.Broadcast();
 }
 
 void ATPSCharacter::StartAim() {
@@ -190,7 +202,7 @@ void ATPSCharacter::EndFireWeapon() {
 }
 
 
-// TODO: Make this follow a state-driven design pattern
+// TODO: Make this follow a strategy pattern
 ETPSLocomotionState ATPSCharacter::EvaluateLocomotionStateForCurrentInput()
 {
 	//- Non-Combat (restricted states) -----------------------------------=
@@ -304,11 +316,18 @@ AActor* ATPSCharacter::LineTrace(const UObject* WorldContextObject) {
 }
 
 
+
+//~ ============================================================= ~//
+//  ABILITY SYSTEM
+//~ ============================================================= ~//
+
+
 // Overridden in AI Character and Player Character to return appropriate ASC
 UAbilitySystemComponent* ATPSCharacter::GetAbilitySystemComponent() const {
 	return nullptr;
 }
 
+// Should only be called from SERVER when initializing.
 void ATPSCharacter::SetupInitialAbilitiesAndEffects() {
 	UAbilitySystemComponent* asc = GetAbilitySystemComponent();
 	if (! IsValid(asc)) {
@@ -349,4 +368,19 @@ void ATPSCharacter::OnMovementAttributeChanged(const FOnAttributeChangeData& dat
 	UE_LOG(LogTemp, Log, TEXT("OnMovementChange"));
 
 	MovementSpeedModifier = data.NewValue;
+}
+
+void ATPSCharacter::SyncAttributesFromGAS() {
+	UAbilitySystemComponent* asc = GetAbilitySystemComponent();
+	if (!IsValid(asc)) {
+		return;
+	}
+
+	CurrentHealth = asc->GetNumericAttribute(UCharacterHealthAttributeSet::GetHealthAttribute());
+	MaxHealth = asc->GetNumericAttribute(UCharacterHealthAttributeSet::GetHealthMaxAttribute());
+
+	CurrentArmor = asc->GetNumericAttribute(UCharacterHealthAttributeSet::GetArmorAttribute());
+	MaxArmor = asc->GetNumericAttribute(UCharacterHealthAttributeSet::GetArmorMaxAttribute());
+
+	MovementSpeedModifier = asc->GetNumericAttribute(UStandardAttributeSet::GetMovementSpeedModifierAttribute());
 }
