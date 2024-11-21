@@ -32,10 +32,10 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
-public:
 //~ ============================================================= ~//
 //  COMPONENTS
 //~ ============================================================= ~//
+public:
 	//TObjectPtr<UWidget> UnitFrameWidget;
 	//TObjectPtr<UWidget> DebugFrameWidget;
 
