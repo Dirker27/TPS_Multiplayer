@@ -1,4 +1,4 @@
-#include "Character/AbilitySet.h"
+#include "Ability/AbilitySet.h"
 
 TArray<FGameplayAbilitySpecHandle> UAbilitySet::GrantAbilitiesToAbilitySystem(UAbilitySystemComponent* AbilitySystemComponent) const {
     check(AbilitySystemComponent);

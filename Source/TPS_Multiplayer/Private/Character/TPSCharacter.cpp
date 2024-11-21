@@ -7,14 +7,17 @@
 #include "EnhancedInputComponent.h"
 #include "Net/UnrealNetwork.h"
 
+#include "GameFramework/CharacterMovementComponent.h"
+
+#include "Player/TPSPlayerState.h"
+
 // Sets default values
 ATPSCharacter::ATPSCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+ 	PrimaryActorTick.bCanEverTick = true;
 
-	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
-	StandardAttributes = CreateDefaultSubobject<UStandardAttributeSet>(TEXT("StandardAttributeSet"));
+	//UnitFrameWidget = CreateDefaultSubobject<UWidget>(TEXT("UnitFrameWidget"));
+	//DebugFrameWidget = CreateDefaultSubobject<UWidget>(TEXT("DebugFrameWidget"));
 }
 
 void ATPSCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
@@ -44,28 +47,6 @@ void ATPSCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-// Called to bind functionality to input
-void ATPSCharacter::SetupPlayerInputComponent(UInputComponent* playerInputComponent)
-{
-	Super::SetupPlayerInputComponent(playerInputComponent);
-
-	if (UEnhancedInputComponent* playerEnhancedInputComponent = Cast<UEnhancedInputComponent>(playerInputComponent)) {
-		for (const FAbilityInputToInputActionBinding& binding : AbilityInputBindings.Bindings)
-		{
-			playerEnhancedInputComponent->BindAction(binding.InputAction, ETriggerEvent::Started, this, &ThisClass::AbilityInputBindingPressedHandler, binding.AbilityInput);
-			playerEnhancedInputComponent->BindAction(binding.InputAction, ETriggerEvent::Completed, this, &ThisClass::AbilityInputBindingReleasedHandler, binding.AbilityInput);
-		}
-	}
-}
-
-// EnhancedInput -> GAS plumbing
-void ATPSCharacter::AbilityInputBindingPressedHandler(EAbilityInput abilityInput) {
-	AbilitySystemComponent->AbilityLocalInputPressed(static_cast<uint32>(abilityInput));
-}
-void ATPSCharacter::AbilityInputBindingReleasedHandler(EAbilityInput abilityInput) {
-	AbilitySystemComponent->AbilityLocalInputReleased(static_cast<uint32>(abilityInput));
-}
-
 void ATPSCharacter::GetActorEyesViewPoint(FVector& Location, FRotator& Rotation) const
 {
 	Location = GetMesh()->GetSocketLocation(EyeSocketName);
@@ -85,18 +66,26 @@ void ATPSCharacter::ApplyLocomotionState(const ETPSLocomotionState LocomotionSta
 {
 	if (CurrentLocomotionState == LocomotionState) { return; } // swallow redundant state changes
 
-	//UE_LOG(LogTemp, Log, TEXT("Applying LocomotionState[%i]"), LocomotionState);
 	PreviousLocomotionState = CurrentLocomotionState;
 	CurrentLocomotionState = LocomotionState;
+}
+void ATPSCharacter::RevertLocomotionState() {
+	ETPSLocomotionState swap = PreviousLocomotionState;
+	CurrentLocomotionState = PreviousLocomotionState;
+	PreviousLocomotionState = swap;
 }
 
 void ATPSCharacter::ApplyCharacterState(const ETPSCharacterState CharacterState)
 {
 	if (CurrentCharacterState == CharacterState) { return; } // swallow redundant state changes
 
-	//UE_LOG(LogTemp, Log, TEXT("Applying CharacterState[%i]"), CharacterState);
 	PreviousCharacterState = CurrentCharacterState;
 	CurrentCharacterState = CharacterState;
+}
+void ATPSCharacter::RevertCharacterState() {
+	ETPSCharacterState swap = PreviousCharacterState;
+	CurrentCharacterState = PreviousCharacterState;
+	PreviousCharacterState = swap;
 }
 
 /**
@@ -140,11 +129,21 @@ float ATPSCharacter::GetSpeedModifierForLocomotionState(const ETPSLocomotionStat
 float ATPSCharacter::UpdateCharacterSpeedForCurrentState()
 {
 	float baseSpeed = GetBaseSpeedForCharacterState(CurrentCharacterState);
-	float locomotionStateModifier = GetSpeedModifierForLocomotionState(CurrentLocomotionState);
+	//float locomotionStateModifier = GetSpeedModifierForLocomotionState(CurrentLocomotionState);
 
-	CurrentMaxWalkSpeed = baseSpeed * locomotionStateModifier;
+	CurrentMaxWalkSpeed = baseSpeed * MovementSpeedModifier;
 
-	// TODO: Apply to CharacterMovement
+	UCharacterMovementComponent* characterMovement = GetCharacterMovement();
+	characterMovement->MaxWalkSpeed = CurrentMaxWalkSpeed;
+	characterMovement->MaxWalkSpeedCrouched = CurrentMaxWalkSpeed;
+
+	// Adjusts collider to crouch height
+	if (CurrentLocomotionState == Crouching) {
+		Crouch();
+	}
+	else {
+		UnCrouch();
+	}
 
 	return CurrentMaxWalkSpeed;
 }
@@ -167,10 +166,27 @@ void ATPSCharacter::UpdateInputContextForCurrentState()
 }
 
 
-void ATPSCharacter::ApplyCharacterAttributesForCurrentState()
+void ATPSCharacter::EvaluateStateAndApplyUpdates()
 {
+	EvaluateLocomotionStateForCurrentInput();
 	UpdateCharacterSpeedForCurrentState();
 	UpdateInputContextForCurrentState();
+
+	updateDelegate.Broadcast();
+}
+
+void ATPSCharacter::StartAim() {
+	OnAimAbilityStart();
+}
+void ATPSCharacter::EndAim() {
+	OnAimAbilityEnd();
+}
+
+void ATPSCharacter::StartFireWeapon() {
+	OnFireWeaponAbilityStart();
+}
+void ATPSCharacter::EndFireWeapon() {
+	OnFireWeaponAbilityEnd();
 }
 
 
@@ -261,13 +277,6 @@ bool ATPSCharacter::IsActionActive() const {
 }
 
 
-
-
-
-
-
-
-
 AActor* ATPSCharacter::LineTrace(const UObject* WorldContextObject) {
 	AActor* hitActor = NULL;
 
@@ -295,45 +304,49 @@ AActor* ATPSCharacter::LineTrace(const UObject* WorldContextObject) {
 }
 
 
-
-
-
+// Overridden in AI Character and Player Character to return appropriate ASC
 UAbilitySystemComponent* ATPSCharacter::GetAbilitySystemComponent() const {
-	return AbilitySystemComponent;
+	return nullptr;
 }
 
-
-void ATPSCharacter::SetupInitialAbilitiesAndEffects()
-{
-	if (IsValid(AbilitySystemComponent) == false || IsValid(StandardAttributes) == false) {
+void ATPSCharacter::SetupInitialAbilitiesAndEffects() {
+	UAbilitySystemComponent* asc = GetAbilitySystemComponent();
+	if (! IsValid(asc)) {
 		return;
 	}
 
 	if (IsValid(InitialAbilitySet)) {
-		InitiallyGrantedAbilitySpecHandles.Append(InitialAbilitySet->GrantAbilitiesToAbilitySystem(AbilitySystemComponent));
+		InitiallyGrantedAbilitySpecHandles.Append(
+			InitialAbilitySet->GrantAbilitiesToAbilitySystem(asc));
 	}
 
 	if (IsValid(InitialGameplayEffect)) {
-		AbilitySystemComponent->ApplyGameplayEffectToSelf(
-			InitialGameplayEffect->GetDefaultObject<UGameplayEffect>(), 
-			0, 
-			AbilitySystemComponent->MakeEffectContext());
+		asc->ApplyGameplayEffectToSelf(
+			InitialGameplayEffect->GetDefaultObject<UGameplayEffect>(),
+			0,
+			asc->MakeEffectContext());
 	}
 
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UStandardAttributeSet::GetHealthAttribute())
+	asc->GetGameplayAttributeValueChangeDelegate(UCharacterHealthAttributeSet::GetArmorAttribute())
+		.AddUObject(this, &ThisClass::OnArmorAttributeChanged);
+	asc->GetGameplayAttributeValueChangeDelegate(UCharacterHealthAttributeSet::GetHealthAttribute())
 		.AddUObject(this, &ThisClass::OnHealthAttributeChanged);
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UStandardAttributeSet::GetHealthMaxAttribute())
-		.AddUObject(this, &ThisClass::OnHealthAttributeChanged);
-
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UStandardAttributeSet::GetMovementSpeedModifierAttribute())
+	asc->GetGameplayAttributeValueChangeDelegate(UStandardAttributeSet::GetMovementSpeedModifierAttribute())
 		.AddUObject(this, &ThisClass::OnMovementAttributeChanged);
 }
 
+void ATPSCharacter::OnArmorAttributeChanged(const FOnAttributeChangeData& data) {
+	UE_LOG(LogTemp, Log, TEXT("OnArmorChange"));
 
+	CurrentArmor = data.NewValue;
+}
 void ATPSCharacter::OnHealthAttributeChanged(const FOnAttributeChangeData& data) {
 	UE_LOG(LogTemp, Log, TEXT("OnHealthChange"));
-}
 
+	CurrentHealth = data.NewValue;
+}
 void ATPSCharacter::OnMovementAttributeChanged(const FOnAttributeChangeData& data) {
 	UE_LOG(LogTemp, Log, TEXT("OnMovementChange"));
+
+	MovementSpeedModifier = data.NewValue;
 }

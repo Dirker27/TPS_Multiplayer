@@ -5,16 +5,14 @@
 #include "AttributeSet.h"
 #include "AbilitySystemComponent.h"
 
-#include "StandardAttributeSet.generated.h"
-
-
-//#include "AttributeHelpers.h"
-#define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
+#include "Util/GASUtilities.h"
+/*#define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
     GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
     GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \
     GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
-    GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
+    GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)*/
 
+#include "StandardAttributeSet.generated.h"
 
 UCLASS()
 class TPS_MULTIPLAYER_API UStandardAttributeSet : public UAttributeSet
@@ -29,6 +27,8 @@ public:
 
     //- Health -------------------------------------------=
     //
+    // TODO: DELETE
+    // 
     //- Current Health
     UPROPERTY(BlueprintReadOnly, Category = "Health", ReplicatedUsing=OnRep_Health)
     FGameplayAttributeData Health;

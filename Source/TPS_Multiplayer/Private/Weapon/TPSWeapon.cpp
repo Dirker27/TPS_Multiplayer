@@ -1,5 +1,9 @@
 #include "Weapon/TPSWeapon.h"
 
-UAbilitySystemComponent* ATPSWeapon::GetAbilitySystemComponent() const {
-    return AbilitySystemComponent;
+ATPSWeapon::ATPSWeapon() {
+    PrimaryActorTick.bCanEverTick = true;
+}
+
+ATPSWeapon::~ATPSWeapon() {
+    // destruct
 }

@@ -3,19 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/Widget.h"
 #include "GameFramework/Character.h"
 
 #include "AbilitySystemInterface.h"
 #include "AbilitySystemComponent.h"
 
+#include "Ability/AbilitySet.h"
 #include "Character/TPSLocomotionState.h"
 #include "Character/TPSCharacterState.h"
 #include "Character/TPSCharacterBodyType.h"
 #include "Weapon/TPSWeapon.h"
 #include "Weapon/TPSWeaponType.h"
-
-#include "Character/Attributes/StandardAttributeSet.h"
-#include "Character/AbilitySet.h"
 
 #include "TPSCharacter.generated.h"
 
@@ -28,29 +27,27 @@ public:
 	// Sets default values for this character's properties
 	ATPSCharacter();
 
-	UFUNCTION(BlueprintCallable, BlueprintPure)
-	static FString CharacterStateToFString(ETPSCharacterState state) {
-		return FString(ETPSCharacterStateToString(state));
-	};
-
-	UFUNCTION(BlueprintCallable, BlueprintPure)
-	static FString LocomotionStateToFString(ETPSLocomotionState state) {
-		return FString(ETPSLocomotionStateToString(state));
-	}
-
 // UE Implementables
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-// UE Implementabes
-public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+public:
+//~ ============================================================= ~//
+//  COMPONENTS
+//~ ============================================================= ~//
+	//TObjectPtr<UWidget> UnitFrameWidget;
+	//TObjectPtr<UWidget> DebugFrameWidget;
 
+	UDELEGATE(BlueprintAuthorityOnly)
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FUpdateAttributeDisplay);
+	UPROPERTY(BlueprintAssignable)
+	FUpdateAttributeDisplay updateDelegate;
+	//updateDelegate.BindSP()
+ 
+
+// UE Implementables
+public:
 	// Overrides
 	void GetActorEyesViewPoint(FVector& Location, FRotator& Rotation) const override;
 	void FellOutOfWorld(const class UDamageType& dmgType) override;
@@ -60,17 +57,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName EyeSocketName;
 
+//~ ============================================================= ~//
+//  STATE
+//~ ============================================================= ~//
+public:
 	UPROPERTY(BlueprintReadOnly)
 	bool IsDebugEnabled = false;
-
-	//~ ============================================================ ~//
-	//  STATE
-	//~ ============================================================ ~//
-
+	
 	//- Identity -----------------------------------------=
 	//
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float Name;
+	FString Name;
 	//
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TEnumAsByte<ETPSCharacterBodyType> CharacterBodyType;
@@ -78,25 +75,36 @@ public:
 	//- Attributes ----------------------------------------=
 	//  (sync'd from GAS attributes)
 	//
-	// Health
+	//- Health
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float CurrentHealth;
-	//
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MaxHealth;
 	//
-	// Movement Speed
+	//- Armor
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float CurrentArmor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MaxArmor;
+	//
+	//- Movement Speed
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float MovementSpeedModifier;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float CurrentMaxWalkSpeed;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Replicated)
+	//- State ------------------------------------------------=
+	//
+	//- Character State
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Replicated)
 	TEnumAsByte<ETPSCharacterState> CurrentCharacterState;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TEnumAsByte<ETPSCharacterState> PreviousCharacterState;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Replicated)
+	//
+	//- Locomotion State
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Replicated)
 	TEnumAsByte<ETPSLocomotionState> CurrentLocomotionState;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TEnumAsByte<ETPSLocomotionState> PreviousLocomotionState;
 
 	//- Weapon State --------------------------------------=
@@ -125,39 +133,75 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	bool IsFiring;
 
-	//~ ============================================================ ~//
-	//  Blueprint Extensions
-	//~ ============================================================ ~//
-
+//~ ============================================================= ~//
+//  Blueprint Extensions
+//~ ============================================================= ~//
+public:
 	// From UE Demo
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnFellOutOfWorld();
 
 	//- Ability Extensions ------------------------------=
 	//
-	// Aim
+	//- Aim
+	UFUNCTION(BlueprintCallable)
+	void StartAim();
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnAimAbilityStart();
 	//
+	UFUNCTION(BlueprintCallable)
+	void EndAim();
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnAimAbilityEnd();
 	//
-	// Fire Weapon
+	//- Fire Weapon
+	UFUNCTION(BlueprintCallable)
+	void StartFireWeapon();
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnFireWeaponAbilityStart();
 	//
+	UFUNCTION(BlueprintCallable)
+	void EndFireWeapon();
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnFireWeaponAbilityEnd();
 
-	//~ ============================================================ ~//
-	//  Character Logic
-	//~ ============================================================ ~//
+	//- Transforms -------------------------------------------=
+	//
+	//- CharacterState
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	static FString CharacterStateToFString(ETPSCharacterState state) {
+		return FString(ETPSCharacterStateToString(state));
+	};
+	//
+	//- LocomotionState
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	static FString LocomotionStateToFString(ETPSLocomotionState state) {
+		return FString(ETPSLocomotionStateToString(state));
+	}
 
+//~ ================================================================ ~//
+//  Character Logic
+//~ ================================================================ ~//
+
+public:
 	UFUNCTION(BlueprintCallable)
 	void ApplyCharacterState(const ETPSCharacterState CharacterState);
 
 	UFUNCTION(BlueprintCallable)
+	void RevertCharacterState();
+
+	UFUNCTION(BlueprintCallable)
 	void ApplyLocomotionState(const ETPSLocomotionState LocomotionState);
+
+	UFUNCTION(BlueprintCallable)
+	void RevertLocomotionState();
+
+
+
+	UFUNCTION(BlueprintCallable)
+	void EvaluateStateAndApplyUpdates();
+
+
 
 	UFUNCTION(BlueprintCallable)
 	ETPSLocomotionState EvaluateLocomotionStateForCurrentInput();
@@ -175,51 +219,29 @@ public:
 	void UpdateInputContextForCurrentState();
 
 	UFUNCTION(BlueprintCallable)
-	void ApplyCharacterAttributesForCurrentState();
-
-	UFUNCTION(BlueprintCallable)
 	bool IsActionActive() const;
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	AActor* LineTrace(const UObject* WorldContextObject);
 
-
-	//~ =========================================================== ~//
-	//  ABILITY SYSTEM TUTORIAL
-	//~ =========================================================== ~//
-
+//~ ============================================================= ~//
+//  ABILITY SYSTEM WIRING
+//~ ============================================================= ~//
 public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override; // IAbilitySystemInterface
 
-	void SetupInitialAbilitiesAndEffects();
-
-	UPROPERTY(VisibleAnywhere, Category = "Abilities")
-	UStandardAttributeSet* StandardAttributes{ nullptr };
-
 protected:
-	void AbilityInputBindingPressedHandler(EAbilityInput abilityInput);
-	void AbilityInputBindingReleasedHandler(EAbilityInput abilityInput);
-
-	void OnHealthAttributeChanged(const FOnAttributeChangeData&);
-	void OnMovementAttributeChanged(const FOnAttributeChangeData&);
-
-protected:
-	UPROPERTY(EditAnywhere, Category="Input|Binding")
-	UInputMappingContext* InputMappingContext{ nullptr };
-
-	UPROPERTY(EditDefaultsOnly, Category = "Input|Binding")
-	FAbilityInputBindings AbilityInputBindings;
-
-	// <Input Actions>
-
-	UPROPERTY(Visibleanywhere, Category="Abilities")
-	UAbilitySystemComponent* AbilitySystemComponent{ nullptr };
-
-	UPROPERTY(EditDefaultsOnly, Category="Abilities")
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities")
 	UAbilitySet* InitialAbilitySet{ nullptr };
 
-	UPROPERTY(EditDefaultsOnly, Category="Abilities")
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities")
 	TSubclassOf<UGameplayEffect> InitialGameplayEffect;
 
 	TArray<FGameplayAbilitySpecHandle> InitiallyGrantedAbilitySpecHandles;
+
+private:
+	void SetupInitialAbilitiesAndEffects();
+	void OnArmorAttributeChanged(const FOnAttributeChangeData&);
+	void OnHealthAttributeChanged(const FOnAttributeChangeData&);
+	void OnMovementAttributeChanged(const FOnAttributeChangeData&);
 };

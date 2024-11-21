@@ -1,6 +1,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/ArrowComponent.h"
+//#include "UObject/ObjectMacros.h"
+//#include "UObject/UObjectGlobals.h"
 
 #include "AbilitySystemInterface.h"
 #include "AbilitySystemComponent.h"
@@ -11,33 +14,51 @@
 #include "TPSWeapon.generated.h"
 
 UCLASS()
-class TPS_MULTIPLAYER_API ATPSWeapon : public AActor, public IAbilitySystemInterface
+class TPS_MULTIPLAYER_API ATPSWeapon : public AActor
 {
     GENERATED_BODY()
 
-    //~ ============================================================ ~//
-    //  ATTRIBUTES
-    //~ ============================================================ ~//
-
 public:
+    ATPSWeapon();
+    ~ATPSWeapon();
 
+//~ ============================================================= ~//
+//  COMPONENTS
+//~ ============================================================= ~//
+public:
+    TObjectPtr<USkeletalMeshComponent> Mesh;
+
+#if WITH_EDITORONLY_DATA
+	/** Component shown in the editor only to indicate character facing */
+	UPROPERTY()
+	TObjectPtr<UArrowComponent> ArrowComponent;
+#endif
+
+//~ ============================================================= ~//
+//  ATTRIBUTES
+//~ ============================================================= ~//
+public:
     //- Identity ------------------------------------------=
     //
-    //- Ammunition
+    //- Name
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    FString Name;
+    // 
+    //- Type
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     TEnumAsByte<ETPSWeaponType> Type;
 
-
-    UPROPERTY(VisibleAnywhere, Category = "Abilities")
-    UWeaponAttributeSet* WeaponAttributes{ nullptr };
-
-
-
+//~ ============================================================= ~//
+//  Blueprint Extensions
+//~ ============================================================= ~//
 public:
-    virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override; // IAbilitySystemInterface
+    //- Transforms -------------------------------------------=
+	//
+	//- CharacterState
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	static FString WeaponTypeToFString(const ETPSWeaponType t) {
+		return FString(ETPSWeaponTypeToString(t));
+	};
 
-protected:
-    UPROPERTY(Visibleanywhere, Category = "Abilities")
-    UAbilitySystemComponent* AbilitySystemComponent{ nullptr };
 };
 
