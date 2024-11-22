@@ -13,6 +13,12 @@ static TAutoConsoleVariable<int32> CVarLocalPlayerDebugMode(
 	TEXT("Shows debug mode for local player.\n")
 	TEXT("<=0: OFF\n")
 	TEXT("  1: ON\n"));
+static TAutoConsoleVariable<int32> CVarLocalPlayerCourchToggleMode(
+	TEXT("TPS.LocalPlayerGodMode"),
+	0,
+	TEXT("Enables GOD MODE for local player.\n")
+	TEXT("<=0: OFF\n")
+	TEXT("  1: ON\n"));
 static TAutoConsoleVariable<int32> CVarLocalPlayerGodMode(
 	TEXT("TPS.LocalPlayerGodMode"),
 	0,
@@ -25,7 +31,8 @@ void _OnControllerConfiugrationConsoleInput(IConsoleVariable* Var) {
 
 	FTPSControllerConfiguration configuration = {
 		CVarLocalPlayerDebugMode->GetInt(),
-		CVarLocalPlayerGodMode->GetBool()
+		CVarLocalPlayerGodMode->GetBool(),
+		CVarLocalPlayerCourchToggleMode->GetBool()
 	};
 	UE_LOG(LogTemp, Log, TEXT("INPUT CharacterDEBUG: %i\nINPUT GodMode: %b"),
 		configuration.localCharacterDebugMode, configuration.godModeEnabled);
@@ -34,6 +41,8 @@ void _OnControllerConfiugrationConsoleInput(IConsoleVariable* Var) {
 void ATPSPlayerController::BindConsoleCallbacks() {
 	CVarLocalPlayerDebugMode.AsVariable()
 		->SetOnChangedCallback(FConsoleVariableDelegate::CreateLambda(&_OnControllerConfiugrationConsoleInput));
+	CVarLocalPlayerCourchToggleMode.AsVariable()
+		->SetOnChangedCallback(FConsoleVariableDelegate::CreateStatic(&_OnControllerConfiugrationConsoleInput));
 	CVarLocalPlayerGodMode.AsVariable()
 		->SetOnChangedCallback(FConsoleVariableDelegate::CreateStatic(&_OnControllerConfiugrationConsoleInput));
 
@@ -80,4 +89,15 @@ void ATPSPlayerController::TPS_ToggleDebugForLocalPlayer() {
 }
 void ATPSPlayerController::DebugLocal() {
 	TPS_ToggleDebugForLocalPlayer();
+}
+
+
+void ATPSPlayerController::TPS_ToggleCrouchForLocalPlayer() {
+	IsDebugEnabled = (!IsDebugEnabled);
+	configuration->crouchToggle = (configuration->crouchToggle == 1)
+		? 0
+		: 1;
+}
+void ATPSPlayerController::ToggleCrouch() {
+	TPS_ToggleCrouchForLocalPlayer();
 }

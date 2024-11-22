@@ -67,13 +67,13 @@ void ATPSPlayerCharacter::SetupPlayerInputComponent(UInputComponent* playerInput
 
 // EnhancedInput -> GAS plumbing
 void ATPSPlayerCharacter::AbilityInputBindingPressedHandler(EAbilityInput abilityInput) {
-	UE_LOG(LogTemp, Log, TEXT("OnInput[%i]"), abilityInput);
+	UE_LOG(LogTemp, Log, TEXT("OnInputPressed[%i]"), abilityInput);
 	if (ATPSPlayerState* ps = GetPlayerState<ATPSPlayerState>()) {
 		ps->GetAbilitySystemComponent()->AbilityLocalInputPressed(static_cast<uint32>(abilityInput));
 	}
 }
 void ATPSPlayerCharacter::AbilityInputBindingReleasedHandler(EAbilityInput abilityInput) {
-	UE_LOG(LogTemp, Log, TEXT("OnInput[%i]"), abilityInput);
+	UE_LOG(LogTemp, Log, TEXT("OnInputReleased[%i]"), abilityInput);
 	if (ATPSPlayerState* ps = GetPlayerState<ATPSPlayerState>()) {
 		ps->GetAbilitySystemComponent()->AbilityLocalInputReleased(static_cast<uint32>(abilityInput));
 	}

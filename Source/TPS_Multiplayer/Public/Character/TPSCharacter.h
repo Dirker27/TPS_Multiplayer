@@ -39,8 +39,8 @@ public:
 	//- Display Widgets --------------------------------------=
 	//
 	//- Widgets
-	//TObjectPtr<UWidgetComponent> UnitFrameWidget;
-	//TObjectPtr<UWidgetComponent> DebugFrameWidget;
+	TObjectPtr<UWidgetComponent> UnitFrameWidget;
+	TObjectPtr<UWidgetComponent> DebugFrameWidget;
 	//
 	//- Broadcast Delegate
 	UDELEGATE(BlueprintAuthorityOnly)

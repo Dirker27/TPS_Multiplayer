@@ -45,7 +45,15 @@ public:
 	UFUNCTION(Exec, Category = "Debug.Overrides")
 	void ExitCombat();
 
-	//- Visual Debugging --------------------------------------------=
+	//- Control Configuration -----------------------------=
+	//
+	UFUNCTION(Exec, Category="Config.Controls")
+	void TPS_ToggleCrouchForLocalPlayer();
+	//
+	UFUNCTION(Exec, Category = "Config.Controls")
+	void ToggleCrouch();
+
+	//- Visual Debugging ----------------------------------=
 	//
 	UFUNCTION(Exec, Category="Debug.Visibility")
 	void TPS_ToggleDebugForLocalPlayer();

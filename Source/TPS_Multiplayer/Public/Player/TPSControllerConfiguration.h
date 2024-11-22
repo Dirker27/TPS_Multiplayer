@@ -17,4 +17,7 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	bool godModeEnabled = false;
+
+	UPROPERTY(BlueprintReadOnly)
+	bool crouchToggle = true;
 };

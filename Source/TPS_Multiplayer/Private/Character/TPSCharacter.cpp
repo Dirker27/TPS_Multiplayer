@@ -15,8 +15,8 @@ ATPSCharacter::ATPSCharacter()
 {
  	PrimaryActorTick.bCanEverTick = true;
 
-	//UnitFrameWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("UnitFrameWidget"));
-	//DebugFrameWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("DebugFrameWidget"));
+	UnitFrameWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("UnitFrameWidget"));
+	DebugFrameWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("DebugFrameWidget"));
 }
 
 void ATPSCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
@@ -140,8 +140,14 @@ float ATPSCharacter::UpdateCharacterSpeedForCurrentState()
 	float baseSpeed = GetBaseSpeedForCharacterState(CurrentCharacterState);
 	//float locomotionStateModifier = GetSpeedModifierForLocomotionState(CurrentLocomotionState);
 
+	float modifier = MovementSpeedModifier;
 	// Set by GAS
-	CurrentMaxWalkSpeed = baseSpeed * MovementSpeedModifier;
+	UAbilitySystemComponent* asc = GetAbilitySystemComponent();
+	if (IsValid(asc)) {
+		modifier = asc->GetNumericAttribute(UStandardAttributeSet::GetMovementSpeedModifierAttribute());
+	}
+
+	CurrentMaxWalkSpeed = baseSpeed * modifier;
 
 	UCharacterMovementComponent* characterMovement = GetCharacterMovement();
 	characterMovement->MaxWalkSpeed = CurrentMaxWalkSpeed;
