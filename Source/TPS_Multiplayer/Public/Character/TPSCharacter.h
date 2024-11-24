@@ -18,6 +18,9 @@
 
 #include "TPSCharacter.generated.h"
 
+UDELEGATE(BlueprintAuthorityOnly)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FUpdateAttributeDisplay);
+
 UCLASS()
 class TPS_MULTIPLAYER_API ATPSCharacter : public ACharacter, public IAbilitySystemInterface
 {
@@ -43,10 +46,10 @@ public:
 	TObjectPtr<UWidgetComponent> DebugFrameWidget;
 	//
 	//- Broadcast Delegate
-	UDELEGATE(BlueprintAuthorityOnly)
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FUpdateAttributeDisplay);
 	UPROPERTY(BlueprintAssignable)
 	FUpdateAttributeDisplay NotifyDisplayWidgets;
+private:
+	bool ShouldNotify = false;
  
 
 // UE Implementables

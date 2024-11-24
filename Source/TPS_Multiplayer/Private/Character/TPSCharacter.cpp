@@ -49,6 +49,11 @@ void ATPSCharacter::BeginPlay()
 void ATPSCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (ShouldNotify) {
+		NotifyDisplayWidgets.Broadcast();
+		ShouldNotify = false;
+	}
 }
 
 // AI Enhancement - Detection FOV is rooted to Character's HEAD.
@@ -74,11 +79,15 @@ void ATPSCharacter::ApplyLocomotionState(const ETPSLocomotionState LocomotionSta
 
 	PreviousLocomotionState = CurrentLocomotionState;
 	CurrentLocomotionState = LocomotionState;
+
+	ShouldNotify = true;
 }
 void ATPSCharacter::RevertLocomotionState() {
 	ETPSLocomotionState swap = PreviousLocomotionState;
 	CurrentLocomotionState = PreviousLocomotionState;
 	PreviousLocomotionState = swap;
+
+	ShouldNotify = true;
 }
 
 void ATPSCharacter::ApplyCharacterState(const ETPSCharacterState CharacterState)
@@ -87,11 +96,15 @@ void ATPSCharacter::ApplyCharacterState(const ETPSCharacterState CharacterState)
 
 	PreviousCharacterState = CurrentCharacterState;
 	CurrentCharacterState = CharacterState;
+
+	ShouldNotify = true;
 }
 void ATPSCharacter::RevertCharacterState() {
 	ETPSCharacterState swap = PreviousCharacterState;
 	CurrentCharacterState = PreviousCharacterState;
 	PreviousCharacterState = swap;
+
+	ShouldNotify = true;
 }
 
 /**
@@ -140,14 +153,14 @@ float ATPSCharacter::UpdateCharacterSpeedForCurrentState()
 	float baseSpeed = GetBaseSpeedForCharacterState(CurrentCharacterState);
 	//float locomotionStateModifier = GetSpeedModifierForLocomotionState(CurrentLocomotionState);
 
-	float modifier = MovementSpeedModifier;
+	//float modifier = MovementSpeedModifier;
 	// Set by GAS
 	UAbilitySystemComponent* asc = GetAbilitySystemComponent();
 	if (IsValid(asc)) {
-		modifier = asc->GetNumericAttribute(UStandardAttributeSet::GetMovementSpeedModifierAttribute());
+		MovementSpeedModifier = asc->GetNumericAttribute(UStandardAttributeSet::GetMovementSpeedModifierAttribute());
 	}
 
-	CurrentMaxWalkSpeed = baseSpeed * modifier;
+	CurrentMaxWalkSpeed = baseSpeed * MovementSpeedModifier;
 
 	UCharacterMovementComponent* characterMovement = GetCharacterMovement();
 	characterMovement->MaxWalkSpeed = CurrentMaxWalkSpeed;
@@ -190,7 +203,7 @@ void ATPSCharacter::EvaluateStateAndApplyUpdates()
 	UpdateCharacterSpeedForCurrentState();
 	UpdateInputContextForCurrentState();
 
-	NotifyDisplayWidgets.Broadcast();
+	ShouldNotify = true;
 }
 
 void ATPSCharacter::StartAim() {
@@ -362,16 +375,19 @@ void ATPSCharacter::SetupInitialAbilitiesAndEffects() {
 
 void ATPSCharacter::OnArmorAttributeChanged(const FOnAttributeChangeData& data) {
 	UE_LOG(LogTemp, Log, TEXT("OnArmorChange"));
+	ShouldNotify = true;
 
 	CurrentArmor = data.NewValue;
 }
 void ATPSCharacter::OnHealthAttributeChanged(const FOnAttributeChangeData& data) {
 	UE_LOG(LogTemp, Log, TEXT("OnHealthChange"));
+	ShouldNotify = true;
 
 	CurrentHealth = data.NewValue;
 }
 void ATPSCharacter::OnMovementAttributeChanged(const FOnAttributeChangeData& data) {
 	UE_LOG(LogTemp, Log, TEXT("OnMovementChange"));
+	ShouldNotify = true;
 
 	MovementSpeedModifier = data.NewValue;
 }
@@ -389,4 +405,6 @@ void ATPSCharacter::SyncAttributesFromGAS() {
 	MaxArmor = asc->GetNumericAttribute(UCharacterHealthAttributeSet::GetArmorMaxAttribute());
 
 	MovementSpeedModifier = asc->GetNumericAttribute(UStandardAttributeSet::GetMovementSpeedModifierAttribute());
+
+	ShouldNotify = true;
 }
