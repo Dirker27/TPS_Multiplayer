@@ -22,13 +22,13 @@ ATPSCharacter::ATPSCharacter()
 void ATPSCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(ATPSCharacter, CurrentHealth);
-	DOREPLIFETIME(ATPSCharacter, CurrentArmor);
+	//DOREPLIFETIME(ATPSCharacter, CurrentHealth);
+	//DOREPLIFETIME(ATPSCharacter, CurrentArmor);
 
 	DOREPLIFETIME(ATPSCharacter, CurrentLocomotionState);
 	DOREPLIFETIME(ATPSCharacter, CurrentCharacterState);
 
-	DOREPLIFETIME(ATPSCharacter, MovementSpeedModifier);
+	//DOREPLIFETIME(ATPSCharacter, MovementSpeedModifier);
 
 	DOREPLIFETIME(ATPSCharacter, IsAiming);
 	DOREPLIFETIME(ATPSCharacter, IsFiring);
@@ -66,6 +66,11 @@ void ATPSCharacter::GetActorEyesViewPoint(FVector& Location, FRotator& Rotation)
 // Blueprint Hook for on-fallout death animation.
 void ATPSCharacter::FellOutOfWorld(const class UDamageType& dmgType) {
 	OnFellOutOfWorld();
+}
+
+bool ATPSCharacter::IsAlive() const
+{
+	return (CurrentCharacterState != Incapacitated);
 }
 
 bool ATPSCharacter::IsCrouching() const
@@ -219,7 +224,6 @@ void ATPSCharacter::StartFireWeapon() {
 void ATPSCharacter::EndFireWeapon() {
 	OnFireWeaponAbilityEnd();
 }
-
 
 // TODO: Make this follow a strategy pattern
 ETPSLocomotionState ATPSCharacter::EvaluateLocomotionStateForCurrentInput()

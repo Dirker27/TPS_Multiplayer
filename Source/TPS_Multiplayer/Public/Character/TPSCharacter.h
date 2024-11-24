@@ -80,7 +80,7 @@ public:
 	TEnumAsByte<ETPSCharacterBodyType> CharacterBodyType;
 
 	//- Attributes ----------------------------------------=
-	//  (sync'd from GAS attributes)
+	// (sync'd from GAS attributes where applicable)
 	//
 	//- Health
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
@@ -113,6 +113,14 @@ public:
 	TEnumAsByte<ETPSLocomotionState> CurrentLocomotionState;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TEnumAsByte<ETPSLocomotionState> PreviousLocomotionState;
+	//
+	// True if Character is not Incapacitated.
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool IsAlive() const;
+	//
+	// True if Crouching OR Prone.
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool IsCrouching() const;
 
 	//- Weapon State --------------------------------------=
 	//
@@ -121,10 +129,6 @@ public:
 	//
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	ATPSWeapon* EquippedWeapon	{ nullptr };
-
-	// True if Crouching OR Prone.
-	UFUNCTION(BlueprintCallable, BlueprintPure)
-	bool IsCrouching() const;
 
 	//- Controller Input ----------------------------------=
 	//
