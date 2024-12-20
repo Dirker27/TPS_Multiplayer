@@ -24,8 +24,16 @@ void UWeaponAttributeSet::OnRep_Ammunition(const FGameplayAttributeData& OldAmmu
     GAMEPLAYATTRIBUTE_REPNOTIFY(UWeaponAttributeSet, Ammunition, OldAmmunition);
 }
 void UWeaponAttributeSet::OnRep_AmmunitionMax(const FGameplayAttributeData& OldAmmunitionMax) {
-    GAMEPLAYATTRIBUTE_REPNOTIFY(UWeaponAttributeSet, Ammunition, OldAmmunitionMax);
+    GAMEPLAYATTRIBUTE_REPNOTIFY(UWeaponAttributeSet, AmmunitionMax, OldAmmunitionMax);
 }
+void UWeaponAttributeSet::OnRep_FireRateModifier(const FGameplayAttributeData& OldFireRateModifier) {
+    GAMEPLAYATTRIBUTE_REPNOTIFY(UWeaponAttributeSet, FireRateModifier, OldFireRateModifier);
+}
+void UWeaponAttributeSet::OnRep_ReloadSpeedModifier(const FGameplayAttributeData& OldReloadSpeedModifier) {
+    GAMEPLAYATTRIBUTE_REPNOTIFY(UWeaponAttributeSet, ReloadSpeedModifier, OldReloadSpeedModifier);
+}
+
+
 
 
 void UWeaponAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -34,4 +42,6 @@ void UWeaponAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 
     DOREPLIFETIME_CONDITION_NOTIFY(UWeaponAttributeSet, Ammunition, COND_None, REPNOTIFY_Always);
     DOREPLIFETIME_CONDITION_NOTIFY(UWeaponAttributeSet, AmmunitionMax, COND_None, REPNOTIFY_Always);
+    DOREPLIFETIME_CONDITION_NOTIFY(UWeaponAttributeSet, FireRateModifier, COND_None, REPNOTIFY_Always);
+    DOREPLIFETIME_CONDITION_NOTIFY(UWeaponAttributeSet, ReloadSpeedModifier, COND_None, REPNOTIFY_Always);
 }

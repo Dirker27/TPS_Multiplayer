@@ -29,7 +29,7 @@ public:
     //- Weapons ------------------------------------------=
     //
     //- Ammunition
-    UPROPERTY(BlueprintReadOnly, Category = "Weapons.Ammunition", ReplicatedUsing = OnRep_Ammunition)
+    UPROPERTY(BlueprintReadOnly, Category = "Weapon.Ammunition", ReplicatedUsing = OnRep_Ammunition)
     FGameplayAttributeData Ammunition;
     ATTRIBUTE_ACCESSORS(UWeaponAttributeSet, Ammunition);
     //
@@ -37,12 +37,28 @@ public:
     void OnRep_Ammunition(const FGameplayAttributeData& OldAmmunitionMax);
     //
     //- Ammunition Max (capacity)
-    UPROPERTY(BlueprintReadOnly, Category = "Weapons.Ammunition", ReplicatedUsing = OnRep_AmmunitionMax)
+    UPROPERTY(BlueprintReadOnly, Category = "Weapon.Ammunition", ReplicatedUsing = OnRep_AmmunitionMax)
     FGameplayAttributeData AmmunitionMax;
     ATTRIBUTE_ACCESSORS(UWeaponAttributeSet, AmmunitionMax);
     //
     UFUNCTION()
     void OnRep_AmmunitionMax(const FGameplayAttributeData& OldAmmunitionMax);
+    //
+    //- Fire Rate Modifier
+    UPROPERTY(BlueprintReadOnly, Category = "Weapon.Behavior", ReplicatedUsing = OnRep_FireRateModifier)
+    FGameplayAttributeData FireRateModifier;
+    ATTRIBUTE_ACCESSORS(UWeaponAttributeSet, FireRateModifier);
+    //
+    UFUNCTION()
+    void OnRep_FireRateModifier(const FGameplayAttributeData& OldFireRateModifier);
+    //
+    //- Reload Speed Modifier
+    UPROPERTY(BlueprintReadOnly, Category = "Weapon.Behavior", ReplicatedUsing = OnRep_ReloadSpeedModifier)
+    FGameplayAttributeData ReloadSpeedModifier;
+    ATTRIBUTE_ACCESSORS(UWeaponAttributeSet, ReloadSpeedModifier);
+    //
+    UFUNCTION()
+    void OnRep_ReloadSpeedModifier(const FGameplayAttributeData& OldReloadSpeedModifier);
 
     //~ ============================================================ ~//
     //  GAS PLUMBING

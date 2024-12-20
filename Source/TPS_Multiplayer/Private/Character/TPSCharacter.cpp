@@ -22,18 +22,21 @@ ATPSCharacter::ATPSCharacter()
 void ATPSCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	//DOREPLIFETIME(ATPSCharacter, CurrentHealth);
-	//DOREPLIFETIME(ATPSCharacter, CurrentArmor);
+	DOREPLIFETIME(ATPSCharacter, CurrentHealth);
+	DOREPLIFETIME(ATPSCharacter, CurrentArmor);
 
 	DOREPLIFETIME(ATPSCharacter, CurrentLocomotionState);
 	DOREPLIFETIME(ATPSCharacter, CurrentCharacterState);
 
-	//DOREPLIFETIME(ATPSCharacter, MovementSpeedModifier);
+	DOREPLIFETIME(ATPSCharacter, MovementSpeedModifier);
 
 	DOREPLIFETIME(ATPSCharacter, IsAiming);
 	DOREPLIFETIME(ATPSCharacter, IsFiring);
 	DOREPLIFETIME(ATPSCharacter, IsBoosting);
 	DOREPLIFETIME(ATPSCharacter, IsCrouchInputReceived);
+
+
+	//DOREPLIFETIME(ATPSCharacter, ShouldNotify);
 }
 
 void ATPSCharacter::BeginPlay()
@@ -156,7 +159,7 @@ float ATPSCharacter::GetSpeedModifierForLocomotionState(const ETPSLocomotionStat
 float ATPSCharacter::UpdateCharacterSpeedForCurrentState()
 {
 	float baseSpeed = GetBaseSpeedForCharacterState(CurrentCharacterState);
-	//float locomotionStateModifier = GetSpeedModifierForLocomotionState(CurrentLocomotionState);
+	float locomotionStateModifier = GetSpeedModifierForLocomotionState(CurrentLocomotionState);
 
 	//float modifier = MovementSpeedModifier;
 	// Set by GAS
@@ -203,6 +206,8 @@ void ATPSCharacter::UpdateInputContextForCurrentState()
 void ATPSCharacter::EvaluateStateAndApplyUpdates()
 {
 	UE_LOG(LogTemp, Log, TEXT("EVAL-CHARACTER"));
+
+	SyncAttributesFromGAS();
 
 	EvaluateLocomotionStateForCurrentInput();
 	UpdateCharacterSpeedForCurrentState();
@@ -381,19 +386,19 @@ void ATPSCharacter::OnArmorAttributeChanged(const FOnAttributeChangeData& data) 
 	UE_LOG(LogTemp, Log, TEXT("OnArmorChange"));
 	ShouldNotify = true;
 
-	CurrentArmor = data.NewValue;
+	//CurrentArmor = data.NewValue;
 }
 void ATPSCharacter::OnHealthAttributeChanged(const FOnAttributeChangeData& data) {
 	UE_LOG(LogTemp, Log, TEXT("OnHealthChange"));
 	ShouldNotify = true;
 
-	CurrentHealth = data.NewValue;
+	//CurrentHealth = data.NewValue;
 }
 void ATPSCharacter::OnMovementAttributeChanged(const FOnAttributeChangeData& data) {
 	UE_LOG(LogTemp, Log, TEXT("OnMovementChange"));
 	ShouldNotify = true;
 
-	MovementSpeedModifier = data.NewValue;
+	//MovementSpeedModifier = data.NewValue;
 }
 
 void ATPSCharacter::SyncAttributesFromGAS() {
