@@ -34,9 +34,6 @@ void ATPSCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 	DOREPLIFETIME(ATPSCharacter, IsFiring);
 	DOREPLIFETIME(ATPSCharacter, IsBoosting);
 	DOREPLIFETIME(ATPSCharacter, IsCrouchInputReceived);
-
-
-	//DOREPLIFETIME(ATPSCharacter, ShouldNotify);
 }
 
 void ATPSCharacter::BeginPlay()
@@ -88,14 +85,18 @@ void ATPSCharacter::ApplyLocomotionState(const ETPSLocomotionState LocomotionSta
 	PreviousLocomotionState = CurrentLocomotionState;
 	CurrentLocomotionState = LocomotionState;
 
+	// Cascade to inner components (adjusts collider height)
+	if (CurrentLocomotionState == Crouching) {
+		Crouch();
+	}
+	else {
+		UnCrouch();
+	}
+
 	ShouldNotify = true;
 }
 void ATPSCharacter::RevertLocomotionState() {
-	ETPSLocomotionState swap = PreviousLocomotionState;
-	CurrentLocomotionState = PreviousLocomotionState;
-	PreviousLocomotionState = swap;
-
-	ShouldNotify = true;
+	ApplyLocomotionState(PreviousLocomotionState);
 }
 
 void ATPSCharacter::ApplyCharacterState(const ETPSCharacterState CharacterState)
@@ -174,14 +175,6 @@ float ATPSCharacter::UpdateCharacterSpeedForCurrentState()
 	characterMovement->MaxWalkSpeed = CurrentMaxWalkSpeed;
 	characterMovement->MaxWalkSpeedCrouched = CurrentMaxWalkSpeed;
 
-	// Adjusts collider to crouch height
-	if (CurrentLocomotionState == Crouching) {
-		Crouch();
-	}
-	else {
-		UnCrouch();
-	}
-
 	return CurrentMaxWalkSpeed;
 }
 
@@ -230,56 +223,15 @@ void ATPSCharacter::EndFireWeapon() {
 	OnFireWeaponAbilityEnd();
 }
 
-// TODO: Make this follow a strategy pattern
+// TODO: Make this follow a strategy pattern baed on current CharacterState
 ETPSLocomotionState ATPSCharacter::EvaluateLocomotionStateForCurrentInput()
 {
-	//- Non-Combat (restricted states) -----------------------------------=
-	//
-	if (CurrentCharacterState != Combat) {
-		
-		switch (CurrentLocomotionState) {
-		case Standing:
-			if (IsCrouchInputReceived) {
-				ApplyLocomotionState(Crouching);
-			}
-			else if (IsBoosting) {
-				ApplyLocomotionState(Sprinting);
-			}
-			break;
-
-		case Crouching:
-			if (!IsCrouchInputReceived) {
-				ApplyLocomotionState(Standing);
-			}
-			break;
-
-		case Prone:
-			ApplyLocomotionState(Crouching);
-			break;
-		case Sprinting:
-			if (!IsBoosting || IsActionActive()) {
-				ApplyLocomotionState(Standing);
-			}
-			else if (IsCrouchInputReceived) {
-				ApplyLocomotionState(Crouching);
-			}
-			break;
-		default:
-			ApplyLocomotionState(Standing);
-			break;
-		}
-
-		return CurrentLocomotionState;
-	}
-
-	//- Combat (all states available) ---------------------------------------=
-	//
 	switch (CurrentLocomotionState) {
 	case Standing:
 		if (IsCrouchInputReceived) {
 			ApplyLocomotionState(Crouching);
 		}
-		else if (IsBoosting) {
+		else if (IsBoosting && !IsActionActive()) {
 			ApplyLocomotionState(Sprinting);
 		}
 		break;

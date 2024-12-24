@@ -67,9 +67,7 @@ public:
 //  STATE
 //~ ============================================================= ~//
 public:
-	UPROPERTY(BlueprintReadOnly)
-	bool IsDebugEnabled = false;
-	
+
 	//- Identity -----------------------------------------=
 	//
 	//- Name
@@ -143,6 +141,16 @@ public:
 	//
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	bool IsFiring;
+
+	//- Visibility ---------------------------------------=
+	//
+	// Shows full diagnostic data to peer client/server
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsDebugEnabled = false;
+	//
+	// Shows name/health data to peer client/server
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool ShouldRenderUnitFrame = true;
 
 //~ ============================================================= ~//
 //  Blueprint Extensions
