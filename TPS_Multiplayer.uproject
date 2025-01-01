@@ -9,7 +9,8 @@
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
-				"Engine"
+				"Engine",
+				"FunctionalTesting"
 			]
 		}
 	],
@@ -49,6 +50,26 @@
 		},
 		{
 			"Name": "HairStrands",
+			"Enabled": true
+		},
+		{
+			"Name": "AutomationDriverTests",
+			"Enabled": true
+		},
+		{
+			"Name": "EditorTests",
+			"Enabled": true
+		},
+		{
+			"Name": "FunctionalTestingEditor",
+			"Enabled": true
+		},
+		{
+			"Name": "RuntimeTests",
+			"Enabled": true
+		},
+		{
+			"Name": "TestSamples",
 			"Enabled": true
 		}
 	]
