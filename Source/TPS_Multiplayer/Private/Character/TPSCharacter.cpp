@@ -17,6 +17,24 @@ ATPSCharacter::ATPSCharacter()
 
 	UnitFrameWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("UnitFrameWidget"));
 	DebugFrameWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("DebugFrameWidget"));
+
+	//- Default Values ------------------------------------=
+	//
+	// Used for testing and default values.
+	//   Will be overridden in Blueprints or in BeginPlay()
+	//
+	CurrentHealth = 100;
+	MaxHealth = 100;
+	CurrentArmor = 100;
+	MaxArmor = 100;
+	//
+	MovementSpeedModifier = 1.0;
+	CurrentMaxWalkSpeed = 200;
+	//
+	CurrentCharacterState = Casual;
+	PreviousCharacterState = Incapacitated;
+	CurrentLocomotionState = Standing;
+	PreviousLocomotionState = Crouching;
 }
 
 void ATPSCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
@@ -109,11 +127,7 @@ void ATPSCharacter::ApplyCharacterState(const ETPSCharacterState CharacterState)
 	ShouldNotify = true;
 }
 void ATPSCharacter::RevertCharacterState() {
-	ETPSCharacterState swap = PreviousCharacterState;
-	CurrentCharacterState = PreviousCharacterState;
-	PreviousCharacterState = swap;
-
-	ShouldNotify = true;
+	ApplyCharacterState(PreviousCharacterState);
 }
 
 /**
@@ -226,6 +240,8 @@ void ATPSCharacter::EndFireWeapon() {
 // TODO: Make this follow a strategy pattern baed on current CharacterState
 ETPSLocomotionState ATPSCharacter::EvaluateLocomotionStateForCurrentInput()
 {
+	// TODO: Transitions based on allowed LocomotionStates for CharacterState
+
 	switch (CurrentLocomotionState) {
 	case Standing:
 		if (IsCrouchInputReceived) {
@@ -238,7 +254,11 @@ ETPSLocomotionState ATPSCharacter::EvaluateLocomotionStateForCurrentInput()
 
 	case Crouching:
 		if (!IsCrouchInputReceived) {
-			ApplyLocomotionState(Standing);
+			if (IsBoosting) {
+				ApplyLocomotionState(Sprinting);
+			} else {
+				ApplyLocomotionState(Standing);
+			}
 		}
 		break;
 
