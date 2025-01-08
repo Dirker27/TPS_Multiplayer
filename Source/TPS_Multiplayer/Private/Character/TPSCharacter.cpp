@@ -48,10 +48,11 @@ void ATPSCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 
 	DOREPLIFETIME(ATPSCharacter, MovementSpeedModifier);
 
-	DOREPLIFETIME(ATPSCharacter, IsAiming);
-	DOREPLIFETIME(ATPSCharacter, IsFiring);
 	DOREPLIFETIME(ATPSCharacter, IsBoosting);
 	DOREPLIFETIME(ATPSCharacter, IsCrouchInputReceived);
+	DOREPLIFETIME(ATPSCharacter, IsAiming);
+	DOREPLIFETIME(ATPSCharacter, IsFiring);
+	DOREPLIFETIME(ATPSCharacter, IsInteracting);
 }
 
 void ATPSCharacter::BeginPlay()
@@ -68,10 +69,25 @@ void ATPSCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	SyncAttributesFromGAS();
+
+	ETPSLocomotionState evaluatedState = EvaluateLocomotionStateForCurrentInput();
+	if (evaluatedState != CurrentLocomotionState)
+	{
+		ApplyLocomotionState(evaluatedState);
+	}
+	SyncComponentsFromState();
+
 	if (ShouldNotify) {
 		NotifyDisplayWidgets.Broadcast();
 		ShouldNotify = false;
 	}
+}
+
+void ATPSCharacter::SyncComponentsFromState()
+{
+	UpdateCharacterSpeedForCurrentState();
+	UpdateInputContextForCurrentState();
 }
 
 // AI Enhancement - Detection FOV is rooted to Character's HEAD.
@@ -107,7 +123,8 @@ void ATPSCharacter::ApplyLocomotionState(const ETPSLocomotionState LocomotionSta
 	if (CurrentLocomotionState == Crouching) {
 		Crouch();
 	}
-	else {
+	else if (PreviousLocomotionState == Crouching)
+	{
 		UnCrouch();
 	}
 
@@ -185,6 +202,8 @@ float ATPSCharacter::UpdateCharacterSpeedForCurrentState()
 
 	CurrentMaxWalkSpeed = baseSpeed * MovementSpeedModifier;
 
+	// TODO: Lerp accel/decell?
+
 	UCharacterMovementComponent* characterMovement = GetCharacterMovement();
 	characterMovement->MaxWalkSpeed = CurrentMaxWalkSpeed;
 	characterMovement->MaxWalkSpeedCrouched = CurrentMaxWalkSpeed;
@@ -214,14 +233,9 @@ void ATPSCharacter::EvaluateStateAndApplyUpdates()
 {
 	UE_LOG(LogTemp, Log, TEXT("EVAL-CHARACTER"));
 
-	SyncAttributesFromGAS();
-
 	EvaluateLocomotionStateForCurrentInput();
-	UpdateCharacterSpeedForCurrentState();
-	UpdateInputContextForCurrentState();
-
-	ShouldNotify = true;
 }
+
 
 void ATPSCharacter::StartAim() {
 	OnAimAbilityStart();
@@ -242,7 +256,25 @@ ETPSLocomotionState ATPSCharacter::EvaluateLocomotionStateForCurrentInput()
 {
 	// TODO: Transitions based on allowed LocomotionStates for CharacterState
 
-	switch (CurrentLocomotionState) {
+	// Character State Overrides
+	if (CurrentCharacterState == Incapacitated)
+	{
+		return Ragdoll;
+	}
+
+	// Simplified State Tree (Casual & Combat)
+	if (IsCrouchInputReceived)
+	{
+		return Crouching;
+	}
+	if (IsBoosting && !IsActionActive())
+	{
+		return Sprinting;
+	}
+
+	return Standing;
+
+	/*switch (CurrentLocomotionState) {
 	case Standing:
 		if (IsCrouchInputReceived) {
 			ApplyLocomotionState(Crouching);
@@ -281,11 +313,11 @@ ETPSLocomotionState ATPSCharacter::EvaluateLocomotionStateForCurrentInput()
 		break;
 	}
 
-	return CurrentLocomotionState;
+	return CurrentLocomotionState;*/
 }
 
 bool ATPSCharacter::IsActionActive() const {
-	return IsAiming || IsFiring;
+	return IsAiming || IsFiring || IsInteracting;
 }
 
 

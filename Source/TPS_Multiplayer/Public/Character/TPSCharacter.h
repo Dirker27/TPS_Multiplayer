@@ -141,6 +141,9 @@ public:
 	//
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	bool IsFiring;
+	//
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
+	bool IsInteracting;
 
 	//- Visibility ---------------------------------------=
 	//
@@ -203,6 +206,11 @@ public:
 //~ ================================================================ ~//
 //  Character Logic
 //~ ================================================================ ~//
+
+private:
+	// Called every frame.
+	//  Set state-driven values in subcomponents.
+	void SyncComponentsFromState();
 
 public:
 	// Call after every action that modifies state.
