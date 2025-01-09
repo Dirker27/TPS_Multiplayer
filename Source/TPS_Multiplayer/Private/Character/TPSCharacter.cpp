@@ -63,6 +63,17 @@ void ATPSCharacter::BeginPlay()
 	{
 		// Init
 	}
+
+	/*static ConstructorHelpers::FClassFinder DebugWidget(TEXT("/TPS_Multiplayer/UI/TPS_RemotePlayerDebugFrame"));
+	if (DebugWidget.Succeeded())
+	{
+		DebugFrameWidget->SetWidgetClass(DebugWidget.Class);
+	}
+	static ConstructorHelpers::FClassFinder UnitFrameWidget(TEXT("/TPS_Multiplayer/UI/TPS_RemotePlayerUnitFrame"));
+	if (UnitFrameWidget.Succeeded())
+	{
+		DebugFrameWidget->SetWidgetClass(UnitFrameWidget.Class);
+	}*/
 }
 
 void ATPSCharacter::Tick(float DeltaTime)
@@ -399,7 +410,13 @@ void ATPSCharacter::OnHealthAttributeChanged(const FOnAttributeChangeData& data)
 	//CurrentHealth = data.NewValue;
 }
 void ATPSCharacter::OnMovementAttributeChanged(const FOnAttributeChangeData& data) {
-	UE_LOG(LogTemp, Log, TEXT("OnMovementChange"));
+	if (HasAuthority()) {
+		UE_LOG(LogTemp, Log, TEXT("OnMovementChange-Server"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Log, TEXT("OnMovementChange-Client"));
+	}
 	ShouldNotify = true;
 
 	//MovementSpeedModifier = data.NewValue;
