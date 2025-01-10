@@ -1,4 +1,4 @@
-// (C) ToasterCat Studios 2024
+// (C) ToasterCat Studios 20255
 
 #pragma once
 
@@ -8,11 +8,13 @@
 
 #include "AbilitySystemInterface.h"
 #include "AbilitySystemComponent.h"
+#include "TPSCharacterInventory.h"
 
 #include "Ability/AbilitySet.h"
 #include "Character/TPSLocomotionState.h"
 #include "Character/TPSCharacterState.h"
 #include "Character/TPSCharacterBodyType.h"
+#include "Inventory/TPSEquippableInventory.h"
 #include "Weapon/TPSWeapon.h"
 #include "Weapon/TPSWeaponType.h"
 
@@ -282,4 +284,11 @@ protected:
 	void OnArmorAttributeChanged(const FOnAttributeChangeData&);
 	void OnHealthAttributeChanged(const FOnAttributeChangeData&);
 	void OnMovementAttributeChanged(const FOnAttributeChangeData&);
+
+//~ ============================================================= ~//
+//  INVENTORY SYSTEM
+//~ ============================================================= ~//
+public:
+	ATPSEquippableInventory* EquippableInventory;
+	UTPSCharacterInventory* Inventory;
 };

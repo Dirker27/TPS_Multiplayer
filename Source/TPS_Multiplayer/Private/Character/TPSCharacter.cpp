@@ -1,4 +1,4 @@
-// (C) ToasterCat Studios 2024
+// (C) ToasterCat Studios 2025
 
 #include "Character/TPSCharacter.h"
 
@@ -63,17 +63,6 @@ void ATPSCharacter::BeginPlay()
 	{
 		// Init
 	}
-
-	/*static ConstructorHelpers::FClassFinder DebugWidget(TEXT("/TPS_Multiplayer/UI/TPS_RemotePlayerDebugFrame"));
-	if (DebugWidget.Succeeded())
-	{
-		DebugFrameWidget->SetWidgetClass(DebugWidget.Class);
-	}
-	static ConstructorHelpers::FClassFinder UnitFrameWidget(TEXT("/TPS_Multiplayer/UI/TPS_RemotePlayerUnitFrame"));
-	if (UnitFrameWidget.Succeeded())
-	{
-		DebugFrameWidget->SetWidgetClass(UnitFrameWidget.Class);
-	}*/
 }
 
 void ATPSCharacter::Tick(float DeltaTime)
@@ -284,47 +273,6 @@ ETPSLocomotionState ATPSCharacter::EvaluateLocomotionStateForCurrentInput()
 	}
 
 	return Standing;
-
-	/*switch (CurrentLocomotionState) {
-	case Standing:
-		if (IsCrouchInputReceived) {
-			ApplyLocomotionState(Crouching);
-		}
-		else if (IsBoosting && !IsActionActive()) {
-			ApplyLocomotionState(Sprinting);
-		}
-		break;
-
-	case Crouching:
-		if (!IsCrouchInputReceived) {
-			if (IsBoosting) {
-				ApplyLocomotionState(Sprinting);
-			} else {
-				ApplyLocomotionState(Standing);
-			}
-		}
-		break;
-
-	case Prone:
-		// STUB - just switch to Crouching for now.
-		ApplyLocomotionState(Crouching);
-		break;
-
-	case Sprinting:
-		if (!IsBoosting || IsActionActive()) {
-			ApplyLocomotionState(Standing);
-		}
-		else if (IsCrouchInputReceived) {
-			ApplyLocomotionState(Crouching);
-		}
-		break;
-
-	default:
-		ApplyLocomotionState(Standing);
-		break;
-	}
-
-	return CurrentLocomotionState;*/
 }
 
 bool ATPSCharacter::IsActionActive() const {
@@ -399,15 +347,15 @@ void ATPSCharacter::SetupInitialAbilitiesAndEffects() {
 
 void ATPSCharacter::OnArmorAttributeChanged(const FOnAttributeChangeData& data) {
 	UE_LOG(LogTemp, Log, TEXT("OnArmorChange"));
-	ShouldNotify = true;
 
-	//CurrentArmor = data.NewValue;
+	CurrentArmor = data.NewValue;
+	ShouldNotify = true;
 }
 void ATPSCharacter::OnHealthAttributeChanged(const FOnAttributeChangeData& data) {
 	UE_LOG(LogTemp, Log, TEXT("OnHealthChange"));
-	ShouldNotify = true;
 
-	//CurrentHealth = data.NewValue;
+	CurrentHealth = data.NewValue;
+	ShouldNotify = true;
 }
 void ATPSCharacter::OnMovementAttributeChanged(const FOnAttributeChangeData& data) {
 	if (HasAuthority()) {
@@ -417,9 +365,9 @@ void ATPSCharacter::OnMovementAttributeChanged(const FOnAttributeChangeData& dat
 	{
 		UE_LOG(LogTemp, Log, TEXT("OnMovementChange-Client"));
 	}
-	ShouldNotify = true;
 
-	//MovementSpeedModifier = data.NewValue;
+	MovementSpeedModifier = data.NewValue;
+	ShouldNotify = true;
 }
 
 void ATPSCharacter::SyncAttributesFromGAS() {
@@ -435,6 +383,4 @@ void ATPSCharacter::SyncAttributesFromGAS() {
 	MaxArmor = asc->GetNumericAttribute(UCharacterHealthAttributeSet::GetArmorMaxAttribute());
 
 	MovementSpeedModifier = asc->GetNumericAttribute(UStandardAttributeSet::GetMovementSpeedModifierAttribute());
-
-	ShouldNotify = true;
 }
