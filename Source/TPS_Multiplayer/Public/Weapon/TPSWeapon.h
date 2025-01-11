@@ -15,8 +15,8 @@ class TPS_MULTIPLAYER_API ATPSWeapon : public ATPSEquipableItem
     GENERATED_BODY()
 
 public:
-    ATPSWeapon();
-    ~ATPSWeapon();
+    //ATPSWeapon();
+    //~ATPSWeapon();
 
 //~ ============================================================= ~//
 //  ATTRIBUTES

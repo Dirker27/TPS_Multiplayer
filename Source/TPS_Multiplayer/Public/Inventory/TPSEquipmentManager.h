@@ -11,13 +11,13 @@
 #include "TPSEquipmentManager.generated.h"
 
 UCLASS()
-class TPS_MULTIPLAYER_API ATPSEquipmentManager : public AActor
+class TPS_MULTIPLAYER_API UTPSEquipmentManager : public UActorComponent
 {
     GENERATED_BODY()
 
 public:
-    ATPSEquipmentManager();
-    ~ATPSEquipmentManager();
+    UTPSEquipmentManager();
+    //~UTPSEquipmentManager();
 
 protected:
     virtual void BeginPlay() override;
@@ -26,10 +26,12 @@ protected:
 //  STATE
 //~ ============================================================= ~//
 public:
-    ETPSEquipmentSlot ActiveEquipmentSlot;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TEnumAsByte<ETPSEquipmentSlot> ActiveEquipmentSlot;
 
-    //private WeaponController weaponController;
-    UTPSLoadout Loadout;
+    //WeaponController weaponController;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TObjectPtr<UTPSLoadout> Loadout;
 
 //~ ============================================================= ~//
 //  CONFIGURATION
@@ -98,18 +100,18 @@ protected:
     void EquipAndArm(ETPSEquipmentSlot equipmentSlot);
 
     UFUNCTION(BlueprintCallable)
-    void EquipToPrimaryWeaponHand(ATPSWeapon* weapon);
+    void EquipToPrimaryWeaponHand(ATPSEquipableItem* weapon);
     UFUNCTION(BlueprintCallable)
-    void EquipToSecondaryWeaponHand(ATPSWeapon* weapon);
+    void EquipToSecondaryWeaponHand(ATPSEquipableItem* weapon);
     UFUNCTION(BlueprintCallable)
-    void EquipToPrimaryHolster(ATPSWeapon* weapon);
+    void EquipToPrimaryHolster(ATPSEquipableItem* weapon);
     UFUNCTION(BlueprintCallable)
-	void EquipToSecondaryHolster(ATPSWeapon* weapon);
+	void EquipToSecondaryHolster(ATPSEquipableItem* weapon);
     UFUNCTION(BlueprintCallable)
-    void EquipToTacticalHolster(ATPSWeapon* weapon);
+    void EquipToTacticalHolster(ATPSEquipableItem* weapon);
     UFUNCTION(BlueprintCallable)
-	void EquipToLethalHolster(ATPSWeapon* weapon);
+	void EquipToLethalHolster(ATPSEquipableItem* weapon);
     UFUNCTION(BlueprintCallable)
-    void EquipToBackHolster(ATPSWeapon* weapon);
+    void EquipToBackHolster(ATPSEquipableItem* weapon);
 
 };

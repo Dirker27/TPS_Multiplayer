@@ -15,6 +15,9 @@ ATPSCharacter::ATPSCharacter()
 {
  	PrimaryActorTick.bCanEverTick = true;
 
+	EquipmentManager = CreateDefaultSubobject<UTPSEquipmentManager>(TEXT("EquipmentManager"));
+	Inventory = CreateDefaultSubobject<UTPSCharacterInventory>(TEXT("Inventory"));
+
 	UnitFrameWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("UnitFrameWidget"));
 	DebugFrameWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("DebugFrameWidget"));
 

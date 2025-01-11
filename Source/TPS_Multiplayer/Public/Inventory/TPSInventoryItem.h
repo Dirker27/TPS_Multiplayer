@@ -16,12 +16,12 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Identity")
 	FName Name;
 
-	//UPROPERTY(EditAnywhere, Category = "Identity")
-	//TObjectPtr<FSkeletalMeshModel> Avatar;
+	UPROPERTY(EditAnywhere, Category = "Identity")
+	TSubclassOf<USkeletalMesh> Avatar;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Quantity")
 	bool IsStackable;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Quantity")
 	int Quantity;
 };

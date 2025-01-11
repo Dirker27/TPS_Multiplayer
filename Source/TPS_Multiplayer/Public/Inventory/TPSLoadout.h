@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 
+#include "Inventory/TPSEquipmentSlot.h"
 #include "Weapon/TPSWeapon.h"
 
 #include "TPSLoadout.generated.h"
@@ -13,31 +14,51 @@ class TPS_MULTIPLAYER_API UTPSLoadout : public UDataAsset
 {
     GENERATED_BODY()
 
-private:
-    TObjectPtr<ATPSWeapon> primaryWeapon;
-    TObjectPtr<ATPSWeapon> secondaryWeapon;
-    TObjectPtr<ATPSWeapon> tertiaryWeapon;
-
-    TObjectPtr<ATPSWeapon> lethalThrowable;
-    TObjectPtr<ATPSWeapon> tacticalThrowable;
+public:
+    UPROPERTY(EditDefaultsOnly)
+    TSubclassOf<ATPSEquipableItem> primaryWeapon;
+    UPROPERTY(EditDefaultsOnly)
+    TSubclassOf<ATPSEquipableItem> secondaryWeapon;
+    UPROPERTY(EditDefaultsOnly)
+    TSubclassOf<ATPSEquipableItem> tertiaryWeapon;
+    UPROPERTY(EditDefaultsOnly)
+    TSubclassOf<ATPSEquipableItem> lethalEquipment;
+    UPROPERTY(EditDefaultsOnly)
+    TSubclassOf<ATPSEquipableItem> tacticalEquipment;
 
 public:
-    ATPSWeapon* GetWeaponFromEquipmentSlot(ETPSEquipmentSlot slot)
+    TObjectPtr<ATPSEquipableItem> PrimaryWeaponInstance;
+    TObjectPtr<ATPSEquipableItem> SecondaryWeaponInstance;
+    TObjectPtr<ATPSEquipableItem> TertiaryWeaponInstance;
+
+    TObjectPtr<ATPSEquipableItem> LethalEquipmentInstance;
+    TObjectPtr<ATPSEquipableItem> TacticalEquipmentInstance;
+
+public:
+    ATPSEquipableItem* GetItemFromEquipmentSlot(ETPSEquipmentSlot slot)
     {
         switch (slot)
         {
-        case PrimaryWeapon:
-            return primaryWeapon.Get();
-        case SecondaryWeapon:
-            return secondaryWeapon.Get();
-        case TertiaryWeapon:
-            return tertiaryWeapon.Get();
-        case LethalThrowable:
-            return lethalThrowable.Get();
-        case TacticalThrowable:
-            return tacticalThrowable.Get();
-        default:
-            return nullptr;
+        case ETPSEquipmentSlot::PrimaryWeapon:
+            return PrimaryWeaponInstance;
+        case ETPSEquipmentSlot::SecondaryWeapon:
+            return SecondaryWeaponInstance;
+        case ETPSEquipmentSlot::TertiaryWeapon:
+            return TertiaryWeaponInstance;
+        case ETPSEquipmentSlot::LethalEquipment:
+            return LethalEquipmentInstance;
+        case ETPSEquipmentSlot::TacticalEquipment:
+            return TacticalEquipmentInstance;
         }
+        return nullptr;
+    }
+
+    void BindItemToEquipmentSlot(ATPSEquipableItem* item, ETPSEquipmentSlot slot)
+    {
+        /*switch (slot)
+        {
+        case PrimaryWeapon:
+            PrimaryWeaponInstance.;
+        }*/
     }
 };

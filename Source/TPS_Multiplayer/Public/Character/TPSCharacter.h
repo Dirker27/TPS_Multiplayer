@@ -1,4 +1,4 @@
-// (C) ToasterCat Studios 20255
+// (C) ToasterCat Studios 2025
 
 #pragma once
 
@@ -59,10 +59,6 @@ public:
 	void GetActorEyesViewPoint(FVector& Location, FRotator& Rotation) const override;
 	void FellOutOfWorld(const class UDamageType& dmgType) override;
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
-public:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Mesh Configuration")
-    FName EyeSocketName;
 
 //~ ============================================================= ~//
 //  STATE
@@ -126,8 +122,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TEnumAsByte<ETPSWeaponType> EquippedWeaponType;
 	//
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	ATPSWeapon* EquippedWeapon	{ nullptr };
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	//TPSWeapon* EquippedWeapon	{ nullptr };
 
 	//- Controller Input ----------------------------------=
 	//
@@ -293,7 +289,14 @@ protected:
 //~ ============================================================= ~//
 public:
 	UPROPERTY(EditAnywhere, Category="Inventory")
-	ATPSEquipmentManager* EquippableInventory;
+	TObjectPtr<UTPSEquipmentManager> EquipmentManager;
 	UPROPERTY(EditAnywhere, Category="Inventory")
-	UTPSCharacterInventory* Inventory;
+	TObjectPtr<UTPSCharacterInventory> Inventory;
+
+//~ ============================================================= ~//
+//  CONFIGURATION
+//~ ============================================================= ~//
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+	FName EyeSocketName;
 };

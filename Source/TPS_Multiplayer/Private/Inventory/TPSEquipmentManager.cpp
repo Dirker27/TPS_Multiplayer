@@ -2,19 +2,21 @@
 
 #include "Inventory/TPSEquipmentManager.h"
 
-ATPSEquipmentManager::ATPSEquipmentManager() { }
-ATPSEquipmentManager::~ATPSEquipmentManager() { }
+UTPSEquipmentManager::UTPSEquipmentManager()
+{
+    Loadout = CreateDefaultSubobject<UTPSLoadout>(TEXT("MyLoadout"));
+}
 
-void ATPSEquipmentManager::BeginPlay()
+void UTPSEquipmentManager::BeginPlay()
 {
     InstantiateLoadout();
 
-    EquipToPrimaryHolster(Loadout.GetWeaponFromEquipmentSlot(PrimaryWeapon));
-    EquipToSecondaryHolster(Loadout.GetWeaponFromEquipmentSlot(SecondaryWeapon));
-    EquipToBackHolster(Loadout.GetWeaponFromEquipmentSlot(TertiaryWeapon));
+    EquipToPrimaryHolster(Loadout->GetItemFromEquipmentSlot(PrimaryWeapon));
+    EquipToSecondaryHolster(Loadout->GetItemFromEquipmentSlot(SecondaryWeapon));
+    EquipToBackHolster(Loadout->GetItemFromEquipmentSlot(TertiaryWeapon));
 
-    EquipToLethalHolster(Loadout.GetWeaponFromEquipmentSlot(LethalThrowable));
-    EquipToTacticalHolster(Loadout.GetWeaponFromEquipmentSlot(TacticalThrowable));
+    EquipToLethalHolster(Loadout->GetItemFromEquipmentSlot(LethalEquipment));
+    EquipToTacticalHolster(Loadout->GetItemFromEquipmentSlot(TacticalEquipment));
 
     ActiveEquipmentSlot = ETPSEquipmentSlot::None;
 }
@@ -23,37 +25,37 @@ void ATPSEquipmentManager::BeginPlay()
 //  EQUIPMENT OPERATIONS
 //~ ============================================================= ~//
 
-void ATPSEquipmentManager::EquipToPrimaryWeaponHand(ATPSWeapon* weapon)
+void UTPSEquipmentManager::EquipToPrimaryWeaponHand(ATPSEquipableItem* weapon)
 {
 	// Attach to parent bone
 }
 
-void ATPSEquipmentManager::EquipToSecondaryWeaponHand(ATPSWeapon* weapon)
+void UTPSEquipmentManager::EquipToSecondaryWeaponHand(ATPSEquipableItem* weapon)
 {
 	// Attach to parent bone
 }
 
-void ATPSEquipmentManager::EquipToPrimaryHolster(ATPSWeapon* weapon)
+void UTPSEquipmentManager::EquipToPrimaryHolster(ATPSEquipableItem* weapon)
 {
 	// Attach to parent bone
 }
 
-void ATPSEquipmentManager::EquipToSecondaryHolster(ATPSWeapon* weapon)
+void UTPSEquipmentManager::EquipToSecondaryHolster(ATPSEquipableItem* weapon)
 {
 	// Attach to parent bone
 }
 
-void ATPSEquipmentManager::EquipToTacticalHolster(ATPSWeapon* weapon)
+void UTPSEquipmentManager::EquipToTacticalHolster(ATPSEquipableItem* weapon)
 {
 	// Attach to parent bone
 }
 
-void ATPSEquipmentManager::EquipToLethalHolster(ATPSWeapon* weapon)
+void UTPSEquipmentManager::EquipToLethalHolster(ATPSEquipableItem* weapon)
 {
 	// Attach to parent bone
 }
 
-void ATPSEquipmentManager::EquipToBackHolster(ATPSWeapon* weapon)
+void UTPSEquipmentManager::EquipToBackHolster(ATPSEquipableItem* weapon)
 {
 	// Attach to parent bone
 }
@@ -63,56 +65,58 @@ void ATPSEquipmentManager::EquipToBackHolster(ATPSWeapon* weapon)
 //  PUBLIC OPERATIONS
 //~ ============================================================= ~//
 
-void ATPSEquipmentManager::Ready()
+void UTPSEquipmentManager::Ready()
 {
+    if (!IsValid(Loadout)) { return; }
     ActiveEquipmentSlot = ETPSEquipmentSlot::PrimaryWeapon;
-    EquipToPrimaryWeaponHand(Loadout.GetWeaponFromEquipmentSlot(PrimaryWeapon));
+    EquipToPrimaryWeaponHand(Loadout->GetItemFromEquipmentSlot(PrimaryWeapon));
 
-    /*weaponController.activeWeapons.Add(Loadout.primaryWeapon);
+    /*weaponController.activeWeapons.Add(Loadout->primaryWeapon);
     weaponController.Ready();*/
 }
 
-void ATPSEquipmentManager::UnReady()
+void UTPSEquipmentManager::UnReady()
 {
+    if (!IsValid(Loadout)) { return; }
     /*weaponController.CancelReady();
     weaponController.activeWeapons.Clear();*/
 
-    EquipToPrimaryHolster(Loadout.GetWeaponFromEquipmentSlot(PrimaryWeapon));
-    EquipToSecondaryHolster(Loadout.GetWeaponFromEquipmentSlot(SecondaryWeapon));
-    EquipToBackHolster(Loadout.GetWeaponFromEquipmentSlot(TertiaryWeapon));
+    EquipToPrimaryHolster(Loadout->GetItemFromEquipmentSlot(PrimaryWeapon));
+    EquipToSecondaryHolster(Loadout->GetItemFromEquipmentSlot(SecondaryWeapon));
+    EquipToBackHolster(Loadout->GetItemFromEquipmentSlot(TertiaryWeapon));
 
-    EquipToLethalHolster(Loadout.GetWeaponFromEquipmentSlot(LethalThrowable));
-    EquipToTacticalHolster(Loadout.GetWeaponFromEquipmentSlot(TacticalThrowable));
+    EquipToLethalHolster(Loadout->GetItemFromEquipmentSlot(LethalEquipment));
+    EquipToTacticalHolster(Loadout->GetItemFromEquipmentSlot(TacticalEquipment));
 }
 
-void ATPSEquipmentManager::EquipPrimary()
+void UTPSEquipmentManager::EquipPrimary()
 {
     UnequipActive();
     EquipAndArm(ETPSEquipmentSlot::PrimaryWeapon);
 }
 
-void ATPSEquipmentManager::EquipSecondary()
+void UTPSEquipmentManager::EquipSecondary()
 {
     UnequipActive();
     EquipAndArm(ETPSEquipmentSlot::SecondaryWeapon);
 }
 
-void ATPSEquipmentManager::EquipTertiary() {
+void UTPSEquipmentManager::EquipTertiary() {
     UnequipActive();
     EquipAndArm(ETPSEquipmentSlot::TertiaryWeapon);
 }
 
-void ATPSEquipmentManager::EquipLethalThrowable() {
+void UTPSEquipmentManager::EquipLethalThrowable() {
     UnequipActive();
-    EquipAndArm(ETPSEquipmentSlot::LethalThrowable);
+    EquipAndArm(ETPSEquipmentSlot::LethalEquipment);
 }
 
-void ATPSEquipmentManager::EquipTacticalThrowable() {
+void UTPSEquipmentManager::EquipTacticalThrowable() {
     UnequipActive();
-    EquipAndArm(ETPSEquipmentSlot::TacticalThrowable);
+    EquipAndArm(ETPSEquipmentSlot::TacticalEquipment);
 }
 
-void ATPSEquipmentManager::WeaponSwap() {
+void UTPSEquipmentManager::WeaponSwap() {
     UE_LOG(LogTemp, Log, TEXT("Swapping Weapons..."));
 
     // Needs to acct for non-populated slots.
@@ -123,55 +127,59 @@ void ATPSEquipmentManager::WeaponSwap() {
     EquipAndArm((ETPSEquipmentSlot) nextSlot);*/
 }
 
-void ATPSEquipmentManager::EquipmentSwap() {
+void UTPSEquipmentManager::EquipmentSwap() {
     UE_LOG(LogTemp, Log, TEXT("Swapping Equipment..."));
 }
 
-void ATPSEquipmentManager::InstantiateLoadout() {
-    if (Loadout.GetWeaponFromEquipmentSlot(PrimaryWeapon)) {
-        UE_LOG(LogTemp, Log, TEXT("Instantiating Primary Weapon [", Loadout.primaryWeapon.name, "]..."));
-        //Loadout.primaryWeapon = GEEngine->SpawnActor<ATPSWeapon>();
+void UTPSEquipmentManager::InstantiateLoadout()
+{
+    if (!IsValid(Loadout)) { return; }
+
+    if (IsValid(Loadout->primaryWeapon)) {
+        UE_LOG(LogTemp, Log, TEXT("Instantiating Primary Weapon []]..."));
+        Loadout->PrimaryWeaponInstance = GetWorld()->SpawnActor<ATPSEquipableItem>(Loadout->primaryWeapon);
+    }
+    /*
+    if (Loadout->GetItemFromEquipmentSlot(SecondaryWeapon)) {
+        UE_LOG(LogTemp, Log, TEXT("Instantiating Secondary Weapon [%s]]..."), Loadout->secondaryWeapon);        //Loadout->secondaryWeapon = GameObject.Instantiate(Loadout->secondaryWeapon, transform);
+        Loadout->secondaryWeapon = GetWorld()->SpawnActor<ATPSWeapon>();
     }
 
-    if (Loadout.GetWeaponFromEquipmentSlot(PrimaryWeapon)) {
-        UE_LOG(LogTemp, Log, TEXT("Instantiating Secondary Weapon [", Loadout.secondaryWeapon.name, "]..."));
-        //Loadout.secondaryWeapon = GameObject.Instantiate(Loadout.secondaryWeapon, transform);
+    if (Loadout->GetItemFromEquipmentSlot(TertiaryWeapon)) {
+        UE_LOG(LogTemp, Log, TEXT("Instantiating Tertiary Weapon [%s]]..."), Loadout->tertiaryWeapon);
+        Loadout->tertiaryWeapon = GetWorld()->SpawnActor<ATPSWeapon>();
     }
 
-    if (Loadout.GetWeaponFromEquipmentSlot(TertiaryWeapon)) {
-        UE_LOG(LogTemp, Log, TEXT("Instantiating Tertiary Weapon [", Loadout.tertiaryWeapon->name, "]..."));
-        //Loadout.tertiaryWeapon = GameObject.Instantiate(Loadout.tertiaryWeapon, std::transform);
+    if (Loadout->GetItemFromEquipmentSlot(TacticalEquipment)) {
+        UE_LOG(LogTemp, Log, TEXT("Instantiating Tactical Equipment [%s]]..."), Loadout->tacticalEquipment);
+        Loadout->tacticalEquipment = GetWorld()->SpawnActor<ATPSWeapon>();
     }
 
-    if (Loadout.GetWeaponFromEquipmentSlot(TacticalThrowable)) {
-        UE_LOG(LogTemp, Log, TEXT("Instantiating Tactical Throwable [", Loadout.primaryWeapon.name, "]..."));
-        //Loadout.tacticalThrowable = GameObject.Instantiate(Loadout.tacticalThrowable, transform);
-    }
-
-    if (Loadout.GetWeaponFromEquipmentSlot(LethalThrowable)) {
-        UE_LOG(LogTemp, Log, TEXT("Instantiating Lethal Throwable [", Loadout.primaryWeapon.name, "]..."));
-        //Loadout.lethalThrowable = GameObject.Instantiate(Loadout.lethalThrowable, transform);
-    }
+    if (Loadout->GetItemFromEquipmentSlot(LethalEquipment)) {
+        UE_LOG(LogTemp, Log, TEXT("Instantiating Lethal Equipment [%s]]..."), Loadout->lethalEquipment);
+        Loadout->lethalEquipment = GetWorld()->SpawnActor<ATPSWeapon>();
+    }*/
 }
 
-void ATPSEquipmentManager::UnequipActive() {
+void UTPSEquipmentManager::UnequipActive() {
+    if (!IsValid(Loadout)) { return; }
     if (ActiveEquipmentSlot == ETPSEquipmentSlot::None) { return; }
 
     switch (ActiveEquipmentSlot) {
     case PrimaryWeapon:
-        EquipToPrimaryHolster(Loadout.GetWeaponFromEquipmentSlot(PrimaryWeapon));
+        EquipToPrimaryHolster(Loadout->GetItemFromEquipmentSlot(PrimaryWeapon));
         break;
     case SecondaryWeapon:
-        EquipToSecondaryHolster(Loadout.GetWeaponFromEquipmentSlot(SecondaryWeapon));
+        EquipToSecondaryHolster(Loadout->GetItemFromEquipmentSlot(SecondaryWeapon));
         break;
     case TertiaryWeapon:
-        EquipToBackHolster(Loadout.GetWeaponFromEquipmentSlot(TertiaryWeapon));
+        EquipToBackHolster(Loadout->GetItemFromEquipmentSlot(TertiaryWeapon));
         break;
-    case LethalThrowable:
-        EquipToLethalHolster(Loadout.GetWeaponFromEquipmentSlot(LethalThrowable));
+    case LethalEquipment:
+        EquipToLethalHolster(Loadout->GetItemFromEquipmentSlot(LethalEquipment));
         break;
-    case TacticalThrowable:
-        EquipToTacticalHolster(Loadout.GetWeaponFromEquipmentSlot(TacticalThrowable));
+    case TacticalEquipment:
+        EquipToTacticalHolster(Loadout->GetItemFromEquipmentSlot(TacticalEquipment));
         break;
     case None:
     default:
@@ -182,14 +190,16 @@ void ATPSEquipmentManager::UnequipActive() {
     ActiveEquipmentSlot = ETPSEquipmentSlot::None;
 }
 
-void ATPSEquipmentManager::EquipAndArm(ETPSEquipmentSlot equipmentSlot) {
-    ATPSWeapon* weapon = Loadout.GetWeaponFromEquipmentSlot(equipmentSlot);
+void UTPSEquipmentManager::EquipAndArm(ETPSEquipmentSlot equipmentSlot) {
+    if (!IsValid(Loadout)) { return; }
 
-    if (weapon) {
-        EquipToPrimaryWeaponHand(weapon);
+    ATPSEquipableItem* item = Loadout->GetItemFromEquipmentSlot(equipmentSlot);
+
+    if (item) {
+        EquipToPrimaryWeaponHand(item);
         //weaponController.activeWeapons.Add(weapon);
         ActiveEquipmentSlot = equipmentSlot;
 
-        weapon->Equip();
+        item->Equip();
     }
 }

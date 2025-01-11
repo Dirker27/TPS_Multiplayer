@@ -1,9 +1,3 @@
+// (C) ToasterCat Studios 2025
+
 #include "Weapon/TPSPlaceable.h"
-
-ATPSPlaceable::ATPSPlaceable() {
-    PrimaryActorTick.bCanEverTick = true;
-}
-
-ATPSPlaceable::~ATPSPlaceable() {
-    // destruct
-}

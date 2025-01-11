@@ -16,8 +16,8 @@ class TPS_MULTIPLAYER_API ATPSEquipableItem : public AActor
     GENERATED_BODY()
 
 public:
-    ATPSEquipableItem();
-    ~ATPSEquipableItem();
+    //ATPSEquipableItem();
+    //~ATPSEquipableItem();
 
 //~ ============================================================= ~//
 //  COMPONENTS
@@ -51,8 +51,27 @@ public:
 //  COMPONENTS
 //~ ============================================================= ~//
 public:
+    //- Equipable -----------------------------------------=
+    //
     UFUNCTION(BlueprintCallable)
     void Equip();
+    UFUNCTION(BlueprintImplementableEvent)
+    void OnEquip();
+    //
     UFUNCTION(BlueprintCallable)
     void UnEquip();
+    UFUNCTION(BlueprintImplementableEvent)
+    void OnUnEquip();
+
+    //- Usable ------------------------------------------=
+    //  (TODO: Extract to UsableItem?)
+    UFUNCTION(BlueprintCallable)
+    void StartUse();
+    UFUNCTION(BlueprintImplementableEvent)
+    void OnStartUse();
+    //
+    UFUNCTION(BlueprintCallable)
+    void StopUse();
+    UFUNCTION(BlueprintImplementableEvent)
+    void OnStopUse();
 };

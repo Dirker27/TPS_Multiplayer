@@ -10,7 +10,7 @@
 #include "TPSCharacterInventory.generated.h"
 
 UCLASS()
-class TPS_MULTIPLAYER_API UTPSCharacterInventory : public UDataAsset
+class TPS_MULTIPLAYER_API UTPSCharacterInventory : public UActorComponent
 {
     GENERATED_BODY()
 public:

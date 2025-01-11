@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Weapon/TPSWeaponType.h"
 
 #include "TPSEquipmentSlot.generated.h"
 
@@ -15,8 +14,8 @@ enum ETPSEquipmentSlot : int
 	PrimaryWeapon = 1,
 	SecondaryWeapon = 2,
 	TertiaryWeapon = 3,
-	LethalThrowable = 4,
-	TacticalThrowable = 5
+	LethalEquipment = 4,
+	TacticalEquipment = 5
 };
 
 static const char* ETPSEquipmentSlotToString(const ETPSEquipmentSlot slot) {
@@ -29,10 +28,10 @@ static const char* ETPSEquipmentSlotToString(const ETPSEquipmentSlot slot) {
 		return "SecondaryWeapon";
 	case TertiaryWeapon:
 		return "TertiaryWeapon";
-	case LethalThrowable:
-		return "LethalThrowable";
-	case TacticalThrowable:
-		return "TacticalThrowable";
+	case LethalEquipment:
+		return "LethalEquipment";
+	case TacticalEquipment:
+		return "TacticalEquipment";
 	default:
 		return "UNSUPPORTED";
 	}

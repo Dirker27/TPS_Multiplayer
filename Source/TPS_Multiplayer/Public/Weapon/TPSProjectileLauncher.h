@@ -15,6 +15,4 @@ class TPS_MULTIPLAYER_API ATPSProjectileLauncher : public ATPSWeapon
     GENERATED_BODY()
 
 public:
-    ATPSProjectileLauncher();
-    ~ATPSProjectileLauncher();
 };

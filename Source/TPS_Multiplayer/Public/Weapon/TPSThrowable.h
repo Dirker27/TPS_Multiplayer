@@ -13,8 +13,4 @@ UCLASS()
 class TPS_MULTIPLAYER_API ATPSThrowable : public ATPSWeapon
 {
     GENERATED_BODY()
-
-public:
-    ATPSThrowable();
-    ~ATPSThrowable();
 };
