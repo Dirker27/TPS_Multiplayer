@@ -7,3 +7,13 @@ ATPSWeapon::ATPSWeapon() {
 ATPSWeapon::~ATPSWeapon() {
     // destruct
 }
+
+void ATPSWeapon::Equip()
+{
+    Super::Equip();
+}
+
+void ATPSWeapon::UnEquip()
+{
+    Super::UnEquip();
+}

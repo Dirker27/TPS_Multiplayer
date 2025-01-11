@@ -14,7 +14,7 @@
 #include "Character/TPSLocomotionState.h"
 #include "Character/TPSCharacterState.h"
 #include "Character/TPSCharacterBodyType.h"
-#include "Inventory/TPSEquippableInventory.h"
+#include "Inventory/TPSEquipmentManager.h"
 #include "Weapon/TPSWeapon.h"
 #include "Weapon/TPSWeaponType.h"
 
@@ -52,7 +52,6 @@ public:
 	FUpdateAttributeDisplay NotifyDisplayWidgets;
 private:
 	bool ShouldNotify = false;
- 
 
 // UE Implementables
 public:
@@ -73,45 +72,45 @@ public:
 	//- Identity -----------------------------------------=
 	//
 	//- Name
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Identity")
 	FString Name;
 	//
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Identity")
 	TEnumAsByte<ETPSCharacterBodyType> CharacterBodyType;
 
 	//- Attributes ----------------------------------------=
 	// (sync'd from GAS attributes where applicable)
 	//
 	//- Health
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State", Replicated)
 	float CurrentHealth;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 	float MaxHealth;
 	//
 	//- Armor
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State", Replicated)
 	float CurrentArmor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 	float MaxArmor;
 	//
 	//- Movement Speed
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State", Replicated)
 	float MovementSpeedModifier;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 	float CurrentMaxWalkSpeed;
 
 	//- State ------------------------------------------------=
 	//
 	//- Character State
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State", Replicated)
 	TEnumAsByte<ETPSCharacterState> CurrentCharacterState;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 	TEnumAsByte<ETPSCharacterState> PreviousCharacterState;
 	//
 	//- Locomotion State
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State", Replicated)
 	TEnumAsByte<ETPSLocomotionState> CurrentLocomotionState;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 	TEnumAsByte<ETPSLocomotionState> PreviousLocomotionState;
 	//
 	// True if Character is not Incapacitated.
@@ -132,29 +131,33 @@ public:
 
 	//- Controller Input ----------------------------------=
 	//
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State.Input", Replicated)
 	bool IsBoosting;
 	//
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State.Input", Replicated)
+
 	bool IsCrouchInputReceived;
 	//
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State.Input", Replicated)
+
 	bool IsAiming;
 	//
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State.Input", Replicated)
+
 	bool IsFiring;
 	//
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State.Input", Replicated)
+
 	bool IsInteracting;
 
 	//- Visibility ---------------------------------------=
 	//
 	// Shows full diagnostic data to peer client/server
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State.Render")
 	bool IsDebugEnabled = false;
 	//
 	// Shows name/health data to peer client/server
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State.Render")
 	bool ShouldRenderUnitFrame = true;
 
 //~ ============================================================= ~//
@@ -289,6 +292,8 @@ protected:
 //  INVENTORY SYSTEM
 //~ ============================================================= ~//
 public:
-	ATPSEquippableInventory* EquippableInventory;
+	UPROPERTY(EditAnywhere, Category="Inventory")
+	ATPSEquipmentManager* EquippableInventory;
+	UPROPERTY(EditAnywhere, Category="Inventory")
 	UTPSCharacterInventory* Inventory;
 };

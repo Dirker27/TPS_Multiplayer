@@ -3,18 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ArrowComponent.h"
 
-#include "AbilitySystemInterface.h"
-#include "AbilitySystemComponent.h"
-
+#include "Inventory/TPSEquipableItem.h"
 #include "Weapon/TPSWeaponType.h"
-#include "Weapon/Attributes/WeaponAttributeSet.h"
 
 #include "TPSWeapon.generated.h"
 
 UCLASS()
-class TPS_MULTIPLAYER_API ATPSWeapon : public AActor
+class TPS_MULTIPLAYER_API ATPSWeapon : public ATPSEquipableItem
 {
     GENERATED_BODY()
 
@@ -23,27 +19,11 @@ public:
     ~ATPSWeapon();
 
 //~ ============================================================= ~//
-//  COMPONENTS
-//~ ============================================================= ~//
-public:
-    TObjectPtr<USkeletalMeshComponent> Mesh;
-
-#if WITH_EDITORONLY_DATA
-	/** Component shown in the editor only to indicate character facing */
-	UPROPERTY()
-	TObjectPtr<UArrowComponent> ArrowComponent;
-#endif
-
-//~ ============================================================= ~//
 //  ATTRIBUTES
 //~ ============================================================= ~//
 public:
     //- Identity ------------------------------------------=
     //
-    //- Name
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString Name;
-    // 
     //- Type
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     TEnumAsByte<ETPSWeaponType> Type;
@@ -54,11 +34,17 @@ public:
 public:
     //- Transforms -------------------------------------------=
 	//
-	//- CharacterState
+	//- WeaponType
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	static FString WeaponTypeToFString(const ETPSWeaponType t) {
 		return FString(ETPSWeaponTypeToString(t));
 	};
 
+//~ ============================================================= ~//
+//  Equipable Overrides
+//~ ============================================================= ~//
+public:
+	virtual void Equip();
+    virtual void UnEquip();
 };
 
