@@ -7,7 +7,7 @@
 
 #include "AbilitySystemInterface.h"
 #include "AbilitySystemComponent.h"
-#include "Behavior/TPSMountableActor.h"
+#include "Behavior/TPSMountable.h"
 
 #include "TPSEquipableItem.generated.h"
 

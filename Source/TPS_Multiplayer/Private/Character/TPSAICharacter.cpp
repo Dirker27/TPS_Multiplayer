@@ -10,10 +10,6 @@ ATPSAICharacter::ATPSAICharacter() {
 	WeaponAttributes = CreateDefaultSubobject<UWeaponAttributeSet>(TEXT("WeaponAttributes"));
 }
 
-ATPSAICharacter::~ATPSAICharacter() {
-	// destruct
-}
-
 void ATPSAICharacter::BeginPlay() {
 	Super::BeginPlay();
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);

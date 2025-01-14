@@ -6,7 +6,7 @@
 
 #include "Behavior/TPSMountPoint.h"
 
-#include "TPSMountableActor.generated.h"
+#include "TPSMountable.generated.h"
 
 UCLASS()
 class TPS_MULTIPLAYER_API ATPSMountableActor : public AActor
@@ -14,16 +14,7 @@ class TPS_MULTIPLAYER_API ATPSMountableActor : public AActor
     GENERATED_BODY()
 
 protected:
-    virtual void Tick(float DeltaSeconds) override
-    {
-        if (IsValid(MountPoint))
-        {
-            SetActorLocationAndRotation(
-                MountPoint->GetCurrentPosition(),
-                MountPoint->GetCurrentRotation()
-            );
-        }
-    };
+    virtual void Tick(float DeltaSeconds) override;
 
 //~ ============================================================= ~//
 //  ATTRIBUTES
@@ -54,21 +45,12 @@ public:
 //~ ============================================================= ~//
 public:
     UFUNCTION(BlueprintCallable)
-    void Mount (UTPSMountPoint* target)
-    {
-        UE_LOG(LogTemp, Log, TEXT("Mounted!"));
-        MountPoint = target;
-        OnMount();
-    }
+    void Mount (UTPSMountPoint* target);
     UFUNCTION(BlueprintImplementableEvent)
     void OnMount();
 
     UFUNCTION(BlueprintCallable)
-    void UnMount()
-    {
-        MountPoint = nullptr;
-        OnUnMount();
-    }
+    void UnMount();
     UFUNCTION(BlueprintImplementableEvent)
     void OnUnMount();
 };

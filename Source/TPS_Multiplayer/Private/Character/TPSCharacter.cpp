@@ -15,13 +15,47 @@ ATPSCharacter::ATPSCharacter()
 {
  	PrimaryActorTick.bCanEverTick = true;
 
+	Inventory = CreateDefaultSubobject<UTPSCharacterInventory>(TEXT("Inventory"));
+
 	EquipmentManager = CreateDefaultSubobject<UTPSEquipmentManager>(TEXT("EquipmentManager"));
 	EquipmentManager->BindToMesh(GetMesh());
 
-	Inventory = CreateDefaultSubobject<UTPSCharacterInventory>(TEXT("Inventory"));
+	/*EquipmentManager->PrimaryWeaponHand = CreateDefaultSubobject<UTPSMountPoint>(TEXT("EM-PrimaryWeaponHand"));
+	EquipmentManager->SecondaryWeaponHand = CreateDefaultSubobject<UTPSMountPoint>(TEXT("EM-SecondaryWeaponHand"));
+	EquipmentManager->BackHolster = CreateDefaultSubobject<UTPSMountPoint>(TEXT("EM-BackHolster"));
+	EquipmentManager->LeftHipHolster = CreateDefaultSubobject<UTPSMountPoint>(TEXT("EM-LeftHipHolster"));
+	EquipmentManager->LeftLegHolster = CreateDefaultSubobject<UTPSMountPoint>(TEXT("EM-LeftLegHolster"));
+	EquipmentManager->RightHipHolster = CreateDefaultSubobject<UTPSMountPoint>(TEXT("EM-RightHipHolster"));
+	EquipmentManager->RightLegHolster = CreateDefaultSubobject<UTPSMountPoint>(TEXT("EM-RightLegHolster"));*/
 
-	UnitFrameWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("UnitFrameWidget"));
-	DebugFrameWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("DebugFrameWidget"));
+	/*EquipmentManager->PrimaryWeaponHand->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("hand_r"));
+	EquipmentManager->SecondaryWeaponHand->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("hand_l"));
+	EquipmentManager->BackHolster->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("spine_05"));
+	EquipmentManager->LeftHipHolster->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("thigh_l"));
+	EquipmentManager->LeftLegHolster->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("calf_l"));
+	EquipmentManager->RightHipHolster->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("thigh_r"));
+	EquipmentManager->RightLegHolster->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("calf_r"));*/
+
+
+	/*EquipmentManager->PrimaryWeaponHand->TargetParentComponent = GetMesh();
+	EquipmentManager->PrimaryWeaponHand->TargetSocketName = FName(TEXT("hand_r"));
+	EquipmentManager->SecondaryWeaponHand->TargetParentComponent = GetMesh();
+	EquipmentManager->SecondaryWeaponHand->TargetSocketName = FName(TEXT("hand_l"));
+	EquipmentManager->BackHolster->TargetParentComponent = GetMesh();
+	EquipmentManager->BackHolster->TargetSocketName = FName(TEXT("spine_05"));
+	EquipmentManager->LeftHipHolster->TargetParentComponent = GetMesh();
+	EquipmentManager->LeftHipHolster->TargetSocketName = FName(TEXT("thigh_l"));
+	EquipmentManager->LeftLegHolster->TargetParentComponent = GetMesh();
+	EquipmentManager->LeftLegHolster->TargetSocketName = FName(TEXT("calf_l"));
+	EquipmentManager->RightHipHolster->TargetParentComponent = GetMesh();
+	EquipmentManager->RightHipHolster->TargetSocketName = FName(TEXT("thigh_r"));
+	EquipmentManager->RightLegHolster->TargetParentComponent = GetMesh();
+	EquipmentManager->RightLegHolster->TargetSocketName = FName(TEXT("calf_r"));*/
+
+
+
+	//UnitFrameWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("UnitFrameWidget"));
+	//DebugFrameWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("DebugFrameWidget"));
 
 	//- Default Values ------------------------------------=
 	//
@@ -65,11 +99,20 @@ void ATPSCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 	DOREPLIFETIME(ATPSCharacter, IsAiming);
 	DOREPLIFETIME(ATPSCharacter, IsFiring);
 	DOREPLIFETIME(ATPSCharacter, IsInteracting);
+	DOREPLIFETIME(ATPSCharacter, IsInMenu);
 }
 
 void ATPSCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	/*EquipmentManager->PrimaryWeaponHand->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("hand_r"));
+	EquipmentManager->SecondaryWeaponHand->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("hand_l"));
+	EquipmentManager->BackHolster->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("spine_05"));
+	EquipmentManager->LeftHipHolster->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("thigh_l"));
+	EquipmentManager->LeftLegHolster->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("calf_l"));
+	EquipmentManager->RightHipHolster->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("thigh_r"));
+	EquipmentManager->RightLegHolster->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("calf_r"));*/
 	
 	if (HasAuthority())
 	{
@@ -152,6 +195,15 @@ void ATPSCharacter::ApplyCharacterState(const ETPSCharacterState CharacterState)
 
 	PreviousCharacterState = CurrentCharacterState;
 	CurrentCharacterState = CharacterState;
+
+	if (CurrentCharacterState == Combat)
+	{
+		EquipmentManager->Ready();
+	}
+	else if (PreviousCharacterState == Combat)
+	{
+		EquipmentManager->UnReady();
+	}
 
 	ShouldNotify = true;
 }
@@ -241,6 +293,7 @@ void ATPSCharacter::UpdateInputContextForCurrentState()
 }
 
 
+// TODO: DEPRECATED! DELETEME!
 void ATPSCharacter::EvaluateStateAndApplyUpdates()
 {
 	UE_LOG(LogTemp, Log, TEXT("EVAL-CHARACTER"));

@@ -20,7 +20,6 @@ class TPS_MULTIPLAYER_API ATPSAICharacter : public ATPSCharacter
 
 public:
     ATPSAICharacter();
-    ~ATPSAICharacter();
 
 public:
     virtual void BeginPlay() override;

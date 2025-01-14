@@ -14,10 +14,6 @@ UCLASS()
 class ATPSPlayerCharacter : public ATPSCharacter
 {
     GENERATED_BODY()
-
-public:
-    ATPSPlayerCharacter();
-    ~ATPSPlayerCharacter();
 	
 //~ ============================================================= ~//
 //  ABILITY SYSTEM WIRING

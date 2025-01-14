@@ -3,9 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/SphereComponent.h"
 
-//#include "Behavior/TPSMountableActor.h"
+#include "Components/SphereComponent.h"
 
 #include "TPSMountPoint.generated.h"
 
@@ -16,8 +15,6 @@ class TPS_MULTIPLAYER_API UTPSMountPoint : public USceneComponent
 
 public:
     UTPSMountPoint();
-    //UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "State")
-    //TArray<ATPSMountableActor*> MountedActors;
 
 #if WITH_EDITORONLY_DATA
 /** Component shown in the editor only to indicate character facing */
@@ -26,11 +23,25 @@ public:
 #endif
 
 //~ ============================================================= ~//
+//  Configuration
+//~ ============================================================= ~//
+public:
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "MountPoint|Configuration")
+    TWeakObjectPtr<USceneComponent> TargetParentComponent;
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "MountPoint|Configuration")
+    FName TargetSocketName;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "MountPoint|Configuration")
+    FVector OffsetPosition = FVector::Zero();
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "MountPoint|Configuration")
+    FVector OffsetEulerRotation = FVector::Zero();
+
+//~ ============================================================= ~//
 //  BEHAVIOR
 //~ ============================================================= ~//
 public:
     UFUNCTION(BlueprintCallable)
     FVector GetCurrentPosition() const;
     UFUNCTION(BlueprintCallable)
-    FRotator GetCurrentRotation() const;
+    FVector GetCurrentEulerRotation() const;
 };

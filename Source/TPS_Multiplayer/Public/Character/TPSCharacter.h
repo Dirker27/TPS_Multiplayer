@@ -78,35 +78,35 @@ public:
 	// (sync'd from GAS attributes where applicable)
 	//
 	//- Health
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Health", Replicated)
 	float CurrentHealth;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Health")
 	float MaxHealth;
 	//
 	//- Armor
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Health", Replicated)
 	float CurrentArmor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Health")
 	float MaxArmor;
 	//
 	//- Movement Speed
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Health", Replicated)
 	float MovementSpeedModifier;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Health")
 	float CurrentMaxWalkSpeed;
 
 	//- State ------------------------------------------------=
 	//
 	//- Character State
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Character", Replicated)
 	TEnumAsByte<ETPSCharacterState> CurrentCharacterState;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Character")
 	TEnumAsByte<ETPSCharacterState> PreviousCharacterState;
 	//
 	//- Locomotion State
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Locomotion", Replicated)
 	TEnumAsByte<ETPSLocomotionState> CurrentLocomotionState;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Locomotion")
 	TEnumAsByte<ETPSLocomotionState> PreviousLocomotionState;
 	//
 	// True if Character is not Incapacitated.
@@ -127,32 +127,32 @@ public:
 
 	//- Controller Input ----------------------------------=
 	//
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State.Input", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Input", Replicated)
 	bool IsBoosting;
 	//
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State.Input", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Input", Replicated)
 	bool IsCrouchInputReceived;
 	//
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State.Input", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Input", Replicated)
 	bool IsAiming;
 	//
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State.Input", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Input", Replicated)
 	bool IsFiring;
 	//
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State.Input", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Input", Replicated)
 	bool IsInteracting;
 	//
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State.Input", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Input", Replicated)
 	bool IsInMenu;
 
 	//- Visibility ---------------------------------------=
 	//
 	// Shows full diagnostic data to peer client/server
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State.Render")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Render")
 	bool IsDebugEnabled = false;
 	//
 	// Shows name/health data to peer client/server
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State.Render")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Render")
 	bool ShouldRenderUnitFrame = true;
 
 //~ ============================================================= ~//

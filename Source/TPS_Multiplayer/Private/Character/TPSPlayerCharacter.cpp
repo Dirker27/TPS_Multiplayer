@@ -5,14 +5,6 @@
 
 #include "Player/TPSPlayerState.h"
 
-ATPSPlayerCharacter::ATPSPlayerCharacter() {
-    PrimaryActorTick.bCanEverTick = true;
-}
-
-ATPSPlayerCharacter::~ATPSPlayerCharacter() {
-    // destruct
-}
-
 UAbilitySystemComponent* ATPSPlayerCharacter::GetAbilitySystemComponent() const {
 	if (ATPSPlayerState* ps = GetPlayerState<ATPSPlayerState>()) {
 		return ps->GetAbilitySystemComponent();

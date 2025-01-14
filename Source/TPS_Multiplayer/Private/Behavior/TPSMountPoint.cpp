@@ -4,16 +4,17 @@
 
 UTPSMountPoint::UTPSMountPoint()
 {
-    //SphereComponent = NewObject<USphereComponent>(this);
-    //SphereComponent->SetSphereRadius(0.25f, true);
+    //SphereComponent = CreateDefaultSubobject<USphereComponent>(TargetSocketName);
+    //SphereComponent->SetSphereRadius(.1f, true);
+    //SphereComponent->AttachToComponent(this, FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName(TEXT("")));
 }
 
 FVector UTPSMountPoint::GetCurrentPosition() const
 {
-    return GetRelativeLocation();
+    return FVector::Zero();
 }
 
-FRotator UTPSMountPoint::GetCurrentRotation() const
+FVector UTPSMountPoint::GetCurrentEulerRotation() const
 {
-    return GetRelativeRotation();
+    return FVector::Zero();
 }
