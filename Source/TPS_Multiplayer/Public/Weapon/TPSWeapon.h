@@ -25,7 +25,7 @@ public:
     //- Identity ------------------------------------------=
     //
     //- Type
-    UPROPERTY(EditAnywhere, BlueprintReadOnly)
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Identity")
     TEnumAsByte<ETPSWeaponType> Type;
 
 //~ ============================================================= ~//

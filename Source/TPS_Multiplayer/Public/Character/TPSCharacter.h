@@ -131,20 +131,19 @@ public:
 	bool IsBoosting;
 	//
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State.Input", Replicated)
-
 	bool IsCrouchInputReceived;
 	//
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State.Input", Replicated)
-
 	bool IsAiming;
 	//
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State.Input", Replicated)
-
 	bool IsFiring;
 	//
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State.Input", Replicated)
-
 	bool IsInteracting;
+	//
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State.Input", Replicated)
+	bool IsInMenu;
 
 	//- Visibility ---------------------------------------=
 	//

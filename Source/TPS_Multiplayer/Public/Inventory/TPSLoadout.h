@@ -25,40 +25,4 @@ public:
     TSubclassOf<ATPSEquipableItem> lethalEquipment;
     UPROPERTY(EditDefaultsOnly)
     TSubclassOf<ATPSEquipableItem> tacticalEquipment;
-
-public:
-    TObjectPtr<ATPSEquipableItem> PrimaryWeaponInstance;
-    TObjectPtr<ATPSEquipableItem> SecondaryWeaponInstance;
-    TObjectPtr<ATPSEquipableItem> TertiaryWeaponInstance;
-
-    TObjectPtr<ATPSEquipableItem> LethalEquipmentInstance;
-    TObjectPtr<ATPSEquipableItem> TacticalEquipmentInstance;
-
-public:
-    ATPSEquipableItem* GetItemFromEquipmentSlot(ETPSEquipmentSlot slot)
-    {
-        switch (slot)
-        {
-        case ETPSEquipmentSlot::PrimaryWeapon:
-            return PrimaryWeaponInstance;
-        case ETPSEquipmentSlot::SecondaryWeapon:
-            return SecondaryWeaponInstance;
-        case ETPSEquipmentSlot::TertiaryWeapon:
-            return TertiaryWeaponInstance;
-        case ETPSEquipmentSlot::LethalEquipment:
-            return LethalEquipmentInstance;
-        case ETPSEquipmentSlot::TacticalEquipment:
-            return TacticalEquipmentInstance;
-        }
-        return nullptr;
-    }
-
-    void BindItemToEquipmentSlot(ATPSEquipableItem* item, ETPSEquipmentSlot slot)
-    {
-        /*switch (slot)
-        {
-        case PrimaryWeapon:
-            PrimaryWeaponInstance.;
-        }*/
-    }
 };

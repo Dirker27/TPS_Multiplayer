@@ -16,6 +16,8 @@ ATPSCharacter::ATPSCharacter()
  	PrimaryActorTick.bCanEverTick = true;
 
 	EquipmentManager = CreateDefaultSubobject<UTPSEquipmentManager>(TEXT("EquipmentManager"));
+	EquipmentManager->BindToMesh(GetMesh());
+
 	Inventory = CreateDefaultSubobject<UTPSCharacterInventory>(TEXT("Inventory"));
 
 	UnitFrameWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("UnitFrameWidget"));
@@ -38,6 +40,13 @@ ATPSCharacter::ATPSCharacter()
 	PreviousCharacterState = Incapacitated;
 	CurrentLocomotionState = Standing;
 	PreviousLocomotionState = Crouching;
+	//
+	IsBoosting = false;
+	IsCrouchInputReceived = false;
+	IsAiming = false;
+	IsFiring = false;
+	IsInteracting = false;
+	IsInMenu = false;
 }
 
 void ATPSCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
@@ -279,7 +288,7 @@ ETPSLocomotionState ATPSCharacter::EvaluateLocomotionStateForCurrentInput()
 }
 
 bool ATPSCharacter::IsActionActive() const {
-	return IsAiming || IsFiring || IsInteracting;
+	return IsAiming || IsFiring || IsInteracting || IsInMenu;
 }
 
 

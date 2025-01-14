@@ -7,11 +7,12 @@
 
 #include "AbilitySystemInterface.h"
 #include "AbilitySystemComponent.h"
+#include "Behavior/TPSMountableActor.h"
 
 #include "TPSEquipableItem.generated.h"
 
 UCLASS()
-class TPS_MULTIPLAYER_API ATPSEquipableItem : public AActor
+class TPS_MULTIPLAYER_API ATPSEquipableItem : public ATPSMountableActor
 {
     GENERATED_BODY()
 
@@ -48,7 +49,7 @@ public:
     bool isActiveAndEnabled;
 
 //~ ============================================================= ~//
-//  COMPONENTS
+//  BEHAVIOR
 //~ ============================================================= ~//
 public:
     //- Equipable -----------------------------------------=

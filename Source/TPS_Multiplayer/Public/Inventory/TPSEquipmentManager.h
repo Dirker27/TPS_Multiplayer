@@ -26,46 +26,79 @@ protected:
 //  STATE
 //~ ============================================================= ~//
 public:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EquipmentManager.State")
     TEnumAsByte<ETPSEquipmentSlot> ActiveEquipmentSlot;
 
     //WeaponController weaponController;
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EquipmentManager.State")
     TObjectPtr<UTPSLoadout> Loadout;
 
 //~ ============================================================= ~//
 //  CONFIGURATION
 //~ ============================================================= ~//
 public:
-
     //- Equipment Slot Bones ------------------------------=
     //
+    //- Parent Mesh
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EquipmentManager.Configuration")
+    TObjectPtr<USkeletalMeshComponent> TargetMesh;
     //- Weapon Hands
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EquipmentManager.Configuration")
     FName PrimaryWeaponHandBone;
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EquipmentManager.Configuration")
     FName SecondaryWeaponHandBone;
     //
     //- Hip Holsters
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
-    FName LeftHipHolster;
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
-    FName RightHipHolster;
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EquipmentManager.Configuration")
+    FName LeftHipHolsterBone;
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EquipmentManager.Configuration")
+    FName RightHipHolsterBone;
     //
     //- Leg Holsters
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
-    FName LeftLegHolster;
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
-    FName RightLegHolster;
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EquipmentManager.Configuration")
+    FName LeftLegHolsterBone;
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EquipmentManager.Configuration")
+    FName RightLegHolsterBone;
     //
     //- Back Holsters
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
-    FName BackHolster;
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EquipmentManager.Configuration")
+    FName BackHolsterBone;
+
+//~ ============================================================= ~//
+//  COMPONENTS
+//~ ============================================================= ~//
+protected:
+    //- Equipment Slot Mounts ------------------------------=
+    //
+    //- Weapon Hands
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EquipmentManager.Components")
+    TObjectPtr<UTPSMountPoint> PrimaryWeaponHand;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EquipmentManager.Components")
+    TObjectPtr<UTPSMountPoint> SecondaryWeaponHand;
+    //
+    //- Hip Holsters
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EquipmentManager.Components")
+    TObjectPtr<UTPSMountPoint> LeftHipHolster;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EquipmentManager.Components")
+    TObjectPtr<UTPSMountPoint> RightHipHolster;
+    //
+    //- Leg Holsters
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EquipmentManager.Components")
+    TObjectPtr<UTPSMountPoint> LeftLegHolster;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EquipmentManager.Components")
+    TObjectPtr<UTPSMountPoint> RightLegHolster;
+    //
+    //- Back Holsters
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EquipmentManager.Components")
+    TObjectPtr<UTPSMountPoint> BackHolster;
 
 //~ ============================================================= ~//
 //  PUBLIC OPERATIONS
 //~ ============================================================= ~//
 public:
+    //UFUNCTION(BlueprintCallable)
+    void BindToMesh(USkeletalMeshComponent* mesh);
+
     UFUNCTION(BlueprintCallable)
     void InstantiateLoadout();
 
@@ -100,6 +133,8 @@ protected:
     void EquipAndArm(ETPSEquipmentSlot equipmentSlot);
 
     UFUNCTION(BlueprintCallable)
+    void EquipWeaponToHolster(ATPSEquipableItem* weapon, ETPSEquipmentSlot slot);
+    UFUNCTION(BlueprintCallable)
     void EquipToPrimaryWeaponHand(ATPSEquipableItem* weapon);
     UFUNCTION(BlueprintCallable)
     void EquipToSecondaryWeaponHand(ATPSEquipableItem* weapon);
@@ -114,4 +149,36 @@ protected:
     UFUNCTION(BlueprintCallable)
     void EquipToBackHolster(ATPSEquipableItem* weapon);
 
+
+protected:
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="EquipmentManager.State")
+    TObjectPtr<ATPSEquipableItem> PrimaryWeaponInstance;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EquipmentManager.State")
+    TObjectPtr<ATPSEquipableItem> SecondaryWeaponInstance;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EquipmentManager.State")
+    TObjectPtr<ATPSEquipableItem> TertiaryWeaponInstance;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EquipmentManager.State")
+    TObjectPtr<ATPSEquipableItem> LethalEquipmentInstance;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EquipmentManager.State")
+    TObjectPtr<ATPSEquipableItem> TacticalEquipmentInstance;
+
+private:
+    ATPSEquipableItem* GetItemInstanceFromEquipmentSlot(ETPSEquipmentSlot slot)
+    {
+        switch (slot)
+        {
+        case ETPSEquipmentSlot::PrimaryWeapon:
+            return PrimaryWeaponInstance;
+        case ETPSEquipmentSlot::SecondaryWeapon:
+            return SecondaryWeaponInstance;
+        case ETPSEquipmentSlot::TertiaryWeapon:
+            return TertiaryWeaponInstance;
+        case ETPSEquipmentSlot::LethalEquipment:
+            return LethalEquipmentInstance;
+        case ETPSEquipmentSlot::TacticalEquipment:
+            return TacticalEquipmentInstance;
+        }
+        return nullptr;
+    }
 };

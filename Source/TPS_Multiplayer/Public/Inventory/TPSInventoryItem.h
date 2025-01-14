@@ -17,7 +17,7 @@ public:
 	FName Name;
 
 	UPROPERTY(EditAnywhere, Category = "Identity")
-	TSubclassOf<USkeletalMesh> Avatar;
+	TObjectPtr<USkeletalMesh> Avatar;
 
 	UPROPERTY(EditAnywhere, Category = "Quantity")
 	bool IsStackable;
