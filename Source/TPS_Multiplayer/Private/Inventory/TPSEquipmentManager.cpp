@@ -8,7 +8,7 @@
 
 UTPSEquipmentManager::UTPSEquipmentManager()
 {
-    Loadout = CreateDefaultSubobject<UTPSLoadout>(TEXT("MyLoadout"));
+    Loadout = CreateDefaultSubobject<UTPSLoadout>(TEXT("CustomLoadout"));
 
     PrimaryWeaponHand = CreateDefaultSubobject<UTPSMountPoint>(TEXT("MP-PrimaryWeaponHand"));
     SecondaryWeaponHand = CreateDefaultSubobject<UTPSMountPoint>(TEXT("MP-SecondaryWeaponHand"));
@@ -86,7 +86,6 @@ void UTPSEquipmentManager::BindToMesh(USkeletalMeshComponent* mesh)
 
     PrimaryWeaponHand->TargetParentComponent = TargetMesh;
     SecondaryWeaponHand->TargetParentComponent = TargetMesh;
-
     BackHolster->TargetParentComponent = TargetMesh;
     LeftHipHolster->TargetParentComponent = TargetMesh;
     LeftLegHolster->TargetParentComponent = TargetMesh;
@@ -95,14 +94,13 @@ void UTPSEquipmentManager::BindToMesh(USkeletalMeshComponent* mesh)
 
     PrimaryWeaponHand->TargetSocketName = FName(TEXT("hand_r"));
     SecondaryWeaponHand->TargetSocketName = FName(TEXT("hand_l"));
-
     BackHolster->TargetSocketName = FName(TEXT("spine_05"));
     LeftHipHolster->TargetSocketName = FName(TEXT("thigh_l"));
     LeftLegHolster->TargetSocketName = FName(TEXT("calf_l"));
     RightHipHolster->TargetSocketName = FName(TEXT("thigh_r"));
     RightLegHolster->TargetSocketName = FName(TEXT("calf_r"));
 
-    /*if (IsValid(TargetMesh)) {
+    if (IsValid(TargetMesh)) {
         UE_LOG(LogTemp, Log, TEXT("Mounting Holsters..."));
 
         if (IsValid(PrimaryWeaponHand) && !PrimaryWeaponHandBone.IsNone())
@@ -134,7 +132,7 @@ void UTPSEquipmentManager::BindToMesh(USkeletalMeshComponent* mesh)
         {
             RightLegHolster->SetupAttachment(TargetMesh, RightLegHolsterBone);
         }
-    }*/
+    }
 }
 
 
