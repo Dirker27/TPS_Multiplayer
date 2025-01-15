@@ -43,9 +43,9 @@ public:
 
     //- State --------------------------------------------=
 	//
-    //- IsArmed
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon|State", Replicated)
-    bool IsArmed;
+    //- Ammo
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon|State", Replicated);
+    int CurrentAmmunition;
     //
     //- IsAiming
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon|State", Replicated)

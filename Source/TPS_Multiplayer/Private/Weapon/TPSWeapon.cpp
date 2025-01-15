@@ -11,22 +11,18 @@ ATPSWeapon::ATPSWeapon()
 
 void ATPSWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
+    DOREPLIFETIME(ATPSWeapon, CurrentAmmunition);
     DOREPLIFETIME(ATPSWeapon, IsAiming);
     DOREPLIFETIME(ATPSWeapon, IsFiring);
-    DOREPLIFETIME(ATPSWeapon, IsArmed);
 }
 
 
 void ATPSWeapon::Equip()
 {
     Super::Equip();
-
-    IsArmed = true;
 }
 
 void ATPSWeapon::UnEquip()
 {
     Super::UnEquip();
-
-    IsArmed = false;
 }

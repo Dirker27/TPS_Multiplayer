@@ -121,9 +121,9 @@ public:
 
 	//- Weapon State --------------------------------------=
 	//
-	//- Current Equipped Weapon
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TWeakObjectPtr<ATPSWeapon> EquippedWeapon;
+	//- Current Equipped Weapon (Synthetic)
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	ATPSWeapon* GetEquippedWeapon() const;
 
 	//- Controller Input ----------------------------------=
 	//
@@ -258,9 +258,6 @@ private:
 	void SyncComponentsFromState();
 
 public:
-	// Call after every action that modifies state.
-	UFUNCTION(BlueprintCallable)
-	void EvaluateStateAndApplyUpdates();
 
 	//- Modify Behavioral States --------------------------=
 	//
@@ -276,11 +273,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void RevertLocomotionState();
 
-protected:
+public:
 	//- Logic ---------------------------------------------=
 	// 
 	//- Determine what state we should be in.
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	ETPSLocomotionState EvaluateLocomotionStateForCurrentInput();
 	//
 	//- Calculate Speed

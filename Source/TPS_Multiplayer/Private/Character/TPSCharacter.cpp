@@ -135,6 +135,13 @@ bool ATPSCharacter::IsIdle() const
 	return false;
 }
 
+ATPSWeapon* ATPSCharacter::GetEquippedWeapon() const
+{
+	if (EquipmentManager->ActiveEquipmentSlot == None) { return nullptr; }
+
+	return Cast<ATPSWeapon>(EquipmentManager->GetItemFromEquipmentSlot(EquipmentManager->ActiveEquipmentSlot));
+}
+
 //~ ============================================================= ~//
 //  BEHAVIOR OPERATIONS
 //~ ============================================================= ~//
@@ -265,15 +272,6 @@ void ATPSCharacter::UpdateInputContextForCurrentState()
 }
 
 
-// TODO: DEPRECATED! DELETEME!
-void ATPSCharacter::EvaluateStateAndApplyUpdates()
-{
-	UE_LOG(LogTemp, Log, TEXT("EVAL-CHARACTER"));
-
-	EvaluateLocomotionStateForCurrentInput();
-}
-
-
 // TODO: Make this follow a strategy pattern baed on current CharacterState
 ETPSLocomotionState ATPSCharacter::EvaluateLocomotionStateForCurrentInput()
 {
@@ -299,8 +297,10 @@ ETPSLocomotionState ATPSCharacter::EvaluateLocomotionStateForCurrentInput()
 }
 
 bool ATPSCharacter::IsActionActive() const {
-	return IsAiming || IsFiring
-		|| IsEquipping || IsInteracting
+	return IsAiming
+		|| IsFiring
+		|| IsEquipping
+		|| IsInteracting
 		|| IsInMenu;
 }
 
@@ -347,19 +347,47 @@ void ATPSCharacter::EndBoost() {
 
 void ATPSCharacter::StartAim() {
 	IsAiming = true;
+
+	ATPSWeapon* weapon = GetEquippedWeapon();
+	if (weapon != nullptr)
+	{
+		weapon->IsAiming = true;
+	}
+
 	OnAimAbilityStart();
 }
 void ATPSCharacter::EndAim() {
 	IsAiming = false;
+
+	ATPSWeapon* weapon = GetEquippedWeapon();
+	if (weapon != nullptr)
+	{
+		weapon->IsAiming = false;
+	}
+
 	OnAimAbilityEnd();
 }
 
 void ATPSCharacter::StartFireWeapon() {
 	IsFiring = true;
+
+	ATPSWeapon* weapon = GetEquippedWeapon();
+	if (weapon != nullptr)
+	{
+		weapon->IsFiring = true;
+	}
+
 	OnFireWeaponAbilityStart();
 }
 void ATPSCharacter::EndFireWeapon() {
 	IsFiring = false;
+
+	ATPSWeapon* weapon = GetEquippedWeapon();
+	if (weapon != nullptr)
+	{
+		weapon->IsFiring = false;
+	}
+
 	OnFireWeaponAbilityEnd();
 }
 

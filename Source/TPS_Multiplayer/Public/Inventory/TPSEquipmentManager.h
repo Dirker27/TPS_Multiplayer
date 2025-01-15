@@ -156,7 +156,7 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EquipmentManager|State")
     TObjectPtr<ATPSEquipableItem> TacticalEquipmentInstance;
 
-private:
-    ATPSEquipableItem* GetItemInstanceFromEquipmentSlot(ETPSEquipmentSlot slot);
-    UTPSMountPoint* GetMountPointForSlot(ETPSEquipmentSlot slot);
+public:
+    ATPSEquipableItem* GetItemFromEquipmentSlot(ETPSEquipmentSlot slot) const;
+    UTPSMountPoint* GetMountPointForSlot(ETPSEquipmentSlot slot) const;
 };

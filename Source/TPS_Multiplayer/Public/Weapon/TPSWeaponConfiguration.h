@@ -21,7 +21,7 @@ class TPS_MULTIPLAYER_API UTPSWeaponConfiguration : public UDataAsset
     GENERATED_BODY()
 
 public:
-    UPROPERTY(EditDefaultsOnly)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TEnumAsByte<ETPSWeaponFireMode> FireMode = SingleShot;
 
     UPROPERTY(EditDefaultsOnly)

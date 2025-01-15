@@ -25,12 +25,12 @@ void UTPSEquipmentManager::BeginPlay()
     if (IsValid(Loadout)) {
         InstantiateLoadout();
 
-        EquipToPrimaryHolster(GetItemInstanceFromEquipmentSlot(PrimaryWeapon));
-        EquipToSecondaryHolster(GetItemInstanceFromEquipmentSlot(SecondaryWeapon));
-        EquipToBackHolster(GetItemInstanceFromEquipmentSlot(TertiaryWeapon));
+        EquipToPrimaryHolster(GetItemFromEquipmentSlot(PrimaryWeapon));
+        EquipToSecondaryHolster(GetItemFromEquipmentSlot(SecondaryWeapon));
+        EquipToBackHolster(GetItemFromEquipmentSlot(TertiaryWeapon));
 
-        EquipToLethalHolster(GetItemInstanceFromEquipmentSlot(LethalEquipment));
-        EquipToTacticalHolster(GetItemInstanceFromEquipmentSlot(TacticalEquipment));
+        EquipToLethalHolster(GetItemFromEquipmentSlot(LethalEquipment));
+        EquipToTacticalHolster(GetItemFromEquipmentSlot(TacticalEquipment));
     }
 
     ActiveEquipmentSlot = ETPSEquipmentSlot::None;
@@ -150,7 +150,7 @@ void UTPSEquipmentManager::Ready()
 {
     if (!IsValid(Loadout)) { return; }
     ActiveEquipmentSlot = ETPSEquipmentSlot::PrimaryWeapon;
-    EquipToPrimaryWeaponHand(GetItemInstanceFromEquipmentSlot(PrimaryWeapon));
+    EquipToPrimaryWeaponHand(GetItemFromEquipmentSlot(PrimaryWeapon));
 
     /*weaponController.activeWeapons.Add(Loadout->primaryWeapon);
     weaponController.Ready();*/
@@ -162,12 +162,12 @@ void UTPSEquipmentManager::UnReady()
     /*weaponController.CancelReady();
     weaponController.activeWeapons.Clear();*/
 
-    EquipToPrimaryHolster(GetItemInstanceFromEquipmentSlot(PrimaryWeapon));
-    EquipToSecondaryHolster(GetItemInstanceFromEquipmentSlot(SecondaryWeapon));
-    EquipToBackHolster(GetItemInstanceFromEquipmentSlot(TertiaryWeapon));
+    EquipToPrimaryHolster(GetItemFromEquipmentSlot(PrimaryWeapon));
+    EquipToSecondaryHolster(GetItemFromEquipmentSlot(SecondaryWeapon));
+    EquipToBackHolster(GetItemFromEquipmentSlot(TertiaryWeapon));
 
-    EquipToLethalHolster(GetItemInstanceFromEquipmentSlot(LethalEquipment));
-    EquipToTacticalHolster(GetItemInstanceFromEquipmentSlot(TacticalEquipment));
+    EquipToLethalHolster(GetItemFromEquipmentSlot(LethalEquipment));
+    EquipToTacticalHolster(GetItemFromEquipmentSlot(TacticalEquipment));
 }
 
 void UTPSEquipmentManager::EquipPrimary()
@@ -239,7 +239,7 @@ void UTPSEquipmentManager::InstantiateLoadout()
 void UTPSEquipmentManager::UnEquipActive() {
     if (ActiveEquipmentSlot == ETPSEquipmentSlot::None) { return; }
 
-    ATPSEquipableItem* weapon = GetItemInstanceFromEquipmentSlot(ActiveEquipmentSlot);
+    ATPSEquipableItem* weapon = GetItemFromEquipmentSlot(ActiveEquipmentSlot);
     EquipWeaponToHolster(weapon, ActiveEquipmentSlot);
 
     //weaponController.activeWeapons.Clear();
@@ -247,7 +247,7 @@ void UTPSEquipmentManager::UnEquipActive() {
 }
 
 void UTPSEquipmentManager::EquipAndArm(ETPSEquipmentSlot equipmentSlot) {
-    ATPSEquipableItem* item = GetItemInstanceFromEquipmentSlot(equipmentSlot);
+    ATPSEquipableItem* item = GetItemFromEquipmentSlot(equipmentSlot);
 
     if (item) {
         EquipToPrimaryWeaponHand(item);
@@ -259,7 +259,7 @@ void UTPSEquipmentManager::EquipAndArm(ETPSEquipmentSlot equipmentSlot) {
 }
 
 
-ATPSEquipableItem* UTPSEquipmentManager::GetItemInstanceFromEquipmentSlot(ETPSEquipmentSlot slot)
+ATPSEquipableItem* UTPSEquipmentManager::GetItemFromEquipmentSlot(ETPSEquipmentSlot slot) const
 {
     switch (slot)
     {
@@ -277,7 +277,7 @@ ATPSEquipableItem* UTPSEquipmentManager::GetItemInstanceFromEquipmentSlot(ETPSEq
     return nullptr;
 }
 
-UTPSMountPoint* UTPSEquipmentManager::GetMountPointForSlot(ETPSEquipmentSlot slot)
+UTPSMountPoint* UTPSEquipmentManager::GetMountPointForSlot(ETPSEquipmentSlot slot) const
 {
     UTPSMountPoint* mount = nullptr;
     switch (slot)

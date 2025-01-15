@@ -29,12 +29,16 @@ enum class EAbilityInput : uint8
 	SecondaryAttack = 7,
 	Aim = 8,
 
-	// Inventory
-	Equip = 9,
-	UnEquip = 10,
-
 	// Weapon Handling
-	Reload = 11
+	Reload = 9,
+
+	// Inventory
+	EquipPrimary = 10,
+	EquipSecondary = 11,
+	EquipTertiary = 12,
+	EquipLethalEquipment = 13,
+	EquipTacticalEquipment = 14,
+	UnEquip = 15
 };
 
 
