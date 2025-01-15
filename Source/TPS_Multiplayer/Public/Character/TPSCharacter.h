@@ -43,10 +43,6 @@ protected:
 public:
 	//- Display Widgets --------------------------------------=
 	//
-	//- Widgets
-	TObjectPtr<UWidgetComponent> UnitFrameWidget;
-	TObjectPtr<UWidgetComponent> DebugFrameWidget;
-	//
 	//- Broadcast Delegate
 	UPROPERTY(BlueprintAssignable)
 	FUpdateAttributeDisplay NotifyDisplayWidgets;
@@ -56,7 +52,6 @@ private:
 // UE Implementables
 public:
 	// Overrides
-	void GetActorEyesViewPoint(FVector& Location, FRotator& Rotation) const override;
 	void FellOutOfWorld(const class UDamageType& dmgType) override;
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
@@ -109,23 +104,31 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Locomotion")
 	TEnumAsByte<ETPSLocomotionState> PreviousLocomotionState;
 	//
+	//- IsAlive (Synthetic)
 	// True if Character is not Incapacitated.
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool IsAlive() const;
 	//
+	//- IsCrouching (Synthetic)
 	// True if Crouching OR Prone.
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool IsCrouching() const;
+	//
+	//- IsIdle (Synthetic)
+	// True if Crouching OR Prone.
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool IsIdle() const;
 
 	//- Weapon State --------------------------------------=
 	//
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TEnumAsByte<ETPSWeaponType> EquippedWeaponType;
-	//
-	//UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	//TPSWeapon* EquippedWeapon	{ nullptr };
+	//- Current Equipped Weapon
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TWeakObjectPtr<ATPSWeapon> EquippedWeapon;
 
 	//- Controller Input ----------------------------------=
+	//
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Input", Replicated)
+	FRotator TargetLookRotation;
 	//
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Input", Replicated)
 	bool IsBoosting;
@@ -138,6 +141,9 @@ public:
 	//
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Input", Replicated)
 	bool IsFiring;
+	//
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Input", Replicated)
+	bool IsEquipping;
 	//
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Input", Replicated)
 	bool IsInteracting;
@@ -154,6 +160,10 @@ public:
 	// Shows name/health data to peer client/server
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Render")
 	bool ShouldRenderUnitFrame = true;
+	//
+	// Shows simple debug data to peer client
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Render")
+	bool ShouldRenderDebugFrame = true;
 
 //~ ============================================================= ~//
 //  Blueprint Extensions
@@ -161,6 +171,17 @@ public:
 public:
 
 	//- Ability Extensions ------------------------------=
+	//
+	//- Boost
+	UFUNCTION(BlueprintCallable)
+	void StartBoost();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnBoostAbilityStart();
+	//
+	UFUNCTION(BlueprintCallable)
+	void EndBoost();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnBoostAbilityEnd();
 	//
 	//- Aim
 	UFUNCTION(BlueprintCallable)
@@ -183,11 +204,35 @@ public:
 	void EndFireWeapon();
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnFireWeaponAbilityEnd();
+	//
+	//- EquipWeapon
+	UFUNCTION(BlueprintCallable)
+	void StartEquipWeapon();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnEquipWeaponAbilityStart();
+	//
+	UFUNCTION(BlueprintCallable)
+	void EndEquipWeapon();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnEquipWeaponAbilityEnd();
+	//
+	//- EquipWeapon
+	UFUNCTION(BlueprintCallable)
+	void StartInteract();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnInteractAbilityStart();
+	//
+	UFUNCTION(BlueprintCallable)
+	void EndInteract();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnInteractAbilityEnd();
+
 
 	//- Behavior Overrides --------------------------------=
 	//
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnFellOutOfWorld();
+
 
 	//- Transforms -------------------------------------------=
 	//
@@ -287,15 +332,21 @@ protected:
 //  INVENTORY SYSTEM
 //~ ============================================================= ~//
 public:
-	UPROPERTY(EditAnywhere, Category="Inventory")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Inventory")
 	TObjectPtr<UTPSEquipmentManager> EquipmentManager;
-	UPROPERTY(EditAnywhere, Category="Inventory")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Inventory")
 	TObjectPtr<UTPSCharacterInventory> Inventory;
 
 //~ ============================================================= ~//
 //  CONFIGURATION
 //~ ============================================================= ~//
+
 public:
+	//------------------------------------------------------=
+	//
+	//- Use Actor's Eyes at Mesh Location for detection and docking sweeps
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
 	FName EyeSocketName;
+	//
+	void GetActorEyesViewPoint(FVector& Location, FRotator& Rotation) const override;
 };

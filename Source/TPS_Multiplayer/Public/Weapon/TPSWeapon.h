@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "TPSWeaponConfiguration.h"
 
 #include "Inventory/TPSEquipableItem.h"
 #include "Weapon/TPSWeaponType.h"
@@ -15,24 +16,50 @@ class TPS_MULTIPLAYER_API ATPSWeapon : public ATPSEquipableItem
     GENERATED_BODY()
 
 public:
-    //ATPSWeapon();
+    ATPSWeapon();
     //~ATPSWeapon();
+
+    void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 //~ ============================================================= ~//
 //  ATTRIBUTES
 //~ ============================================================= ~//
 public:
-    //- Identity ------------------------------------------=
+    //- Identity -----------------------------------------=
     //
     //- Type
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Identity")
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Identity")
     TEnumAsByte<ETPSWeaponType> Type;
+
+    //- Configuration ------------------------------------=
+    //
+    //- Configuration
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon|Configuration")
+    TObjectPtr<UTPSWeaponConfiguration> Configuration;
+    //
+    //- Muzzle/LaunchPoint
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon|Configuration")
+    FTransform Muzzle = GetTransform();
+
+    //- State --------------------------------------------=
+	//
+    //- IsArmed
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon|State", Replicated)
+    bool IsArmed;
+    //
+    //- IsAiming
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon|State", Replicated)
+    bool IsAiming;
+    //
+	//- IsFiring
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon|State", Replicated)
+    bool IsFiring;
 
 //~ ============================================================= ~//
 //  Blueprint Extensions
 //~ ============================================================= ~//
 public:
-    //- Transforms -------------------------------------------=
+    //- Transforms -----------------------------------------=
 	//
 	//- WeaponType
 	UFUNCTION(BlueprintCallable, BlueprintPure)

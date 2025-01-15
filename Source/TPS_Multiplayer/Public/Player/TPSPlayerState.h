@@ -34,13 +34,13 @@ protected:
 public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override; // IAbilitySystemInterface
 
-	UPROPERTY(VisibleAnywhere, Category = "Abilities.Attributes", Transient)
+	UPROPERTY(VisibleAnywhere, Category = "Abilities|Attributes", Transient)
 	UStandardAttributeSet* StandardAttributes{ nullptr };
 
-	UPROPERTY(VisibleAnywhere, Category = "Abilities.Attributes", Transient)
+	UPROPERTY(VisibleAnywhere, Category = "Abilities|Attributes", Transient)
     UCharacterHealthAttributeSet* CharacterHealthAttributes{ nullptr };
 
-    UPROPERTY(VisibleAnywhere, Category = "Abilities.Attributes", Transient)
+    UPROPERTY(VisibleAnywhere, Category = "Abilities|Attributes", Transient)
     UWeaponAttributeSet* WeaponAttributes{ nullptr };
 
 protected:

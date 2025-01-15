@@ -6,6 +6,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "Net/UnrealNetwork.h"
+#include "UObject/ConstructorHelpers.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -19,9 +20,6 @@ ATPSCharacter::ATPSCharacter()
 
 	EquipmentManager = CreateDefaultSubobject<UTPSEquipmentManager>(TEXT("EquipmentManager"));
 	EquipmentManager->BindToMesh(GetMesh());
-
-	//UnitFrameWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("UnitFrameWidget"));
-	//DebugFrameWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("DebugFrameWidget"));
 
 	//- Default Values ------------------------------------=
 	//
@@ -47,6 +45,7 @@ ATPSCharacter::ATPSCharacter()
 	IsFiring = false;
 	IsInteracting = false;
 	IsInMenu = false;
+	TargetLookRotation = FRotator::ZeroRotator;
 }
 
 void ATPSCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
@@ -64,8 +63,11 @@ void ATPSCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 	DOREPLIFETIME(ATPSCharacter, IsCrouchInputReceived);
 	DOREPLIFETIME(ATPSCharacter, IsAiming);
 	DOREPLIFETIME(ATPSCharacter, IsFiring);
+	DOREPLIFETIME(ATPSCharacter, IsEquipping);
 	DOREPLIFETIME(ATPSCharacter, IsInteracting);
 	DOREPLIFETIME(ATPSCharacter, IsInMenu);
+
+	DOREPLIFETIME(ATPSCharacter, TargetLookRotation);
 }
 
 void ATPSCharacter::BeginPlay()
@@ -95,6 +97,10 @@ void ATPSCharacter::Tick(float DeltaTime)
 		NotifyDisplayWidgets.Broadcast();
 		ShouldNotify = false;
 	}
+
+	if (HasAuthority()) {
+		TargetLookRotation = GetViewRotation();
+	}
 }
 
 void ATPSCharacter::SyncComponentsFromState()
@@ -119,11 +125,19 @@ bool ATPSCharacter::IsAlive() const
 {
 	return (CurrentCharacterState != Incapacitated);
 }
-
 bool ATPSCharacter::IsCrouching() const
 {
 	return (CurrentLocomotionState == Crouching || CurrentLocomotionState == Prone);
 }
+bool ATPSCharacter::IsIdle() const
+{
+	// TODO: Determine what "Idle" means.
+	return false;
+}
+
+//~ ============================================================= ~//
+//  BEHAVIOR OPERATIONS
+//~ ============================================================= ~//
 
 void ATPSCharacter::ApplyLocomotionState(const ETPSLocomotionState LocomotionState)
 {
@@ -260,20 +274,6 @@ void ATPSCharacter::EvaluateStateAndApplyUpdates()
 }
 
 
-void ATPSCharacter::StartAim() {
-	OnAimAbilityStart();
-}
-void ATPSCharacter::EndAim() {
-	OnAimAbilityEnd();
-}
-
-void ATPSCharacter::StartFireWeapon() {
-	OnFireWeaponAbilityStart();
-}
-void ATPSCharacter::EndFireWeapon() {
-	OnFireWeaponAbilityEnd();
-}
-
 // TODO: Make this follow a strategy pattern baed on current CharacterState
 ETPSLocomotionState ATPSCharacter::EvaluateLocomotionStateForCurrentInput()
 {
@@ -299,7 +299,9 @@ ETPSLocomotionState ATPSCharacter::EvaluateLocomotionStateForCurrentInput()
 }
 
 bool ATPSCharacter::IsActionActive() const {
-	return IsAiming || IsFiring || IsInteracting || IsInMenu;
+	return IsAiming || IsFiring
+		|| IsEquipping || IsInteracting
+		|| IsInMenu;
 }
 
 
@@ -327,6 +329,56 @@ AActor* ATPSCharacter::LineTrace(const UObject* WorldContextObject) {
 	}
 
 	return hitActor;
+}
+
+
+//~ ============================================================= ~//
+//  Ability Extensions
+//~ ============================================================= ~//
+
+void ATPSCharacter::StartBoost() {
+	IsBoosting = true;
+	OnBoostAbilityStart();
+}
+void ATPSCharacter::EndBoost() {
+	IsBoosting = false;
+	OnBoostAbilityEnd();
+}
+
+void ATPSCharacter::StartAim() {
+	IsAiming = true;
+	OnAimAbilityStart();
+}
+void ATPSCharacter::EndAim() {
+	IsAiming = false;
+	OnAimAbilityEnd();
+}
+
+void ATPSCharacter::StartFireWeapon() {
+	IsFiring = true;
+	OnFireWeaponAbilityStart();
+}
+void ATPSCharacter::EndFireWeapon() {
+	IsFiring = false;
+	OnFireWeaponAbilityEnd();
+}
+
+void ATPSCharacter::StartEquipWeapon() {
+	IsEquipping = true;
+	OnEquipWeaponAbilityStart();
+}
+void ATPSCharacter::EndEquipWeapon() {
+	IsEquipping = false;
+	OnEquipWeaponAbilityEnd();
+}
+
+void ATPSCharacter::StartInteract() {
+	IsInteracting = true;
+	OnInteractAbilityStart();
+}
+void ATPSCharacter::EndInteract() {
+	IsInteracting = false;
+	OnInteractAbilityEnd();
 }
 
 
@@ -390,7 +442,7 @@ void ATPSCharacter::OnMovementAttributeChanged(const FOnAttributeChangeData& dat
 	}
 
 	MovementSpeedModifier = data.NewValue;
-	ShouldNotify = true;
+	//ShouldNotify = true;
 }
 
 void ATPSCharacter::SyncAttributesFromGAS() {
@@ -407,3 +459,7 @@ void ATPSCharacter::SyncAttributesFromGAS() {
 
 	MovementSpeedModifier = asc->GetNumericAttribute(UStandardAttributeSet::GetMovementSpeedModifierAttribute());
 }
+
+//~ ============================================================= ~//
+//  END
+//~ ============================================================= ~//

@@ -27,38 +27,38 @@ public:
 	
 	//- Override Character State ---------------------------------------=
 	//
-	UFUNCTION(Exec, Category="Debug.Overrides")
+	UFUNCTION(Exec, Category="Debug|Overrides")
 	void TPS_OverrideCurrentCharacterStateFromInt(int32 state);
 	//
-	UFUNCTION(Exec, Category = "Debug.Overrides")
+	UFUNCTION(Exec, Category = "Debug|Overrides")
 	void TPS_OverrideCurrentCharacterStateFromString(FString state);
 	//
-	UFUNCTION(Exec, Category = "Debug.Overrides")
+	UFUNCTION(Exec, Category = "Debug|Overrides")
 	void Kill();
 	//
-	UFUNCTION(Exec, Category = "Debug.Overrides")
+	UFUNCTION(Exec, Category = "Debug|Overrides")
 	void Injure();
 	//
-	UFUNCTION(Exec, Category = "Debug.Overrides")
+	UFUNCTION(Exec, Category = "Debug|Overrides")
 	void EnterCombat();
 	//
-	UFUNCTION(Exec, Category = "Debug.Overrides")
+	UFUNCTION(Exec, Category = "Debug|Overrides")
 	void ExitCombat();
 
 	//- Control Configuration -----------------------------=
 	//
-	UFUNCTION(Exec, Category="Config.Controls")
+	UFUNCTION(Exec, Category="Config|Controls")
 	void TPS_ToggleCrouchForLocalPlayer();
 	//
-	UFUNCTION(Exec, Category = "Config.Controls")
+	UFUNCTION(Exec, Category = "Config|Controls")
 	void ToggleCrouch();
 
 	//- Visual Debugging ----------------------------------=
 	//
-	UFUNCTION(Exec, Category="Debug.Visibility")
+	UFUNCTION(Exec, Category="Debug|Visibility")
 	void TPS_ToggleDebugForLocalPlayer();
 	//
-	UFUNCTION(Exec, Category = "Debug.Visibility")
+	UFUNCTION(Exec, Category = "Debug|Visibility")
 	void DebugLocal();
 
 	//~ ==================================================================== ~//

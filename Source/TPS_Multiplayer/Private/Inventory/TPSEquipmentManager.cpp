@@ -2,9 +2,7 @@
 
 #include "Inventory/TPSEquipmentManager.h"
 
-#include "ComponentUtils.h"
 #include "Behavior/TPSMountPoint.h"
-#include "GeometryCollection/GeometryCollectionAlgo.h"
 
 UTPSEquipmentManager::UTPSEquipmentManager()
 {
@@ -18,48 +16,6 @@ UTPSEquipmentManager::UTPSEquipmentManager()
     LeftLegHolster = CreateDefaultSubobject<UTPSMountPoint>(TEXT("MP-LeftLegHolster"));
     RightHipHolster = CreateDefaultSubobject<UTPSMountPoint>(TEXT("MP-RightHipHolster"));
     RightLegHolster = CreateDefaultSubobject<UTPSMountPoint>(TEXT("MP-RightLegHolster"));
-}
-
-ATPSEquipableItem* UTPSEquipmentManager::GetItemInstanceFromEquipmentSlot(ETPSEquipmentSlot slot)
-{
-    switch (slot)
-    {
-    case ETPSEquipmentSlot::PrimaryWeapon:
-        return PrimaryWeaponInstance;
-    case ETPSEquipmentSlot::SecondaryWeapon:
-        return SecondaryWeaponInstance;
-    case ETPSEquipmentSlot::TertiaryWeapon:
-        return TertiaryWeaponInstance;
-    case ETPSEquipmentSlot::LethalEquipment:
-        return LethalEquipmentInstance;
-    case ETPSEquipmentSlot::TacticalEquipment:
-        return TacticalEquipmentInstance;
-    }
-    return nullptr;
-}
-
-UTPSMountPoint* UTPSEquipmentManager::GetMountPointForSlot(ETPSEquipmentSlot slot)
-{
-    UTPSMountPoint* mount = nullptr;
-    switch (slot)
-    {
-    case PrimaryWeapon:
-        mount = RightLegHolster;
-        break;
-    case SecondaryWeapon:
-        mount = RightHipHolster;
-        break;
-    case TertiaryWeapon:
-        mount = BackHolster;
-        break;
-    case LethalEquipment:
-        mount = LeftLegHolster;
-        break;
-    case TacticalEquipment:
-        mount = LeftHipHolster;
-        break;
-    }
-    return mount;
 }
 
 void UTPSEquipmentManager::BeginPlay()
@@ -100,7 +56,7 @@ void UTPSEquipmentManager::BindToMesh(USkeletalMeshComponent* mesh)
     RightHipHolster->TargetSocketName = FName(TEXT("thigh_r"));
     RightLegHolster->TargetSocketName = FName(TEXT("calf_r"));
 
-    if (IsValid(TargetMesh)) {
+    /*if (IsValid(TargetMesh)) {
         UE_LOG(LogTemp, Log, TEXT("Mounting Holsters..."));
 
         if (IsValid(PrimaryWeaponHand) && !PrimaryWeaponHandBone.IsNone())
@@ -132,7 +88,7 @@ void UTPSEquipmentManager::BindToMesh(USkeletalMeshComponent* mesh)
         {
             RightLegHolster->SetupAttachment(TargetMesh, RightLegHolsterBone);
         }
-    }
+    }*/
 }
 
 
@@ -259,21 +215,23 @@ void UTPSEquipmentManager::InstantiateLoadout()
     if (IsValid(Loadout->primaryWeapon)) {
         UE_LOG(LogTemp, Log, TEXT("Instantiating Primary Weapon [%s]..."), *Loadout->primaryWeapon->GetName());
         PrimaryWeaponInstance = GetWorld()->SpawnActor<ATPSEquipableItem>(Loadout->primaryWeapon);
+        //PrimaryWeaponInstance->SetReplicates(true);
+        //PrimaryWeaponInstance->SetReplicateMovement(true);
     }
     if (IsValid(Loadout->secondaryWeapon)) {
         UE_LOG(LogTemp, Log, TEXT("Instantiating Secondary Weapon [%s]..."), *Loadout->secondaryWeapon->GetName());
         SecondaryWeaponInstance = GetWorld()->SpawnActor<ATPSEquipableItem>(Loadout->secondaryWeapon);
     }
     if (IsValid(Loadout->tertiaryWeapon)) {
-        UE_LOG(LogTemp, Log, TEXT("Instantiating Tertiary Weapon []..."));
+        UE_LOG(LogTemp, Log, TEXT("Instantiating Tertiary Weapon [%s]..."), *Loadout->tertiaryWeapon->GetName());
         TertiaryWeaponInstance = GetWorld()->SpawnActor<ATPSEquipableItem>(Loadout->tertiaryWeapon);
     }
     if (IsValid(Loadout->tacticalEquipment)) {
-        UE_LOG(LogTemp, Log, TEXT("Instantiating Tactical Equipment []..."));
+        UE_LOG(LogTemp, Log, TEXT("Instantiating Tactical Equipment [%s]..."), *Loadout->tacticalEquipment->GetName());
         TacticalEquipmentInstance = GetWorld()->SpawnActor<ATPSEquipableItem>(Loadout->tacticalEquipment);
     }
     if (IsValid(Loadout->lethalEquipment)) {
-        UE_LOG(LogTemp, Log, TEXT("Instantiating Lethal Equipment []..."));
+        UE_LOG(LogTemp, Log, TEXT("Instantiating Lethal Equipment [%s]..."), *Loadout->lethalEquipment->GetName());
         LethalEquipmentInstance = GetWorld()->SpawnActor<ATPSEquipableItem>(Loadout->lethalEquipment);
     }
 }
@@ -298,4 +256,47 @@ void UTPSEquipmentManager::EquipAndArm(ETPSEquipmentSlot equipmentSlot) {
 
         item->Equip();
     }
+}
+
+
+ATPSEquipableItem* UTPSEquipmentManager::GetItemInstanceFromEquipmentSlot(ETPSEquipmentSlot slot)
+{
+    switch (slot)
+    {
+    case ETPSEquipmentSlot::PrimaryWeapon:
+        return PrimaryWeaponInstance;
+    case ETPSEquipmentSlot::SecondaryWeapon:
+        return SecondaryWeaponInstance;
+    case ETPSEquipmentSlot::TertiaryWeapon:
+        return TertiaryWeaponInstance;
+    case ETPSEquipmentSlot::LethalEquipment:
+        return LethalEquipmentInstance;
+    case ETPSEquipmentSlot::TacticalEquipment:
+        return TacticalEquipmentInstance;
+    }
+    return nullptr;
+}
+
+UTPSMountPoint* UTPSEquipmentManager::GetMountPointForSlot(ETPSEquipmentSlot slot)
+{
+    UTPSMountPoint* mount = nullptr;
+    switch (slot)
+    {
+    case PrimaryWeapon:
+        mount = RightLegHolster;
+        break;
+    case SecondaryWeapon:
+        mount = RightHipHolster;
+        break;
+    case TertiaryWeapon:
+        mount = BackHolster;
+        break;
+    case LethalEquipment:
+        mount = LeftLegHolster;
+        break;
+    case TacticalEquipment:
+        mount = LeftHipHolster;
+        break;
+    }
+    return mount;
 }
