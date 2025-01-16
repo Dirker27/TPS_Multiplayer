@@ -375,6 +375,7 @@ void ATPSCharacter::StartFireWeapon() {
 	if (weapon != nullptr)
 	{
 		weapon->IsFiring = true;
+		weapon->StartUse();
 	}
 
 	OnFireWeaponAbilityStart();
@@ -386,6 +387,7 @@ void ATPSCharacter::EndFireWeapon() {
 	if (weapon != nullptr)
 	{
 		weapon->IsFiring = false;
+		weapon->StopUse();
 	}
 
 	OnFireWeaponAbilityEnd();
@@ -393,12 +395,36 @@ void ATPSCharacter::EndFireWeapon() {
 
 void ATPSCharacter::StartEquipWeapon() {
 	IsEquipping = true;
+
+	// Temporary - derives behavior from equipment state
+	if (CurrentCharacterState != Combat)
+	{
+		ApplyCharacterState(Combat);
+	}
+
 	OnEquipWeaponAbilityStart();
 }
 void ATPSCharacter::EndEquipWeapon() {
 	IsEquipping = false;
 	OnEquipWeaponAbilityEnd();
 }
+
+void ATPSCharacter::StartUnEquipWeapon() {
+	IsEquipping = true;
+
+	// Temporary - derives behavior from equipment state
+	if (CurrentCharacterState != Casual)
+	{
+		ApplyCharacterState(Casual);
+	}
+
+	OnUnEquipWeaponAbilityStart();
+}
+void ATPSCharacter::EndUnEquipWeapon() {
+	IsEquipping = false;
+	OnUnEquipWeaponAbilityEnd();
+}
+
 
 void ATPSCharacter::StartInteract() {
 	IsInteracting = true;

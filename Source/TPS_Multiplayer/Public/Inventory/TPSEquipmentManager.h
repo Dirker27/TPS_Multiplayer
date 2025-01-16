@@ -41,7 +41,8 @@ public:
     //
     //- Parent Mesh
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EquipmentManager|Configuration")
-    TObjectPtr<USkeletalMeshComponent> TargetMesh;
+    TWeakObjectPtr<USkeletalMeshComponent> TargetMesh;
+    //
     //- Weapon Hands
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EquipmentManager|Configuration")
     FName PrimaryWeaponHandBone;
@@ -143,20 +144,21 @@ protected:
     void EquipToBackHolster(ATPSEquipableItem* weapon);
 
 
-protected:
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="EquipmentManager|State")
+private:
+    //UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="EquipmentManager|State")
     TObjectPtr<ATPSEquipableItem> PrimaryWeaponInstance;
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EquipmentManager|State")
+    //UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EquipmentManager|State")
     TObjectPtr<ATPSEquipableItem> SecondaryWeaponInstance;
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EquipmentManager|State")
+    //UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EquipmentManager|State")
     TObjectPtr<ATPSEquipableItem> TertiaryWeaponInstance;
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EquipmentManager|State")
+    //UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EquipmentManager|State")
     TObjectPtr<ATPSEquipableItem> LethalEquipmentInstance;
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EquipmentManager|State")
+    //UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EquipmentManager|State")
     TObjectPtr<ATPSEquipableItem> TacticalEquipmentInstance;
 
 public:
+    UFUNCTION(BlueprintCallable)
     ATPSEquipableItem* GetItemFromEquipmentSlot(ETPSEquipmentSlot slot) const;
     UTPSMountPoint* GetMountPointForSlot(ETPSEquipmentSlot slot) const;
 };

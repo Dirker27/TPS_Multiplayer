@@ -286,13 +286,15 @@ bool FTPSCharacterBehaviorTest::RunTest(const FString& Parameters)
 
 	// Evaluate for Boosting input
 	character->IsBoosting = true;
-	character->EvaluateLocomotionStateForCurrentInput();
+	character->ApplyLocomotionState(
+		character->EvaluateLocomotionStateForCurrentInput());
 	TestEqual("Character that is Boosting should be Sprinting",
 	character->CurrentLocomotionState, Sprinting);
 
 	// Evaluate for Crouching input from Sprinting
 	character->IsCrouchInputReceived = true;
-	character->EvaluateLocomotionStateForCurrentInput();
+	character->ApplyLocomotionState(
+		character->EvaluateLocomotionStateForCurrentInput());
 	TestEqual("Character should be Crouching when Boosting and CrouchInput is received",
 	character->CurrentLocomotionState, Crouching);
 	TestTrue("Evaluated CharacterMovement should be Crouching",
@@ -300,7 +302,8 @@ bool FTPSCharacterBehaviorTest::RunTest(const FString& Parameters)
 
 	// Evaluate for return to Sprinting from Crouch
 	character->IsCrouchInputReceived = false;
-	character->EvaluateLocomotionStateForCurrentInput();
+	character->ApplyLocomotionState(
+		character->EvaluateLocomotionStateForCurrentInput());
 	TestEqual("Character should be Sprinting when Boosting and CrouchInput is released",
 	character->CurrentLocomotionState, Sprinting);
 	TestFalse("Evaluated CharacterMovement should no longer be Crouching",
@@ -308,7 +311,8 @@ bool FTPSCharacterBehaviorTest::RunTest(const FString& Parameters)
 
 	// Evaluate for return to Standing from Sprinting
 	character->IsBoosting = false;
-	character->EvaluateLocomotionStateForCurrentInput();
+	character->ApplyLocomotionState(
+		character->EvaluateLocomotionStateForCurrentInput());
 	TestEqual("Character should be Standing when no longer Boosting",
 	character->CurrentLocomotionState, Standing);
 

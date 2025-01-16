@@ -34,25 +34,25 @@ public:
     //- Configuration ------------------------------------=
     //
     //- Configuration
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon|Configuration")
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Configuration")
     TObjectPtr<UTPSWeaponConfiguration> Configuration;
     //
     //- Muzzle/LaunchPoint
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon|Configuration")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
     FTransform Muzzle = GetTransform();
 
     //- State --------------------------------------------=
 	//
     //- Ammo
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon|State", Replicated);
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State", Replicated);
     int CurrentAmmunition;
     //
     //- IsAiming
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon|State", Replicated)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State", Replicated)
     bool IsAiming;
     //
 	//- IsFiring
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon|State", Replicated)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State", Replicated)
     bool IsFiring;
 
 //~ ============================================================= ~//

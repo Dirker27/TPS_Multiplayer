@@ -42,6 +42,12 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Identity")
     FString Name;
 
+    //- Configuration ------------------------------------=
+    //
+    //- Name
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+    TArray<TSubclassOf<UGameplayEffect>> AppliedEffects;
+
     //- State --------------------------------------------=
     //
     //- IsActive

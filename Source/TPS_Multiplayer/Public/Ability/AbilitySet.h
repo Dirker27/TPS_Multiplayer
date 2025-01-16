@@ -38,7 +38,10 @@ enum class EAbilityInput : uint8
 	EquipTertiary = 12,
 	EquipLethalEquipment = 13,
 	EquipTacticalEquipment = 14,
-	UnEquip = 15
+	UnEquip = 15,
+
+	PauseMenu = 16,
+	InGameMenu = 17
 };
 
 

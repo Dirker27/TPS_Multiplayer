@@ -205,7 +205,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnFireWeaponAbilityEnd();
 	//
-	//- EquipWeapon
+	//- EquipWeapon ("Ready")
 	UFUNCTION(BlueprintCallable)
 	void StartEquipWeapon();
 	UFUNCTION(BlueprintImplementableEvent)
@@ -216,7 +216,18 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnEquipWeaponAbilityEnd();
 	//
-	//- EquipWeapon
+	//- UnEquipWeapon ("UnReady")
+	UFUNCTION(BlueprintCallable)
+	void StartUnEquipWeapon();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnUnEquipWeaponAbilityStart();
+	//
+	UFUNCTION(BlueprintCallable)
+	void EndUnEquipWeapon();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnUnEquipWeaponAbilityEnd();
+	//
+	//- Interact
 	UFUNCTION(BlueprintCallable)
 	void StartInteract();
 	UFUNCTION(BlueprintImplementableEvent)
