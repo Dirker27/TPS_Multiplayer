@@ -1,4 +1,4 @@
-#include "Character/Attributes/CharacterHealthAttributeSet.h"
+#include "GAS/Attributes/CharacterHealthAttributeSet.h"
 
 #include "GameplayEffectExtension.h"
 #include "Net/UnrealNetwork.h"

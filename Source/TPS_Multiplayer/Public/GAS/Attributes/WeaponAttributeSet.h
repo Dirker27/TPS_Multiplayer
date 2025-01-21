@@ -5,7 +5,7 @@
 #include "AttributeSet.h"
 #include "AbilitySystemComponent.h"
 
-#include "Util/GASUtilities.h"
+#include "GAS/GASUtilities.h"
 /*#define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
     GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
     GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \

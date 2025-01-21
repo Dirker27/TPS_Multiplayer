@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
 
-#include "Util/GASUtilities.h"
+#include "GAS/GASUtilities.h"
 
 #include "CharacterHealthAttributeSet.generated.h"
 

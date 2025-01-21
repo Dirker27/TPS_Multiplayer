@@ -1,4 +1,4 @@
-#include "Ability/AbilitySet.h"
+#include "GAS/GASAbilitySet.h"
 
 TArray<FGameplayAbilitySpecHandle> UAbilitySet::GrantAbilitiesToAbilitySystem(UAbilitySystemComponent* AbilitySystemComponent) const {
     check(AbilitySystemComponent);

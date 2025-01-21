@@ -2,14 +2,13 @@
 
 #include "CoreMinimal.h"
 
-#include "AbilitySystemInterface.h"
 #include "AbilitySystemComponent.h"
 
-#include "Ability/AbilitySet.h"
 #include "Character/TPSCharacter.h"
-#include "Character/Attributes/StandardAttributeSet.h"
-#include "Character/Attributes/CharacterHealthAttributeSet.h"
-#include "Weapon/Attributes/WeaponAttributeSet.h"
+
+#include "GAS/Attributes/StandardAttributeSet.h"
+#include "GAS/Attributes/CharacterHealthAttributeSet.h"
+#include "GAS/Attributes/WeaponAttributeSet.h"
 
 #include "TPSAICharacter.generated.h"
 

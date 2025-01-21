@@ -9,7 +9,7 @@
 #include "AbilitySystemComponent.h"
 #include "GameplayAbilitySpecHandle.h"
 
-#include "AbilitySet.generated.h"
+#include "GASAbilitySet.generated.h"
 
 
 UENUM(BlueprintType)

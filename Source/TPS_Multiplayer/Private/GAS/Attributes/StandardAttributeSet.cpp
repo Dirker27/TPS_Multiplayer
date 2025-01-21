@@ -1,4 +1,4 @@
-#include "Character/Attributes/StandardAttributeSet.h"
+#include "GAS/Attributes/StandardAttributeSet.h"
 
 #include "GameplayEffectExtension.h"
 
@@ -18,16 +18,9 @@ void UStandardAttributeSet::OnRep_MovementSpeedModifier(const FGameplayAttribute
     GAMEPLAYATTRIBUTE_REPNOTIFY(UStandardAttributeSet, MovementSpeedModifier, OldMovementSpeedModifier);
 }
 
-void UStandardAttributeSet::OnRep_AccuracyModifier(const FGameplayAttributeData& OldAccuracyModifier) {
-    GAMEPLAYATTRIBUTE_REPNOTIFY(UStandardAttributeSet, AccuracyModifier, OldAccuracyModifier);
-}
-
-
 void UStandardAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
     DOREPLIFETIME_CONDITION_NOTIFY(UStandardAttributeSet, MovementSpeedModifier, COND_None, REPNOTIFY_Always);
-
-    DOREPLIFETIME_CONDITION_NOTIFY(UStandardAttributeSet, AccuracyModifier, COND_None, REPNOTIFY_Always);
 }

@@ -5,7 +5,7 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
 
-#include "Ability/AbilitySet.h"
+#include "GAS/GASAbilitySet.h"
 #include "Character/TPSCharacter.h"
 
 #include "TPSPlayerCharacter.generated.h"

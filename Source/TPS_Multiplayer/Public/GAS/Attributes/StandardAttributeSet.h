@@ -5,7 +5,7 @@
 #include "AttributeSet.h"
 #include "AbilitySystemComponent.h"
 
-#include "Util/GASUtilities.h"
+#include "GAS/GASUtilities.h"
 
 #include "StandardAttributeSet.generated.h"
 
@@ -27,17 +27,6 @@ public:
     //
     UFUNCTION()
     void OnRep_MovementSpeedModifier(const FGameplayAttributeData& OldMovementSpeedModifier);
-
-
-    //- Weapon Handling ----------------------------------=
-    // 
-    //- Accuracy Modifier
-    UPROPERTY(BlueprintReadOnly, Category = "Weapons", ReplicatedUsing = OnRep_AccuracyModifier)
-    FGameplayAttributeData AccuracyModifier;
-    ATTRIBUTE_ACCESSORS(UStandardAttributeSet, AccuracyModifier);
-    //
-    UFUNCTION()
-    void OnRep_AccuracyModifier(const FGameplayAttributeData& OldAccuracyModifier);
     
 
 //~ ============================================================= ~//

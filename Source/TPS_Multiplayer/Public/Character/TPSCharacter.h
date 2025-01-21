@@ -3,20 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/WidgetComponent.h"
 #include "GameFramework/Character.h"
 
 #include "AbilitySystemInterface.h"
 #include "AbilitySystemComponent.h"
 #include "TPSCharacterInventory.h"
 
-#include "Ability/AbilitySet.h"
+#include "GAS/GASAbilitySet.h"
 #include "Character/TPSLocomotionState.h"
 #include "Character/TPSCharacterState.h"
 #include "Character/TPSCharacterBodyType.h"
 #include "Inventory/TPSEquipmentManager.h"
 #include "Weapon/TPSWeapon.h"
-#include "Weapon/TPSWeaponType.h"
 
 #include "TPSCharacter.generated.h"
 
