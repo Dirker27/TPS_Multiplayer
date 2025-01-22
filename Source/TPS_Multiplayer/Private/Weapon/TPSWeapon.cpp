@@ -9,6 +9,13 @@ ATPSWeapon::ATPSWeapon()
     Configuration = CreateDefaultSubobject<UTPSWeaponConfiguration>(TEXT("CustomConfiguration"));
 }
 
+void ATPSWeapon::BeginPlay()
+{
+    Super::BeginPlay();
+
+    CurrentAmmunition = Configuration->AmmunitionCapacity;
+}
+
 void ATPSWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
     DOREPLIFETIME(ATPSWeapon, CurrentAmmunition);
