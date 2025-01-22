@@ -80,9 +80,9 @@ void ATPSCharacter::BeginPlay()
 	}
 }
 
-void ATPSCharacter::Tick(float DeltaTime)
+void ATPSCharacter::Tick(float deltaTime)
 {
-	Super::Tick(DeltaTime);
+	Super::Tick(deltaTime);
 
 	SyncAttributesFromGAS();
 
