@@ -33,7 +33,11 @@ void UTPSEquipmentManager::BeginPlay()
         EquipToTacticalHolster(GetItemFromEquipmentSlot(TacticalEquipment));
     }
 
-    ActiveEquipmentSlot = ETPSEquipmentSlot::None;
+    // For characters who should spawn equipped.
+    if (ActiveEquipmentSlot != None)
+    {
+        EquipAndArm(ActiveEquipmentSlot);
+    }
 }
 
 void UTPSEquipmentManager::BindToMesh(USkeletalMeshComponent* mesh)

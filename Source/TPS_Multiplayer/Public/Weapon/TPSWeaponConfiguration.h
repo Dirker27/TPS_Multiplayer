@@ -21,24 +21,27 @@ class TPS_MULTIPLAYER_API UTPSWeaponConfiguration : public UDataAsset
     GENERATED_BODY()
 
 public:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
     TEnumAsByte<ETPSWeaponFireMode> FireMode = SingleShot;
 
-    UPROPERTY(EditDefaultsOnly)
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
     float Damage = 1;
 
-    UPROPERTY(EditDefaultsOnly)
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
     float FireDelaySeconds = 0.01; // Delay before a fire actually happens (reaction/trigger-pull time)
 
-    UPROPERTY(EditDefaultsOnly)
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
     float FireRateDelaySeconds = 0.2;
 
-    UPROPERTY(EditDefaultsOnly)
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
     float ReloadDelaySeconds = 2;
 
-    UPROPERTY(EditDefaultsOnly)
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
     int AmmunitionCapacity = 10;
 
-    UPROPERTY(EditDefaultsOnly)
-    float AccuracyScalar = 0.5; // 0 - 1 scale of noise
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+    float AccuracyScalar = 0.5; // 0 - 1 scale of accuracy noise
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+    float RecoilScalar = 0.5; // 0 - 1 scale of recoil noise
 };

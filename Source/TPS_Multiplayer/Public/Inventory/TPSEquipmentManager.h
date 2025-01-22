@@ -26,7 +26,7 @@ protected:
 //  STATE
 //~ ============================================================= ~//
 public:
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EquipmentManager|State")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "EquipmentManager|State")
     TEnumAsByte<ETPSEquipmentSlot> ActiveEquipmentSlot;
 
     //WeaponController weaponController;
