@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "TPSAmmunitionModifierType.generated.h"
+#include "TPSAmmunitionType.generated.h"
 
 // Compatability type (Chambering)
 UENUM(BlueprintType)

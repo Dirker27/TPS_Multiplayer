@@ -6,7 +6,7 @@
 
 ATPSWeapon::ATPSWeapon()
 {
-    Configuration = CreateDefaultSubobject<UTPSWeaponConfiguration>(TEXT("CustomConfiguration"));
+    Configuration = CreateDefaultSubobject<UTPSWeaponConfiguration>(TEXT("DefaultConfiguration"));
 }
 
 void ATPSWeapon::BeginPlay()

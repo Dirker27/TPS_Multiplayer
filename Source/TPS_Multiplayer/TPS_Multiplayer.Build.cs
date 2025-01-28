@@ -9,7 +9,7 @@ public class TPS_Multiplayer : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
 		PublicDependencyModuleNames.AddRange(new string[] { 
-			"Core", "CoreUObject", "Engine", "InputCore", "UMG" 
+			"Core", "CoreUObject", "Engine", "InputCore", "UMG", "GameplayAbilities"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {

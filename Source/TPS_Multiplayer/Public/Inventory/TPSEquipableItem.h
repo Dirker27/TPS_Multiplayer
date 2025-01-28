@@ -8,6 +8,7 @@
 #include "AbilitySystemInterface.h"
 #include "AbilitySystemComponent.h"
 #include "Behavior/TPSMountable.h"
+#include "Components/BoxComponent.h"
 
 #include "TPSEquipableItem.generated.h"
 
@@ -17,14 +18,19 @@ class TPS_MULTIPLAYER_API ATPSEquipableItem : public ATPSMountableActor
     GENERATED_BODY()
 
 public:
-    //ATPSEquipableItem();
+    ATPSEquipableItem();
     //~ATPSEquipableItem();
 
 //~ ============================================================= ~//
 //  COMPONENTS
 //~ ============================================================= ~//
-public:
-    TObjectPtr<USkeletalMeshComponent> Mesh;
+protected:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TObjectPtr<UStaticMeshComponent> Mesh;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TObjectPtr<UBoxComponent> CollisionComponent;
+
 
 #if WITH_EDITORONLY_DATA
     /** Component shown in the editor only to indicate character facing */

@@ -39,10 +39,6 @@ public:
     //- Configuration
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Configuration")
     TObjectPtr<UTPSWeaponConfiguration> Configuration;
-    //
-    //- Muzzle/LaunchPoint
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
-    FTransform Muzzle = GetTransform();
 
     //- State --------------------------------------------=
 	//
