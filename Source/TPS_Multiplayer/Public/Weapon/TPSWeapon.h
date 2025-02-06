@@ -23,6 +23,7 @@ public:
 
 protected:
     virtual void BeginPlay() override;
+    virtual void Tick(float DeltaTime) override;
 
 //~ ============================================================= ~//
 //  ATTRIBUTES
@@ -46,6 +47,10 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State", Replicated);
     int CurrentAmmunition;
     //
+    //- IsReloading
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State", Replicated)
+    bool IsReloading;
+    //
     //- IsAiming
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State", Replicated)
     bool IsAiming;
@@ -53,24 +58,52 @@ public:
 	//- IsFiring
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State", Replicated)
     bool IsFiring;
+    //
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+    float TimeLastFired;
+    //
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+    bool HasEverFired;
+    //
+    //- If follow-up attacks are allowed per-press.
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+    bool CanFire;
+    //
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+    int SuccessiveFireCount;
+
+//~ ============================================================= ~//
+//  BEHAVIOR
+//~ ============================================================= ~//
+public:
+    UFUNCTION(BlueprintCallable)
+    void Fire();
+
+    virtual void PerformFire() { UE_LOG(LogTemp, Log, TEXT("Weapon::PerformFire()")); };
+
+    UFUNCTION(BlueprintCallable)
+    void Reload();
+
+//~ ============================================================= ~//
+//  Equipable Overrides
+//~ ============================================================= ~//
+public:
+    virtual void StartUse() override;
+    virtual void StopUse() override;
+	virtual void Equip() override;
+    virtual void UnEquip() override;
 
 //~ ============================================================= ~//
 //  Blueprint Extensions
 //~ ============================================================= ~//
 public:
     //- Transforms -----------------------------------------=
-	//
-	//- WeaponType
-	UFUNCTION(BlueprintCallable, BlueprintPure)
-	static FString WeaponTypeToFString(const ETPSWeaponType t) {
-		return FString(ETPSWeaponTypeToString(t));
-	};
+    //
+    //- WeaponType
+    UFUNCTION(BlueprintCallable, BlueprintPure)
+    static FString WeaponTypeToFString(const ETPSWeaponType t) {
+        return FString(ETPSWeaponTypeToString(t));
+    };
 
-//~ ============================================================= ~//
-//  Equipable Overrides
-//~ ============================================================= ~//
-public:
-	virtual void Equip();
-    virtual void UnEquip();
 };
 

@@ -56,9 +56,9 @@ public:
 
     //- State --------------------------------------------=
     //
-    //- IsActive
+    //- IsEquipped
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
-    bool isActiveAndEnabled;
+    bool IsEquipped;
 
 //~ ============================================================= ~//
 //  BEHAVIOR
@@ -67,24 +67,24 @@ public:
     //- Equipable -----------------------------------------=
     //
     UFUNCTION(BlueprintCallable)
-    void Equip();
+    virtual void Equip();
     UFUNCTION(BlueprintImplementableEvent)
     void OnEquip();
     //
     UFUNCTION(BlueprintCallable)
-    void UnEquip();
+    virtual void UnEquip();
     UFUNCTION(BlueprintImplementableEvent)
     void OnUnEquip();
 
     //- Usable ------------------------------------------=
     //  (TODO: Extract to UsableItem?)
     UFUNCTION(BlueprintCallable)
-    void StartUse();
+    virtual void StartUse();
     UFUNCTION(BlueprintImplementableEvent)
     void OnStartUse();
     //
     UFUNCTION(BlueprintCallable)
-    void StopUse();
+    virtual void StopUse();
     UFUNCTION(BlueprintImplementableEvent)
     void OnStopUse();
 };

@@ -28,10 +28,12 @@ ATPSEquipableItem::ATPSEquipableItem()
 
 void ATPSEquipableItem::Equip()
 {
+	IsEquipped = true;
 	OnEquip();
 }
 void ATPSEquipableItem::UnEquip()
 {
+	IsEquipped = false;
 	OnUnEquip();
 }
 

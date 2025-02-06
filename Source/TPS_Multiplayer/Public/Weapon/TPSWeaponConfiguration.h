@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Ammunition/TPSAmmunitionType.h"
 
 #include "TPSWeaponConfiguration.generated.h"
 
@@ -25,6 +26,9 @@ public:
     TEnumAsByte<ETPSWeaponFireMode> FireMode = SingleShot;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+    int BurstFireCount = 3;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
     float Damage = 1;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
@@ -38,6 +42,9 @@ public:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
     int AmmunitionCapacity = 10;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TEnumAsByte<ETPSAmmunitionType> AmmunitionType;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
     float AccuracyScalar = 0.5; // 0 - 1 scale of accuracy noise

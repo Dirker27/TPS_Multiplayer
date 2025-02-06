@@ -144,6 +144,9 @@ public:
 	bool IsEquipping;
 	//
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Input", Replicated)
+	bool IsReloading;
+	//
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Input", Replicated)
 	bool IsInteracting;
 	//
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Input", Replicated)
@@ -224,6 +227,17 @@ public:
 	void EndUnEquipWeapon();
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnUnEquipWeaponAbilityEnd();
+	//
+	//- Reload Weapon
+	UFUNCTION(BlueprintCallable)
+	void StartReloadWeapon();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnReloadWeaponAbilityStart();
+	//
+	UFUNCTION(BlueprintCallable)
+	void EndReloadWeapon();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnReloadWeaponAbilityEnd();
 	//
 	//- Interact
 	UFUNCTION(BlueprintCallable)

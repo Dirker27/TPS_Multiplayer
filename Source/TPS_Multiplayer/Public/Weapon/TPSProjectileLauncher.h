@@ -19,24 +19,14 @@ class TPS_MULTIPLAYER_API ATPSProjectileLauncher : public ATPSWeapon
 public:
     ATPSProjectileLauncher();
 
-protected:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TObjectPtr<UTPSMountPoint> Muzzle;
-
 public:
-    //- Identity -----------------------------------------=
-    //
-    //- Name
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Identity")
-    TEnumAsByte<ETPSAmmunitionType> AmmunitionType;
-
     //- Configuration ------------------------------------=
     //
     //- Muzzle/LaunchPoint
-    //UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
-    //FTransform Muzzle = GetTransform();
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+    TObjectPtr<UTPSMountPoint> Muzzle;
     //
-    //- Configuration
+    //- Fired Projectile
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
     TSubclassOf<ATPSProjectile> ProjectileTemplate;
 
@@ -44,13 +34,13 @@ public:
 //  BEHAVIOR
 //~ ============================================================= ~//
 public:
-
     UFUNCTION(BlueprintCallable)
-    void Launch();
+    void LaunchProjectile();
+    virtual void PerformFire() override; // Wired to ^
 
     //- Usable ------------------------------------------=
     //
-    virtual void StartUse();
+    virtual void StartUse() override;
     //
-    virtual void StopUse();
+    virtual void StopUse() override;
 };

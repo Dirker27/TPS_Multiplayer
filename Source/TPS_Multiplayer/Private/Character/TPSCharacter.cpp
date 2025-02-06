@@ -64,6 +64,7 @@ void ATPSCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 	DOREPLIFETIME(ATPSCharacter, IsAiming);
 	DOREPLIFETIME(ATPSCharacter, IsFiring);
 	DOREPLIFETIME(ATPSCharacter, IsEquipping);
+	DOREPLIFETIME(ATPSCharacter, IsReloading);
 	DOREPLIFETIME(ATPSCharacter, IsInteracting);
 	DOREPLIFETIME(ATPSCharacter, IsInMenu);
 
@@ -300,6 +301,7 @@ bool ATPSCharacter::IsActionActive() const {
 	return IsAiming
 		|| IsFiring
 		|| IsEquipping
+		|| IsReloading
 		|| IsInteracting
 		|| IsInMenu;
 }
@@ -336,6 +338,8 @@ AActor* ATPSCharacter::LineTrace(const UObject* WorldContextObject) {
 //  Ability Extensions
 //~ ============================================================= ~//
 
+// - BOOST -//
+
 void ATPSCharacter::StartBoost() {
 	IsBoosting = true;
 	OnBoostAbilityStart();
@@ -344,6 +348,8 @@ void ATPSCharacter::EndBoost() {
 	IsBoosting = false;
 	OnBoostAbilityEnd();
 }
+
+// - AIM -//
 
 void ATPSCharacter::StartAim() {
 	IsAiming = true;
@@ -368,13 +374,14 @@ void ATPSCharacter::EndAim() {
 	OnAimAbilityEnd();
 }
 
+// - FIRE WEAPON / USE EQUIPMENT -//
+
 void ATPSCharacter::StartFireWeapon() {
 	IsFiring = true;
 
 	ATPSWeapon* weapon = GetEquippedWeapon();
 	if (weapon != nullptr)
 	{
-		weapon->IsFiring = true;
 		weapon->StartUse();
 	}
 
@@ -386,12 +393,13 @@ void ATPSCharacter::EndFireWeapon() {
 	ATPSWeapon* weapon = GetEquippedWeapon();
 	if (weapon != nullptr)
 	{
-		weapon->IsFiring = false;
 		weapon->StopUse();
 	}
 
 	OnFireWeaponAbilityEnd();
 }
+
+// - EQUIP WEAPON -//
 
 void ATPSCharacter::StartEquipWeapon() {
 	IsEquipping = true;
@@ -409,6 +417,8 @@ void ATPSCharacter::EndEquipWeapon() {
 	OnEquipWeaponAbilityEnd();
 }
 
+// - UN-EQUIP WEAPON -//
+
 void ATPSCharacter::StartUnEquipWeapon() {
 	IsEquipping = true;
 
@@ -425,6 +435,25 @@ void ATPSCharacter::EndUnEquipWeapon() {
 	OnUnEquipWeaponAbilityEnd();
 }
 
+// - RELOAD WEAPON -//
+
+void ATPSCharacter::StartReloadWeapon() {
+	IsReloading = true;
+
+	ATPSWeapon* weapon = GetEquippedWeapon();
+	if (weapon != nullptr)
+	{
+		weapon->Reload();
+	}
+
+	OnReloadWeaponAbilityStart();
+}
+void ATPSCharacter::EndReloadWeapon() {
+	IsReloading = false;
+	OnReloadWeaponAbilityEnd();
+}
+
+// - INTERACT -//
 
 void ATPSCharacter::StartInteract() {
 	IsInteracting = true;
