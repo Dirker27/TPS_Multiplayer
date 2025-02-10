@@ -15,16 +15,19 @@ void ATPSWeapon::BeginPlay()
 {
     Super::BeginPlay();
 
-    CurrentAmmunition = Configuration->AmmunitionCapacity;
+    CurrentAmmunitionCount = Configuration->AmmunitionCapacity;
 
+	CurrentWeaponState = Ready;
+	PreviousWeaponState = Arming;
 	IsFiring = false;
 	IsAiming = false;
 	IsEquipped = false;
 	IsReloading = false;
+
 	HasEverFired = false;
 
-	CanFire = true;
-	TimeLastFired = FApp::GetGameTime();
+	HasTriggerCompleted = false;
+	TimeLastFired = 0;
 	SuccessiveFireCount = 0;
 }
 
@@ -34,25 +37,9 @@ void ATPSWeapon::Tick(float DeltaTime)
 
 	if (IsFiring)
 	{
-		float currentGameTime = FApp::GetGameTime();
-
-		if (CanFire
-			&& (currentGameTime - Configuration->FireRateDelaySeconds) > TimeLastFired
-			&& CurrentAmmunition > 0)
+		if (CanFire())
 		{
 			Fire();
-
-			switch (Configuration->FireMode)
-			{
-			case SingleShot:
-				CanFire = false;
-				break;
-			case Burst:
-				if (SuccessiveFireCount >= Configuration->BurstFireCount) { CanFire = false; }
-				break;
-			case FullAuto:
-				break;
-			}
 		}
 		else
 		{
@@ -63,7 +50,7 @@ void ATPSWeapon::Tick(float DeltaTime)
 
 void ATPSWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
-    DOREPLIFETIME(ATPSWeapon, CurrentAmmunition);
+    DOREPLIFETIME(ATPSWeapon, CurrentAmmunitionCount);
 	DOREPLIFETIME(ATPSWeapon, IsReloading);
     DOREPLIFETIME(ATPSWeapon, IsAiming);
     DOREPLIFETIME(ATPSWeapon, IsFiring);
@@ -73,7 +60,9 @@ void ATPSWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifeti
 void ATPSWeapon::StartUse()
 {
     Super::StartUse();
+
     IsFiring = true;
+	ApplyWeaponState(Firing);
 }
 
 void ATPSWeapon::StopUse()
@@ -81,9 +70,10 @@ void ATPSWeapon::StopUse()
     Super::StopUse();
 
     IsFiring = false;
+	ApplyWeaponState(PreviousWeaponState);
 
 	// Reset Trigger
-	CanFire = true;
+	HasTriggerCompleted = false;
 	SuccessiveFireCount = 0;
 }
 
@@ -98,29 +88,78 @@ void ATPSWeapon::UnEquip()
     Super::UnEquip();
 }
 
-
 void ATPSWeapon::Fire()
 {
-	UE_LOG(LogTemp, Log, TEXT("BANG!"));
+	OnFire();
 
 	PerformFire();
 
-	CurrentAmmunition--;
+	CurrentAmmunitionCount--;
 	TimeLastFired = FApp::GetGameTime();
 	SuccessiveFireCount++;
+
+	switch (Configuration->FireMode)
+	{
+	case SingleShot:
+		HasTriggerCompleted = true;
+		break;
+	case Burst:
+		if (SuccessiveFireCount >= Configuration->BurstFireCount)
+		{
+			HasTriggerCompleted = true;
+		}
+		break;
+	case FullAuto:
+	default:
+		break;
+	}
+
+	if (CurrentAmmunitionCount <= 0)
+	{
+		HasTriggerCompleted = true;
+	}
 
 	HasEverFired = true;
 }
 
-void ATPSWeapon::Reload()
+bool ATPSWeapon::CanFire()
 {
-    // 'plus 1'
-    if (CurrentAmmunition > 0)
-    {
-        CurrentAmmunition = Configuration->AmmunitionCapacity + 1;
-    }
-    else
-    {
-        CurrentAmmunition = Configuration->AmmunitionCapacity;
-    }
+	if (HasTriggerCompleted)
+	{
+		return false;
+	}
+
+	float cycleRateSeconds = 1.0f / Configuration -> CycleRate;
+
+	float currentGameTime = FApp::GetGameTime();
+	if (CurrentAmmunitionCount > 0
+		&& (currentGameTime - cycleRateSeconds) > TimeLastFired) {
+		return true;
+	}
+	return false;
+}
+
+
+void ATPSWeapon::StartReload()
+{
+    ApplyWeaponState(Arming);
+
+	if (CurrentAmmunitionCount > 0 && Configuration->HasChamber)
+	{
+		CurrentAmmunitionCount = 1;
+	}
+}
+
+void ATPSWeapon::CommitReload(int newAmmunitionCount)
+{
+	CurrentAmmunitionCount += newAmmunitionCount;
+	ApplyWeaponState(Ready);
+}
+
+void ATPSWeapon::ApplyWeaponState(ETPSWeaponState newState)
+{
+	if (newState == CurrentWeaponState) { return; }
+
+	PreviousWeaponState = CurrentWeaponState;
+	CurrentWeaponState = newState;
 }

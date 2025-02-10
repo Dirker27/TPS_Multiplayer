@@ -21,12 +21,14 @@ public:
 
 protected:
     virtual void BeginPlay() override;
+    virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 
 //~ ============================================================= ~//
 //  STATE
 //~ ============================================================= ~//
 public:
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "EquipmentManager|State")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "EquipmentManager|State", Replicated)
     TEnumAsByte<ETPSEquipmentSlot> ActiveEquipmentSlot;
 
     //WeaponController weaponController;
@@ -144,17 +146,17 @@ protected:
     void EquipToBackHolster(ATPSEquipableItem* weapon);
 
 
-private:
-    //UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="EquipmentManager|State")
+protected:
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Replicated, Category="EquipmentManager|State")
     TObjectPtr<ATPSEquipableItem> PrimaryWeaponInstance;
-    //UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EquipmentManager|State")
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Replicated, Category = "EquipmentManager|State")
     TObjectPtr<ATPSEquipableItem> SecondaryWeaponInstance;
-    //UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EquipmentManager|State")
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Replicated, Category = "EquipmentManager|State")
     TObjectPtr<ATPSEquipableItem> TertiaryWeaponInstance;
 
-    //UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EquipmentManager|State")
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Replicated, Category = "EquipmentManager|State")
     TObjectPtr<ATPSEquipableItem> LethalEquipmentInstance;
-    //UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EquipmentManager|State")
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Replicated, Category = "EquipmentManager|State")
     TObjectPtr<ATPSEquipableItem> TacticalEquipmentInstance;
 
 public:

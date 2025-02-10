@@ -3,10 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "TPSWeaponConfiguration.h"
 
 #include "Inventory/TPSEquipableItem.h"
 #include "Weapon/TPSWeaponType.h"
+#include "Weapon/TPSWeaponConfiguration.h"
+#include "Weapon/TPSWeaponState.h"
 
 #include "TPSWeapon.generated.h"
 
@@ -45,30 +46,39 @@ public:
 	//
     //- Ammo
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State", Replicated);
-    int CurrentAmmunition;
+    int CurrentAmmunitionCount;
     //
-    //- IsReloading
+    //- State
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State", Replicated)
+    TEnumAsByte<ETPSWeaponState> CurrentWeaponState;
+    //
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "State", Replicated)
+    TEnumAsByte<ETPSWeaponState> PreviousWeaponState;
+    //
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State", Replicated)
     bool IsReloading;
     //
-    //- IsAiming
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State", Replicated)
-    bool IsAiming;
-    //
-	//- IsFiring
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State", Replicated)
     bool IsFiring;
     //
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
-    float TimeLastFired;
-    //
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
     bool HasEverFired;
     //
-    //- If follow-up attacks are allowed per-press.
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
-    bool CanFire;
+    //- IsAiming (Behavior / Aesthetic Modifier)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State", Replicated)
+    bool IsAiming;
     //
+    //- Fire Control -----
+    //
+    //- Meter fire rate
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+    float TimeLastFired;
+    //
+    //- Consume the trigger (single/burst mode)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+    bool HasTriggerCompleted;
+    //
+    //- For burst-fire count
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
     int SuccessiveFireCount;
 
@@ -78,11 +88,23 @@ public:
 public:
     UFUNCTION(BlueprintCallable)
     void Fire();
+    UFUNCTION(BlueprintImplementableEvent)
+    void OnFire();
 
     virtual void PerformFire() { UE_LOG(LogTemp, Log, TEXT("Weapon::PerformFire()")); };
 
+    UFUNCTION(BlueprintCallable, BlueprintPure)
+    bool CanFire();
+
     UFUNCTION(BlueprintCallable)
-    void Reload();
+    void StartReload();
+
+    UFUNCTION(BlueprintCallable)
+    void CommitReload(int newAmmunitionCount);
+
+private:
+    UFUNCTION(BlueprintCallable)
+    void ApplyWeaponState(ETPSWeaponState newState);
 
 //~ ============================================================= ~//
 //  Equipable Overrides
@@ -104,6 +126,11 @@ public:
     static FString WeaponTypeToFString(const ETPSWeaponType t) {
         return FString(ETPSWeaponTypeToString(t));
     };
-
+    //
+    //- WeaponState
+    UFUNCTION(BlueprintCallable, BlueprintPure)
+    static FString WeaponStateToFString(ETPSWeaponState state) {
+        return FString(ETPSWeaponStateToString(state));
+    };
 };
 

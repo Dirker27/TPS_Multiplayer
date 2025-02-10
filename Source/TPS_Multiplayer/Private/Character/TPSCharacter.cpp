@@ -443,13 +443,20 @@ void ATPSCharacter::StartReloadWeapon() {
 	ATPSWeapon* weapon = GetEquippedWeapon();
 	if (weapon != nullptr)
 	{
-		weapon->Reload();
+		weapon->StartReload();
 	}
 
 	OnReloadWeaponAbilityStart();
 }
 void ATPSCharacter::EndReloadWeapon() {
 	IsReloading = false;
+
+	ATPSWeapon* weapon = GetEquippedWeapon();
+	if (weapon != nullptr)
+	{
+		weapon->CommitReload(weapon->Configuration->AmmunitionCapacity);
+	}
+
 	OnReloadWeaponAbilityEnd();
 }
 

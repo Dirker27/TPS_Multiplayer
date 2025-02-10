@@ -3,6 +3,7 @@
 #include "Inventory/TPSEquipmentManager.h"
 
 #include "Behavior/TPSMountPoint.h"
+#include "Net/UnrealNetwork.h"
 
 UTPSEquipmentManager::UTPSEquipmentManager()
 {
@@ -16,6 +17,18 @@ UTPSEquipmentManager::UTPSEquipmentManager()
     LeftLegHolster = CreateDefaultSubobject<UTPSMountPoint>(TEXT("MP-LeftLegHolster"));
     RightHipHolster = CreateDefaultSubobject<UTPSMountPoint>(TEXT("MP-RightHipHolster"));
     RightLegHolster = CreateDefaultSubobject<UTPSMountPoint>(TEXT("MP-RightLegHolster"));
+}
+
+void UTPSEquipmentManager::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+    DOREPLIFETIME(UTPSEquipmentManager, ActiveEquipmentSlot);
+
+    DOREPLIFETIME(UTPSEquipmentManager, PrimaryWeaponInstance);
+    DOREPLIFETIME(UTPSEquipmentManager, SecondaryWeaponInstance);
+    DOREPLIFETIME(UTPSEquipmentManager, TertiaryWeaponInstance);
+    DOREPLIFETIME(UTPSEquipmentManager, LethalEquipmentInstance);
+    DOREPLIFETIME(UTPSEquipmentManager, TacticalEquipmentInstance);
 }
 
 void UTPSEquipmentManager::BeginPlay()

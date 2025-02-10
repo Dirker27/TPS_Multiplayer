@@ -24,16 +24,15 @@ void ATPSProjectileLauncher::StopUse()
 
 void ATPSProjectileLauncher::PerformFire()
 {
-	//if (HasAuthority()) {
+	if (HasAuthority()) {
 		LaunchProjectile();
-	//}
-}	
+	}
+}
 
 void ATPSProjectileLauncher::LaunchProjectile()
 {
 	ATPSProjectile* p = GetWorld()->SpawnActor<ATPSProjectile>(ProjectileTemplate,
 		Muzzle->GetComponentTransform().GetLocation(), Muzzle->GetComponentTransform().GetRotation().Rotator());
-	//ATPSProjectile* p = GetWorld()->SpawnActor<ATPSProjectile>(ProjectileTemplate);
 
 	if (IsValid(p)) {
 		p->Launch();

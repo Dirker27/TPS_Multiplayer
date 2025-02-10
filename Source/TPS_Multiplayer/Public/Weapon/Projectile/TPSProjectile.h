@@ -19,6 +19,7 @@ class TPS_MULTIPLAYER_API ATPSProjectile : public AActor
 public:
     ATPSProjectile();
 
+    // UE Implementables
 protected:
     virtual void BeginPlay() override;
     virtual void Tick(float deltaSeconds) override;
@@ -67,8 +68,13 @@ public:
 //~ ============================================================= ~//
 //  BEHAVIOR
 //~ ============================================================= ~//
+public:
     UFUNCTION(BlueprintCallable)
     void Launch();
     UFUNCTION(BlueprintImplementableEvent)
     void OnLaunch();
+
+protected:
+    UFUNCTION(BlueprintCallable)
+    AActor* LineTrace(const UObject* WorldContextObject, const float deltaSeconds);
 };

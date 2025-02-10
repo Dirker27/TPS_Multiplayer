@@ -25,7 +25,7 @@ public:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
     TEnumAsByte<ETPSWeaponFireMode> FireMode = SingleShot;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (EditCondition = "FireMode == ETPSWeaponFireMode::Burst", EditConditionHides))
     int BurstFireCount = 3;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
@@ -34,14 +34,19 @@ public:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
     float FireDelaySeconds = 0.01; // Delay before a fire actually happens (reaction/trigger-pull time)
 
+    // Rounds / second
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-    float FireRateDelaySeconds = 0.2;
+    float CycleRate = 0.2;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
     float ReloadDelaySeconds = 2;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
     int AmmunitionCapacity = 10;
+
+    // Weapon can 'plus-1'
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+    bool HasChamber = true;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TEnumAsByte<ETPSAmmunitionType> AmmunitionType;

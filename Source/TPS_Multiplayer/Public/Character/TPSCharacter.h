@@ -113,7 +113,6 @@ public:
 	bool IsCrouching() const;
 	//
 	//- IsIdle (Synthetic)
-	// True if Crouching OR Prone.
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool IsIdle() const;
 
