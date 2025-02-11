@@ -78,6 +78,7 @@ void ATPSCharacter::BeginPlay()
 	if (HasAuthority())
 	{
 		// Init
+		EquipmentManager->Initialize();
 	}
 }
 
@@ -101,6 +102,12 @@ void ATPSCharacter::Tick(float deltaTime)
 
 	if (HasAuthority()) {
 		TargetLookRotation = GetViewRotation();
+	}
+
+	ATPSWeapon* weapon = GetEquippedWeapon();
+	if (IsValid(weapon))
+	{
+		weapon->TargetDirection = TargetLookRotation;
 	}
 }
 

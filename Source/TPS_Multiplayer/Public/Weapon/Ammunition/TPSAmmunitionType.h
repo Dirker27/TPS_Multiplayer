@@ -10,17 +10,40 @@
 UENUM(BlueprintType)
 enum ETPSAmmunitionType : int
 {
+	//- Pistol Cartridges ------------
+	//
+	// 9mm Luger
 	NineMM_Luger,
+	//
+	// .45 ACP
 	FortyFive_ACP,
-
+	
+	//- Rifle Cartridges -------------
+	//
+	// 5.56x45mm NATO
 	FiveFiveSix_NATO,
+	//
+	// 7.62x51mm NATO
 	SevenSixTwo_NATO,
-
+	//
+	// 7.62x39mm Russian
 	SevenSixTwo_Russian,
+	//
+	// 5.45x39mm Russian
 	FiveFourFive_Russian,
-
+	//
+	// 7.62x54mmR Mosin Nagant
 	SevenSixTwo_Rimmed,
-	EightMM_Mauser
+	//
+	// 8mm Mauser
+	EightMM_Mauser,
+
+	//- Shotgun Cartridges -----------
+	//
+	// 12-Gauge
+	TwelveGauge,
+	// 20-Gauge
+	Twenty_Gauge
 };
 
 static const char* ETPSAmmunitionTypeToString(const ETPSAmmunitionType type) {

@@ -30,6 +30,9 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TObjectPtr<UStaticMeshComponent> Mesh;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TObjectPtr<UTexture2D> HitDecal;
+
     UPROPERTY()
     TObjectPtr<UArrowComponent> ArrowComponent;
 

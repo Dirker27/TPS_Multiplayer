@@ -32,14 +32,14 @@ public:
     float Damage = 1;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-    float FireDelaySeconds = 0.01; // Delay before a fire actually happens (reaction/trigger-pull time)
+    float TriggerDelaySeconds = 0.1; // Delay before a fire actually happens (reaction/trigger-pull time)
 
     // Rounds / second
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-    float CycleRate = 0.2;
+    float CycleRate = 3.0f;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-    float ReloadDelaySeconds = 2;
+    float ReloadDelaySeconds = 3.0f;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
     int AmmunitionCapacity = 10;
@@ -51,8 +51,9 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TEnumAsByte<ETPSAmmunitionType> AmmunitionType;
 
+    // Degrees of shot spread in MOA
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-    float AccuracyScalar = 0.5; // 0 - 1 scale of accuracy noise
+    float AccuracySpreadMOA = 1.0;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
     float RecoilScalar = 0.5; // 0 - 1 scale of recoil noise

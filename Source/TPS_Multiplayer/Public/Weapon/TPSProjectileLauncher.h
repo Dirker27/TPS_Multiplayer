@@ -3,13 +3,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
 #include "Ammunition/TPSAmmunitionType.h"
 #include "Projectile/TPSProjectile.h"
+#include "Reticle/TPSReticle.h"
 #include "UObject/ObjectMacros.h"
-
 #include "Weapon/TPSWeapon.h"
 
 #include "TPSProjectileLauncher.generated.h"
+
+UENUM(BlueprintType)
+enum ETPSProjectileBehavior : int
+{
+    Slug = 0,
+    Spread = 1
+};
 
 UCLASS()
 class TPS_MULTIPLAYER_API ATPSProjectileLauncher : public ATPSWeapon
@@ -29,14 +37,26 @@ public:
     //- Fired Projectile
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
     TSubclassOf<ATPSProjectile> ProjectileTemplate;
+    //
+    //- UI Reticle
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+    TObjectPtr<UTPSWeaponReticle> Reticle;
+    //
+    //- Projectile Behavior (Shotgun / Rifle)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+    TEnumAsByte<ETPSProjectileBehavior> ProjectileBehavior;
+    //
+    //- Spread Count (iff Shotgun)
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Configuration", meta = (EditCondition = "ProjectileBehavior == ETPSProjectileBehavior::Spread", EditConditionHides))
+    float SpreadCount = 1.0;
 
 //~ ============================================================= ~//
 //  BEHAVIOR
 //~ ============================================================= ~//
 public:
     UFUNCTION(BlueprintCallable)
-    void LaunchProjectile();
-    virtual void PerformFire() override; // Wired to ^
+    void LaunchProjectile(FRotator target);
+    virtual void PerformFire(FRotator targetDirection) override; // Wired to ^
 
     //- Usable ------------------------------------------=
     //

@@ -8,6 +8,9 @@ ATPSWeapon::ATPSWeapon()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	SetReplicates(true);
+	SetReplicateMovement(true);
+
     Configuration = CreateDefaultSubobject<UTPSWeaponConfiguration>(TEXT("DefaultConfiguration"));
 }
 
@@ -41,10 +44,7 @@ void ATPSWeapon::Tick(float DeltaTime)
 		{
 			Fire();
 		}
-		else
-		{
-			UE_LOG(LogTemp, Log, TEXT("-<click>-"));
-		}
+		//else { UE_LOG(LogTemp, Log, TEXT("-<click>-")); }
 	}
 }
 
@@ -90,9 +90,7 @@ void ATPSWeapon::UnEquip()
 
 void ATPSWeapon::Fire()
 {
-	OnFire();
-
-	PerformFire();
+	PerformFire(TargetDirection);
 
 	CurrentAmmunitionCount--;
 	TimeLastFired = FApp::GetGameTime();
@@ -120,6 +118,8 @@ void ATPSWeapon::Fire()
 	}
 
 	HasEverFired = true;
+
+	OnFire();
 }
 
 bool ATPSWeapon::CanFire()

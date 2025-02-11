@@ -70,6 +70,10 @@ public:
     //
     //- Fire Control -----
     //
+    //- Targeting
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State");
+    FRotator TargetDirection;
+    //
     //- Meter fire rate
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
     float TimeLastFired;
@@ -91,7 +95,7 @@ public:
     UFUNCTION(BlueprintImplementableEvent)
     void OnFire();
 
-    virtual void PerformFire() { UE_LOG(LogTemp, Log, TEXT("Weapon::PerformFire()")); };
+    virtual void PerformFire(FRotator targetDirection) { UE_LOG(LogTemp, Log, TEXT("Weapon::PerformFire()")); };
 
     UFUNCTION(BlueprintCallable, BlueprintPure)
     bool CanFire();

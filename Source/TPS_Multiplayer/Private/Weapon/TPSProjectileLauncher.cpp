@@ -2,6 +2,8 @@
 
 #include "Weapon/TPSProjectileLauncher.h"
 
+#include "Kismet/KismetMathLibrary.h"
+
 ATPSProjectileLauncher::ATPSProjectileLauncher()
 {
 	Muzzle = CreateDefaultSubobject<UTPSMountPoint>(TEXT("Muzzle"));
@@ -22,20 +24,35 @@ void ATPSProjectileLauncher::StopUse()
 	Super::StopUse();
 }
 
-void ATPSProjectileLauncher::PerformFire()
+void ATPSProjectileLauncher::PerformFire(FRotator targetDirection)
 {
 	if (HasAuthority()) {
-		LaunchProjectile();
+
+		int projectileCount = 1;
+		if (ProjectileBehavior == Spread)
+		{
+			projectileCount = SpreadCount;
+		}
+
+		for (int i = 0; i < projectileCount; i++)
+		{
+			// Apply MOA Noise (independent of character's accuracy, this is just the Weapon's spread)
+			FRotator adjustedDirection = targetDirection;
+			float deltaYaw = UKismetMathLibrary::RandomIntegerInRange(-1 * Configuration->AccuracySpreadMOA, Configuration->AccuracySpreadMOA);
+			float deltaPitch = UKismetMathLibrary::RandomIntegerInRange(-1 * Configuration->AccuracySpreadMOA, Configuration->AccuracySpreadMOA);
+			adjustedDirection.Add(deltaPitch, deltaYaw, 0);
+			LaunchProjectile(adjustedDirection);
+		}
 	}
 }
 
-void ATPSProjectileLauncher::LaunchProjectile()
+void ATPSProjectileLauncher::LaunchProjectile(FRotator targetDirection)
 {
 	ATPSProjectile* p = GetWorld()->SpawnActor<ATPSProjectile>(ProjectileTemplate,
-		Muzzle->GetComponentTransform().GetLocation(), Muzzle->GetComponentTransform().GetRotation().Rotator());
+		Muzzle->GetComponentTransform().GetLocation(), targetDirection);
 
 	if (IsValid(p)) {
 		p->Launch();
-		UE_LOG(LogTemp, Log, TEXT("YEET?"));
+		//UE_LOG(LogTemp, Log, TEXT("YEET?"));
 	}
 }

@@ -96,6 +96,8 @@ public:
     void BindToMesh(USkeletalMeshComponent* mesh);
 
     UFUNCTION(BlueprintCallable)
+    void Initialize();
+    UFUNCTION(BlueprintCallable)
     void InstantiateLoadout();
 
     UFUNCTION(BlueprintCallable)

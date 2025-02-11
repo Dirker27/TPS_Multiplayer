@@ -33,8 +33,10 @@ void UTPSEquipmentManager::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 
 void UTPSEquipmentManager::BeginPlay()
 {
-    //BindToCharacter(TargetMesh);
+}
 
+void UTPSEquipmentManager::Initialize()
+{
     if (IsValid(Loadout)) {
         InstantiateLoadout();
 
@@ -120,8 +122,6 @@ void UTPSEquipmentManager::InstantiateLoadout()
     if (IsValid(Loadout->primaryWeapon)) {
         UE_LOG(LogTemp, Log, TEXT("Instantiating Primary Weapon [%s]..."), *Loadout->primaryWeapon->GetName());
         PrimaryWeaponInstance = GetWorld()->SpawnActor<ATPSEquipableItem>(Loadout->primaryWeapon);
-        //PrimaryWeaponInstance->SetReplicates(true);
-        //PrimaryWeaponInstance->SetReplicateMovement(true);
     }
     if (IsValid(Loadout->secondaryWeapon)) {
         UE_LOG(LogTemp, Log, TEXT("Instantiating Secondary Weapon [%s]..."), *Loadout->secondaryWeapon->GetName());
