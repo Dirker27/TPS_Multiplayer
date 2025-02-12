@@ -8,8 +8,11 @@ ATPSWeapon::ATPSWeapon()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	SetReplicates(true);
-	SetReplicateMovement(true);
+	//SetReplicates(true);
+	//SetReplicateMovement(true);
+
+	//bReplicates = true;
+	//bReplicateMovement = true;
 
     Configuration = CreateDefaultSubobject<UTPSWeaponConfiguration>(TEXT("DefaultConfiguration"));
 }
@@ -17,6 +20,9 @@ ATPSWeapon::ATPSWeapon()
 void ATPSWeapon::BeginPlay()
 {
     Super::BeginPlay();
+
+	SetReplicates(true);
+	SetReplicateMovement(true);
 
     CurrentAmmunitionCount = Configuration->AmmunitionCapacity;
 

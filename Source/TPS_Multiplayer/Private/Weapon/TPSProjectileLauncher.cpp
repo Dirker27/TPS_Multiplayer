@@ -46,10 +46,14 @@ void ATPSProjectileLauncher::PerformFire(FRotator targetDirection)
 	}
 }
 
+// TODO: This should be a MultiCast RPC for replication.
 void ATPSProjectileLauncher::LaunchProjectile(FRotator targetDirection)
 {
 	ATPSProjectile* p = GetWorld()->SpawnActor<ATPSProjectile>(ProjectileTemplate,
 		Muzzle->GetComponentTransform().GetLocation(), targetDirection);
+
+	p->SetReplicates(true);
+	p->SetReplicateMovement(true);
 
 	if (IsValid(p)) {
 		p->Launch();

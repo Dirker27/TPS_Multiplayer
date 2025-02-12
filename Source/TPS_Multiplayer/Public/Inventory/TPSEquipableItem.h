@@ -31,7 +31,6 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TObjectPtr<UBoxComponent> CollisionComponent;
 
-
 #if WITH_EDITORONLY_DATA
     /** Component shown in the editor only to indicate character facing */
     UPROPERTY()

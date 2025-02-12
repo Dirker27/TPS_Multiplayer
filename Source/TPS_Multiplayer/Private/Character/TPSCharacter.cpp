@@ -16,6 +16,8 @@ ATPSCharacter::ATPSCharacter()
 {
  	PrimaryActorTick.bCanEverTick = true;
 
+	Configuration = CreateDefaultSubobject<UTPSCharacterConfiguration>(TEXT("DefaultConfiguration"));
+
 	Inventory = CreateDefaultSubobject<UTPSCharacterInventory>(TEXT("Inventory"));
 
 	EquipmentManager = CreateDefaultSubobject<UTPSEquipmentManager>(TEXT("EquipmentManager"));

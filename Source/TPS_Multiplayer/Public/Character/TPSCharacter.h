@@ -7,6 +7,7 @@
 
 #include "AbilitySystemInterface.h"
 #include "AbilitySystemComponent.h"
+#include "TPSCharacterConfiguration.h"
 #include "TPSCharacterInventory.h"
 
 #include "GAS/GASAbilitySet.h"
@@ -63,9 +64,14 @@ public:
 	//- Name
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Identity")
 	FString Name;
+
+	//- Configuration -------------------------------------=
 	//
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Identity")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
 	TEnumAsByte<ETPSCharacterBodyType> CharacterBodyType;
+	//
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+	TObjectPtr<UTPSCharacterConfiguration> Configuration;
 
 	//- Attributes ----------------------------------------=
 	// (sync'd from GAS attributes where applicable)

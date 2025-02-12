@@ -2,6 +2,7 @@
 
 #include "Weapon/Projectile/TPSProjectile.h"
 
+#include "Character/TPSCharacter.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 ATPSProjectile::ATPSProjectile()
@@ -14,6 +15,7 @@ ATPSProjectile::ATPSProjectile()
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(CollisionComponent);
 
+#if WITH_EDITORONLY_DATA
 	ArrowComponent = CreateEditorOnlyDefaultSubobject<UArrowComponent>(TEXT("Arrow"));
 	if (ArrowComponent)
 	{
@@ -23,6 +25,7 @@ ATPSProjectile::ATPSProjectile()
 		ArrowComponent->bIsScreenSizeScaled = true;
 		ArrowComponent->SetSimulatePhysics(false);
 	}
+#endif
 }
 
 void ATPSProjectile::BeginPlay()
@@ -33,6 +36,30 @@ void ATPSProjectile::BeginPlay()
 void ATPSProjectile::Tick(float deltaSeconds)
 {
 	Super::Tick(deltaSeconds);
+
+	FHitResult hitResult;
+	bool isHit = DetectCollisionByLineTrace(deltaSeconds, hitResult);
+
+	if (isHit)
+	{
+		AActor* hitActor = hitResult.GetActor();
+		ATPSCharacter* character = Cast<ATPSCharacter>(hitActor);
+		if (IsValid(character))
+		{
+			UE_LOG(LogTemp, Log, TEXT("Hit Character: [%s]"), *character->Name);
+			OnCharacterHit(character, hitResult);
+
+			if (HasAuthority())
+			{
+				// TODO: Apply Damage & Effects
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Log, TEXT("Hit Surface: [%s]"), *hitActor->GetHumanReadableName());
+			OnSurfaceHit(hitActor, hitResult);
+		}
+	}
 }
 
 
@@ -45,30 +72,34 @@ void ATPSProjectile::Launch()
 }
 
 
-AActor* ATPSProjectile::LineTrace(const UObject* WorldContextObject, const float deltaSeconds) {
+bool ATPSProjectile::DetectCollisionByLineTrace(const float deltaSeconds, FHitResult& outHitResult) {
 	AActor* hitActor = NULL;
 
+	FVector interpVector = GetVelocity() * deltaSeconds;
+
 	FVector startLoc = GetActorLocation();
-	FVector forward = GetActorForwardVector();
-
-	float interpDistance = GetVelocity().Size() * 0.2f;
-
-	FVector endLoc = startLoc + (forward * interpDistance);
+	FVector endLoc = startLoc + interpVector;
 
 	ETraceTypeQuery channel = TraceTypeQuery_MAX;
 	TArray<AActor*> actorsToIgnore;
-	EDrawDebugTrace::Type debugTrace = EDrawDebugTrace::Type::ForOneFrame;
-	FHitResult hitResult;
+	EDrawDebugTrace::Type debugTrace = EDrawDebugTrace::Type::ForDuration;
 
-	bool isHit = UKismetSystemLibrary::LineTraceSingle(WorldContextObject, startLoc, endLoc,
-		channel, false, actorsToIgnore, debugTrace,
-		hitResult,
-		true,
-		FLinearColor::Red, FLinearColor::Green, 5.f);
-
-	if (isHit) {
-		hitActor = hitResult.GetActor();
+	bool isHit = false;
+	if (ShowCollisionTrace)
+	{
+		isHit = UKismetSystemLibrary::LineTraceSingle(this, startLoc, endLoc,
+			channel, false, actorsToIgnore, debugTrace,
+			outHitResult,
+			true,
+			FLinearColor::Green, FLinearColor::Red, 1.f);
+	}
+	else
+	{
+		isHit = UKismetSystemLibrary::LineTraceSingle(this, startLoc, endLoc,
+			channel, false, actorsToIgnore, debugTrace,
+			outHitResult,
+			true);
 	}
 
-	return hitActor;
+	return isHit;
 }

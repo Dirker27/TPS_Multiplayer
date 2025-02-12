@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 
 #include "Inventory/TPSEquipableItem.h"
+#include "Reticle/TPSReticle.h"
 #include "Weapon/TPSWeaponType.h"
 #include "Weapon/TPSWeaponConfiguration.h"
 #include "Weapon/TPSWeaponState.h"
@@ -41,6 +42,10 @@ public:
     //- Configuration
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Configuration")
     TObjectPtr<UTPSWeaponConfiguration> Configuration;
+    //
+    //- UI Reticle
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+    TObjectPtr<UTPSWeaponReticle> Reticle;
 
     //- State --------------------------------------------=
 	//

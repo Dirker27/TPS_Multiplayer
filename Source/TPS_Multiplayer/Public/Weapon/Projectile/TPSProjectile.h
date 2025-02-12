@@ -30,11 +30,13 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TObjectPtr<UStaticMeshComponent> Mesh;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TObjectPtr<UTexture2D> HitDecal;
-
+#if WITH_EDITORONLY_DATA
     UPROPERTY()
     TObjectPtr<UArrowComponent> ArrowComponent;
+#endif
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TObjectPtr<UTexture2D> HitDecal;
 
 //~ ============================================================= ~//
 //  ATTRIBUTES
@@ -58,6 +60,9 @@ public:
     //- On-Hit Effects
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
     TArray<TSubclassOf<UGameplayEffect>> AppliedEffects;
+    //- On-Hit Effects
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+    bool ShowCollisionTrace = true;
 
     //- State --------------------------------------------=
     //
@@ -79,5 +84,11 @@ public:
 
 protected:
     UFUNCTION(BlueprintCallable)
-    AActor* LineTrace(const UObject* WorldContextObject, const float deltaSeconds);
+    bool DetectCollisionByLineTrace(const float deltaSeconds, FHitResult& outHitResult);
+
+    UFUNCTION(BlueprintImplementableEvent)
+    void OnCharacterHit(ATPSCharacter* character, FHitResult hit);
+
+    UFUNCTION(BlueprintImplementableEvent)
+    void OnSurfaceHit(AActor* actor, FHitResult hit);
 };

@@ -4,9 +4,7 @@
 
 #include "CoreMinimal.h"
 
-#include "Ammunition/TPSAmmunitionType.h"
 #include "Projectile/TPSProjectile.h"
-#include "Reticle/TPSReticle.h"
 #include "UObject/ObjectMacros.h"
 #include "Weapon/TPSWeapon.h"
 
@@ -37,10 +35,6 @@ public:
     //- Fired Projectile
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
     TSubclassOf<ATPSProjectile> ProjectileTemplate;
-    //
-    //- UI Reticle
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
-    TObjectPtr<UTPSWeaponReticle> Reticle;
     //
     //- Projectile Behavior (Shotgun / Rifle)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
