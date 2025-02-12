@@ -43,7 +43,15 @@ enum ETPSAmmunitionType : int
 	// 12-Gauge
 	TwelveGauge,
 	// 20-Gauge
-	Twenty_Gauge
+	Twenty_Gauge,
+
+	//- Test Cartridges --------------
+	//
+	// Paintball
+	Paintball,
+	//
+	// Airsoft
+	Airsoft_6mm
 };
 
 static const char* ETPSAmmunitionTypeToString(const ETPSAmmunitionType type) {
