@@ -16,6 +16,13 @@ enum ETPSWeaponFireMode : int
     Continuous = 3
 };
 
+UENUM(BlueprintType)
+enum ETPSWeaponAccuracySpreadMode : int
+{
+    Degrees = 0,
+    MOA = 1
+};
+
 UCLASS()
 class TPS_MULTIPLAYER_API UTPSWeaponConfiguration : public UDataAsset
 {
@@ -49,10 +56,16 @@ public:
     bool HasChamber = true;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TEnumAsByte<ETPSAmmunitionType> AmmunitionType;
+    TEnumAsByte<ETPSAmmunitionType> AmmunitionType = FortyFive_ACP;
 
-    // Degrees of shot spread in MOA
+    // Should we use Degrees or MOA for Spread calculation
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+    TEnumAsByte<ETPSWeaponAccuracySpreadMode> AccuracySpreadMode = Degrees;
+    // Degrees of shot spread in Degrees
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (EditCondition = "AccuracySpreadMode == ETPSWeaponAccuracySpreadMode::Degrees", EditConditionHides))
+    float AccuracySpreadDegrees = 1.0;
+    // Degrees of shot spread in MOA
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (EditCondition = "AccuracySpreadMode == ETPSWeaponAccuracySpreadMode::MOA", EditConditionHides))
     float AccuracySpreadMOA = 1.0;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)

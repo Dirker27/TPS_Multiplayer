@@ -90,26 +90,27 @@ void ATPSCharacter::Tick(float deltaTime)
 
 	SyncAttributesFromGAS();
 
+	if (HasAuthority()) {
+		TargetLookRotation = GetViewRotation();
+	}
+
 	ETPSLocomotionState evaluatedState = EvaluateLocomotionStateForCurrentInput();
 	if (evaluatedState != CurrentLocomotionState)
 	{
 		ApplyLocomotionState(evaluatedState);
-	}
-	SyncComponentsFromState();
-
-	if (ShouldNotify) {
-		NotifyDisplayWidgets.Broadcast();
-		ShouldNotify = false;
-	}
-
-	if (HasAuthority()) {
-		TargetLookRotation = GetViewRotation();
 	}
 
 	ATPSWeapon* weapon = GetEquippedWeapon();
 	if (IsValid(weapon))
 	{
 		weapon->TargetDirection = TargetLookRotation;
+	}
+
+	SyncComponentsFromState();
+
+	if (ShouldNotify) {
+		NotifyDisplayWidgets.Broadcast();
+		ShouldNotify = false;
 	}
 }
 
@@ -124,11 +125,6 @@ void ATPSCharacter::GetActorEyesViewPoint(FVector& Location, FRotator& Rotation)
 {
 	Location = GetMesh()->GetSocketLocation(EyeSocketName);
 	Rotation = GetMesh()->GetSocketRotation(EyeSocketName);
-}
-
-// Blueprint Hook for on-fallout death animation.
-void ATPSCharacter::FellOutOfWorld(const class UDamageType& dmgType) {
-	OnFellOutOfWorld();
 }
 
 bool ATPSCharacter::IsAlive() const
@@ -480,6 +476,11 @@ void ATPSCharacter::EndInteract() {
 	OnInteractAbilityEnd();
 }
 
+
+// Blueprint Hook for on-fallout death animation.
+void ATPSCharacter::FellOutOfWorld(const class UDamageType& dmgType) {
+	OnFellOutOfWorld();
+}
 
 
 //~ ============================================================= ~//

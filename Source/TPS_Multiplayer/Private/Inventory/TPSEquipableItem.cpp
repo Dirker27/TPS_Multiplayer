@@ -26,6 +26,12 @@ ATPSEquipableItem::ATPSEquipableItem()
 #endif // WITH_EDITORONLY_DATA
 }
 
+//~ ============================================================= ~//
+//  DEFAULT INTERFACE BEHAVIOR
+//~ ============================================================= ~//
+
+//- Equip --//
+
 void ATPSEquipableItem::Equip()
 {
 	IsEquipped = true;
@@ -37,10 +43,13 @@ void ATPSEquipableItem::UnEquip()
 	OnUnEquip();
 }
 
+//- Use --//
+
 void ATPSEquipableItem::StartUse()
 {
 	OnStartUse();
 }
+
 void ATPSEquipableItem::StopUse()
 {
 	OnStopUse();

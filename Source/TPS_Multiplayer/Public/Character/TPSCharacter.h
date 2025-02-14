@@ -205,6 +205,9 @@ public:
 	void StartFireWeapon();
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnFireWeaponAbilityStart();
+	// called from Weapon when fire is actually performed
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void OnFirePerformed();
 	//
 	UFUNCTION(BlueprintCallable)
 	void EndFireWeapon();

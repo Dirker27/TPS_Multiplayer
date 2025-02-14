@@ -7,12 +7,7 @@
 ATPSWeapon::ATPSWeapon()
 {
 	PrimaryActorTick.bCanEverTick = true;
-
-	//SetReplicates(true);
-	//SetReplicateMovement(true);
-
 	//bReplicates = true;
-	//bReplicateMovement = true;
 
     Configuration = CreateDefaultSubobject<UTPSWeaponConfiguration>(TEXT("DefaultConfiguration"));
 }
@@ -62,6 +57,9 @@ void ATPSWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifeti
     DOREPLIFETIME(ATPSWeapon, IsFiring);
 }
 
+//~ ============================================================= ~//
+//  Usable / Equipment Interfaces
+//~ ============================================================= ~//
 
 void ATPSWeapon::StartUse()
 {
@@ -93,6 +91,10 @@ void ATPSWeapon::UnEquip()
 {
     Super::UnEquip();
 }
+
+//~ ============================================================= ~//
+//  Fire Control
+//~ ============================================================= ~//
 
 void ATPSWeapon::Fire()
 {
@@ -145,6 +147,9 @@ bool ATPSWeapon::CanFire()
 	return false;
 }
 
+//~ ============================================================= ~//
+//  Loading Control
+//~ ============================================================= ~//
 
 void ATPSWeapon::StartReload()
 {

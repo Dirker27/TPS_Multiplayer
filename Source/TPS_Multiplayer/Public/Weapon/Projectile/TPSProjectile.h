@@ -66,7 +66,7 @@ public:
 
     //- State --------------------------------------------=
     //
-    //- Owner (who shot me?)
+    //- EquipmentOwner (who shot me?)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
     AActor* OwningActor;
     //- Name

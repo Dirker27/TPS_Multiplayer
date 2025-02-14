@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Components/ArrowComponent.h"
 
-#include "AbilitySystemInterface.h"
 #include "AbilitySystemComponent.h"
 #include "Behavior/TPSMountable.h"
 #include "Components/BoxComponent.h"
@@ -63,6 +62,7 @@ public:
 //  BEHAVIOR
 //~ ============================================================= ~//
 public:
+
     //- Equipable -----------------------------------------=
     //
     UFUNCTION(BlueprintCallable)
