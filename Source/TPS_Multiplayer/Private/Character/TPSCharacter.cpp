@@ -100,10 +100,12 @@ void ATPSCharacter::Tick(float deltaTime)
 		ApplyLocomotionState(evaluatedState);
 	}
 
+	// Extend targeting data to current weapon
 	ATPSWeapon* weapon = GetEquippedWeapon();
 	if (IsValid(weapon))
 	{
 		weapon->TargetDirection = TargetLookRotation;
+		weapon->TargetAccuracyTolerance = CurrentAccuracyTolerance();
 	}
 
 	SyncComponentsFromState();
@@ -140,6 +142,16 @@ bool ATPSCharacter::IsIdle() const
 	// TODO: Determine what "Idle" means.
 	return false;
 }
+
+FVector2D ATPSCharacter::CurrentAccuracyTolerance()
+{
+	float accuracyModifier =
+		GetAbilitySystemComponent()->GetSet<UWeaponAttributeSet>()->GetAccuracyModifier();
+
+	return FVector2D(Configuration->BaseAccuracyTolerance, 
+					 Configuration->BaseAccuracyTolerance) / accuracyModifier;
+}
+
 
 ATPSWeapon* ATPSCharacter::GetEquippedWeapon() const
 {

@@ -31,6 +31,8 @@ ATPSProjectile::ATPSProjectile()
 void ATPSProjectile::BeginPlay()
 {
 	Super::BeginPlay();
+
+	ElapsedLifetimeSeconds = 0;
 }
 
 void ATPSProjectile::Tick(float deltaSeconds)
@@ -47,7 +49,7 @@ void ATPSProjectile::Tick(float deltaSeconds)
 		if (IsValid(character))
 		{
 			UE_LOG(LogTemp, Log, TEXT("Hit Character: [%s]"), *character->Name);
-			OnCharacterHit(character, hitResult);
+			CharacterHit(character, hitResult);
 
 			if (HasAuthority())
 			{
@@ -57,8 +59,15 @@ void ATPSProjectile::Tick(float deltaSeconds)
 		else
 		{
 			UE_LOG(LogTemp, Log, TEXT("Hit Surface: [%s]"), *hitActor->GetHumanReadableName());
-			OnSurfaceHit(hitActor, hitResult);
+			SurfaceHit(hitActor, hitResult);
 		}
+	}
+
+	ElapsedLifetimeSeconds += deltaSeconds;
+	if (ElapsedLifetimeSeconds > LifetimeSeconds)
+	{
+		UE_LOG(LogTemp, Log, TEXT("[TTL] Projectile Destroyed"));
+		Destroy();
 	}
 }
 
@@ -103,3 +112,44 @@ bool ATPSProjectile::DetectCollisionByLineTrace(const float deltaSeconds, FHitRe
 
 	return isHit;
 }
+
+void ATPSProjectile::CharacterHit(ATPSCharacter* character, FHitResult hit)
+{
+	if (!hit.IsValidBlockingHit() || !IsValid(character)) { return; }
+
+	OnCharacterHit(character, hit);
+}
+
+
+void ATPSProjectile::SurfaceHit(AActor* sceneActor, FHitResult hit)
+{
+	if (!hit.IsValidBlockingHit() 
+		|| !IsValid(sceneActor)
+		|| !IsValid(hit.GetComponent())) { return; }
+
+	// Carry-Over Physics
+	if (hit.GetComponent()->IsSimulatingPhysics())
+	{
+		hit.GetComponent()->AddImpulseAtLocation(CalculateImpulseJoules(), hit.Location, "None");
+	}
+
+	// TODO: Target Interface Execution
+
+	OnSurfaceHit(sceneActor, hit);
+}
+
+FVector ATPSProjectile::CalculateImpulseJoules() const
+{
+	UE::Math::TVector<double> direction;
+	float magnitude;
+	GetVelocity().ToDirectionAndLength(direction, magnitude);
+
+	magnitude = magnitude / 100; // convert to m/s
+
+	// KE == v^2 * (m/2)
+	float joules = (magnitude * magnitude) * CollisionComponent->GetMass();
+
+	FVector impulseVector = joules * direction;
+	return impulseVector;
+}
+

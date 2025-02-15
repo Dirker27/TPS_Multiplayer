@@ -24,24 +24,28 @@ void ATPSProjectileLauncher::StopUse()
 	Super::StopUse();
 }
 
-void ATPSProjectileLauncher::PerformFire(FRotator targetDirection)
+void ATPSProjectileLauncher::PerformFire()
 {
 	if (HasAuthority()) {
+		// Adjust the shooter's aim.
+		FRotator adjustedDirection = TargetDirection;
+		FVector2D noise = CalculateAccuracyNoise();
+		adjustedDirection.Add(noise.X, noise.Y, 0);
 
 		int projectileCount = 1;
-		if (ProjectileBehavior == Spread)
+		if (Configuration->ProjectileBehavior == Spread)
 		{
-			projectileCount = SpreadCount;
+			projectileCount = Configuration->SpreadCount;
 		}
 
 		for (int i = 0; i < projectileCount; i++)
 		{
-			// Apply MOA Noise (independent of character's accuracy, this is just the Weapon's spread)
-			FRotator adjustedDirection = targetDirection;
-			float deltaYaw = UKismetMathLibrary::RandomIntegerInRange(-1 * Configuration->AccuracySpreadMOA, Configuration->AccuracySpreadMOA);
-			float deltaPitch = UKismetMathLibrary::RandomIntegerInRange(-1 * Configuration->AccuracySpreadMOA, Configuration->AccuracySpreadMOA);
-			adjustedDirection.Add(deltaPitch, deltaYaw, 0);
-			LaunchProjectile(adjustedDirection);
+			// Adjust the weapon's spread.
+			FRotator spreadDirection = adjustedDirection;
+			noise = CalculateSpreadNoise();
+			spreadDirection.Add(noise.X, noise.Y, 0);
+			
+			LaunchProjectile(spreadDirection);
 		}
 	}
 }
@@ -59,4 +63,41 @@ void ATPSProjectileLauncher::LaunchProjectile(FRotator targetDirection)
 		p->Launch();
 		//UE_LOG(LogTemp, Log, TEXT("YEET?"));
 	}
+}
+
+
+FVector2D ATPSProjectileLauncher::CalculateAccuracyNoise()
+{
+	// Apply MOA Noise (independent of character's accuracy, this is just the Weapon's spread)
+	float deltaPitch = UKismetMathLibrary::RandomIntegerInRange(-1 * TargetAccuracyTolerance.X, TargetAccuracyTolerance.X);
+	float deltaYaw = UKismetMathLibrary::RandomIntegerInRange(-1 * TargetAccuracyTolerance.Y, TargetAccuracyTolerance.Y);
+
+	return FVector2D(deltaPitch, deltaYaw);
+}
+
+// Apply MOA Noise (independent of character's accuracy, this is just the Weapon's spread)
+FVector2D ATPSProjectileLauncher::CalculateSpreadNoise()
+{
+	// MOA == "Minute of Angle" -> 1/60 of a 360-degree.
+	//  1 MOA ~= 1 inch @ 100 yards
+	float pitchDegrees;
+	float yawDegrees;
+	if (Configuration->SpreadMode == MOA) {
+		pitchDegrees = Configuration->SpreadMOA / 60.f;
+		yawDegrees = Configuration->SpreadMOA / 60.f;
+	}
+	else
+	{
+		pitchDegrees = Configuration->SpreadDegrees.X;
+		yawDegrees = Configuration->SpreadDegrees.Y;
+	}
+
+	float deltaPitch = UKismetMathLibrary::RandomFloatInRange(-1 * pitchDegrees, pitchDegrees);
+	float deltaYaw = UKismetMathLibrary::RandomFloatInRange(-1 * yawDegrees, yawDegrees);
+	return FVector2D(deltaPitch, deltaYaw);
+
+
+	FVector randomDirection = UKismetMathLibrary::RandomUnitVector();
+	FVector2D offsetDirection = FVector2D(randomDirection.X, randomDirection.Y).GetSafeNormal(0.00001);
+	return FVector2D(offsetDirection.X * pitchDegrees, offsetDirection.Y * yawDegrees);
 }

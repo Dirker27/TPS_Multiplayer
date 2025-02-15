@@ -121,6 +121,9 @@ public:
 	//- IsIdle (Synthetic)
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool IsIdle() const;
+	//
+	// Current Accuracy Tolerance
+	FVector2D CurrentAccuracyTolerance();
 
 	//- Weapon State --------------------------------------=
 	//

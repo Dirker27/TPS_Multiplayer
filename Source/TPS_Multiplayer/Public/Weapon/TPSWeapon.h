@@ -75,19 +75,22 @@ public:
     //
     //- Fire Control -----
     //
-    //- Targeting
+    // Targeting
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State");
     FRotator TargetDirection;
+    // Accuracy (Degrees of freedom in Pitch/Yaw)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State");
+    FVector2D TargetAccuracyTolerance;
     //
-    //- Meter fire rate
+    // Meter fire rate
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
     float TimeLastFired;
     //
-    //- Consume the trigger (single/burst mode)
+    // Consume the trigger (single/burst mode)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
     bool HasTriggerCompleted;
     //
-    //- For burst-fire count
+    // For burst-fire count
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
     int SuccessiveFireCount;
 
@@ -100,7 +103,7 @@ public:
     UFUNCTION(BlueprintImplementableEvent)
     void OnFire();
 
-    virtual void PerformFire(FRotator targetDirection) { UE_LOG(LogTemp, Log, TEXT("Weapon::PerformFire()")); };
+    virtual void PerformFire() { UE_LOG(LogTemp, Log, TEXT("Weapon::PerformFire()")); };
 
     UFUNCTION(BlueprintCallable, BlueprintPure)
     bool CanFire();

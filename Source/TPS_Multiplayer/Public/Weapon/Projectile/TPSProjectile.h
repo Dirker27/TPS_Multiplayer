@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameplayEffect.h"
 #include "Behavior/TPSMountPoint.h"
+#include "Character/TPSCharacter.h"
 #include "Components/ArrowComponent.h"
 
 #include "Weapon/Ammunition/TPSAmmunitionType.h"
@@ -36,7 +37,7 @@ protected:
 #endif
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TObjectPtr<UTexture2D> HitDecal;
+    TArray<TSubclassOf<UTexture2D>> HitDecals;
 
 //~ ============================================================= ~//
 //  ATTRIBUTES
@@ -54,9 +55,12 @@ public:
 
     //- Configuration ------------------------------------=
     //
-    //- Configuration
+    //- Initial Launch Velocity
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
     float InitialVelocity; // [m/s]
+    //- Lifetime Seconds (TTL)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+    float LifetimeSeconds = 5;
     //- On-Hit Effects
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
     TArray<TSubclassOf<UGameplayEffect>> AppliedEffects;
@@ -68,10 +72,10 @@ public:
     //
     //- EquipmentOwner (who shot me?)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
-    AActor* OwningActor;
-    //- Name
+    ATPSCharacter* OwningCharacter;
+    //- Lifetime
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
-    bool HasFired;
+    float ElapsedLifetimeSeconds;
 
 //~ ============================================================= ~//
 //  BEHAVIOR
@@ -86,9 +90,14 @@ protected:
     UFUNCTION(BlueprintCallable)
     bool DetectCollisionByLineTrace(const float deltaSeconds, FHitResult& outHitResult);
 
+    void CharacterHit(ATPSCharacter* character, FHitResult hit);
     UFUNCTION(BlueprintImplementableEvent)
     void OnCharacterHit(ATPSCharacter* character, FHitResult hit);
 
+    void SurfaceHit(AActor* actor, FHitResult hit);
     UFUNCTION(BlueprintImplementableEvent)
     void OnSurfaceHit(AActor* actor, FHitResult hit);
+
+    UFUNCTION(BlueprintCallable, BlueprintPure)
+    FVector CalculateImpulseJoules() const;
 };

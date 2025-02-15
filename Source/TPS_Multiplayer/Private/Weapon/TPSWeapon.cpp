@@ -98,12 +98,15 @@ void ATPSWeapon::UnEquip()
 
 void ATPSWeapon::Fire()
 {
-	PerformFire(TargetDirection);
+	PerformFire();
 
+	// apply state updates
 	CurrentAmmunitionCount--;
 	TimeLastFired = FApp::GetGameTime();
 	SuccessiveFireCount++;
+	HasEverFired = true;
 
+	// determine if trigger sequence has completed (semi/burst modes)
 	switch (Configuration->FireMode)
 	{
 	case SingleShot:
@@ -119,13 +122,10 @@ void ATPSWeapon::Fire()
 	default:
 		break;
 	}
-
 	if (CurrentAmmunitionCount <= 0)
 	{
 		HasTriggerCompleted = true;
 	}
-
-	HasEverFired = true;
 
 	OnFire();
 }
