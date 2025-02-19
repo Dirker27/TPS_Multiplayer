@@ -12,6 +12,9 @@
 
 #include "TPSWeapon.generated.h"
 
+//UDELEGATE(BlueprintAuthorityOnly, NetMulticast, Reliable)
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPerformFire);
+
 UCLASS()
 class TPS_MULTIPLAYER_API ATPSWeapon : public ATPSEquipableItem
 {
@@ -26,6 +29,11 @@ public:
 protected:
     virtual void BeginPlay() override;
     virtual void Tick(float DeltaTime) override;
+
+public:
+    //- Broadcast Delegate
+    //UPROPERTY(BlueprintAssignable)
+    //FPerformFire NotifyPerformFire;
 
 //~ ============================================================= ~//
 //  ATTRIBUTES

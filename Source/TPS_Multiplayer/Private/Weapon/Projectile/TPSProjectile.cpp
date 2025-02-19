@@ -3,7 +3,9 @@
 #include "Weapon/Projectile/TPSProjectile.h"
 
 #include "Character/TPSCharacter.h"
+#include "Engine/DamageEvents.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Util/TPSFunctionLibrary.h"
 
 ATPSProjectile::ATPSProjectile()
 {
@@ -51,15 +53,40 @@ void ATPSProjectile::Tick(float deltaSeconds)
 			UE_LOG(LogTemp, Log, TEXT("Hit Character: [%s]"), *character->Name);
 			CharacterHit(character, hitResult);
 
+			// Apply Damage & Effects
 			if (HasAuthority())
 			{
-				// TODO: Apply Damage & Effects
+				FPointDamageEvent event = FPointDamageEvent();
+				event.Damage = 1.0f;
+				event.HitInfo = hitResult;
+
+				character->TakeDamage(1.f, event, nullptr, nullptr);
+
+				for (TSubclassOf<UGameplayEffect> e: AppliedEffects)
+				{
+					UAbilitySystemComponent* asc = character->GetAbilitySystemComponent();
+					if (IsValid(asc)) {
+						FGameplayEffectContextHandle context = asc->MakeEffectContext();
+						FGameplayEffectSpecHandle spec = asc->MakeOutgoingSpec(e, 1.f, context);
+						asc->ApplyGameplayEffectSpecToSelf(*spec.Data.Get(), asc->GetPredictionKeyForNewAction());
+					}
+				}
 			}
 		}
 		else
 		{
 			UE_LOG(LogTemp, Log, TEXT("Hit Surface: [%s]"), *hitActor->GetHumanReadableName());
 			SurfaceHit(hitActor, hitResult);
+		}
+
+		if (ShouldDestroyOnHit)
+		{
+			Destroy();
+		}
+		else
+		{
+			FVector forward = GetVelocity() / OnHitVelocityDamper;
+			CollisionComponent->SetPhysicsLinearVelocity(forward, false, "None");
 		}
 	}
 
@@ -100,7 +127,7 @@ bool ATPSProjectile::DetectCollisionByLineTrace(const float deltaSeconds, FHitRe
 			channel, false, actorsToIgnore, debugTrace,
 			outHitResult,
 			true,
-			FLinearColor::Green, FLinearColor::Red, 1.f);
+			FLinearColor::Green, FLinearColor::Red, 0.5f);
 	}
 	else
 	{
@@ -128,28 +155,14 @@ void ATPSProjectile::SurfaceHit(AActor* sceneActor, FHitResult hit)
 		|| !IsValid(hit.GetComponent())) { return; }
 
 	// Carry-Over Physics
-	if (hit.GetComponent()->IsSimulatingPhysics())
+	if (HasAuthority() && hit.GetComponent()->IsSimulatingPhysics())
 	{
-		hit.GetComponent()->AddImpulseAtLocation(CalculateImpulseJoules(), hit.Location, "None");
+		FVector impulse = UTPSFunctionLibrary::CalculateImpulseJoules(
+			GetVelocity(), CollisionComponent->GetMass());
+		hit.GetComponent()->AddImpulseAtLocation(impulse, hit.Location, "None");
 	}
 
 	// TODO: Target Interface Execution
 
 	OnSurfaceHit(sceneActor, hit);
 }
-
-FVector ATPSProjectile::CalculateImpulseJoules() const
-{
-	UE::Math::TVector<double> direction;
-	float magnitude;
-	GetVelocity().ToDirectionAndLength(direction, magnitude);
-
-	magnitude = magnitude / 100; // convert to m/s
-
-	// KE == v^2 * (m/2)
-	float joules = (magnitude * magnitude) * CollisionComponent->GetMass();
-
-	FVector impulseVector = joules * direction;
-	return impulseVector;
-}
-

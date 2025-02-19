@@ -61,34 +61,32 @@ public:
 
 	//- Identity -----------------------------------------=
 	//
-	//- Name
+	// Name
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Identity")
 	FString Name;
 
 	//- Configuration -------------------------------------=
 	//
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
-	TEnumAsByte<ETPSCharacterBodyType> CharacterBodyType;
-	//
+	// Character Configuration
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
 	TObjectPtr<UTPSCharacterConfiguration> Configuration;
 
 	//- Attributes ----------------------------------------=
 	// (sync'd from GAS attributes where applicable)
 	//
-	//- Health
+	// Health
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Health", Replicated)
 	float CurrentHealth;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Health")
 	float MaxHealth;
 	//
-	//- Armor
+	// Armor
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Health", Replicated)
 	float CurrentArmor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Health")
 	float MaxArmor;
 	//
-	//- Movement Speed
+	// Movement Speed
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Health", Replicated)
 	float MovementSpeedModifier;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Health")
@@ -96,34 +94,35 @@ public:
 
 	//- State ------------------------------------------------=
 	//
-	//- Character State
+	// Character State
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Character", Replicated)
 	TEnumAsByte<ETPSCharacterState> CurrentCharacterState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Character")
 	TEnumAsByte<ETPSCharacterState> PreviousCharacterState;
 	//
-	//- Locomotion State
+	// Locomotion State
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Locomotion", Replicated)
 	TEnumAsByte<ETPSLocomotionState> CurrentLocomotionState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Locomotion")
 	TEnumAsByte<ETPSLocomotionState> PreviousLocomotionState;
 	//
-	//- IsAlive (Synthetic)
+	// IsAlive (Synthetic)
 	// True if Character is not Incapacitated.
-	UFUNCTION(BlueprintCallable, BlueprintPure)
+	UFUNCTION(BlueprintGetter)
 	bool IsAlive() const;
 	//
-	//- IsCrouching (Synthetic)
+	// IsCrouching (Synthetic)
 	// True if Crouching OR Prone.
-	UFUNCTION(BlueprintCallable, BlueprintPure)
+	UFUNCTION(BlueprintGetter)
 	bool IsCrouching() const;
 	//
-	//- IsIdle (Synthetic)
-	UFUNCTION(BlueprintCallable, BlueprintPure)
+	// IsIdle (Synthetic)
+	UFUNCTION(BlueprintGetter)
 	bool IsIdle() const;
 	//
 	// Current Accuracy Tolerance
-	FVector2D CurrentAccuracyTolerance();
+	UFUNCTION(BlueprintGetter)
+	FVector2D GetCurrentAccuracyTolerance() const;
 
 	//- Weapon State --------------------------------------=
 	//
@@ -181,7 +180,7 @@ public:
 
 	//- Ability Extensions ------------------------------=
 	//
-	//- Boost
+	// Boost
 	UFUNCTION(BlueprintCallable)
 	void StartBoost();
 	UFUNCTION(BlueprintImplementableEvent)
@@ -192,7 +191,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnBoostAbilityEnd();
 	//
-	//- Aim
+	// Aim
 	UFUNCTION(BlueprintCallable)
 	void StartAim();
 	UFUNCTION(BlueprintImplementableEvent)
@@ -203,12 +202,12 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnAimAbilityEnd();
 	//
-	//- Fire Weapon
+	// Fire Weapon
 	UFUNCTION(BlueprintCallable)
 	void StartFireWeapon();
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnFireWeaponAbilityStart();
-	// called from Weapon when fire is actually performed
+	// Called when fire is actually performed to trigger animations
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void OnFirePerformed();
 	//
@@ -217,7 +216,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnFireWeaponAbilityEnd();
 	//
-	//- EquipWeapon ("Ready")
+	// EquipWeapon ("Ready")
 	UFUNCTION(BlueprintCallable)
 	void StartEquipWeapon();
 	UFUNCTION(BlueprintImplementableEvent)
@@ -228,7 +227,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnEquipWeaponAbilityEnd();
 	//
-	//- UnEquipWeapon ("UnReady")
+	// UnEquipWeapon ("UnReady")
 	UFUNCTION(BlueprintCallable)
 	void StartUnEquipWeapon();
 	UFUNCTION(BlueprintImplementableEvent)
@@ -239,7 +238,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnUnEquipWeaponAbilityEnd();
 	//
-	//- Reload Weapon
+	// Reload Weapon
 	UFUNCTION(BlueprintCallable)
 	void StartReloadWeapon();
 	UFUNCTION(BlueprintImplementableEvent)
@@ -250,7 +249,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnReloadWeaponAbilityEnd();
 	//
-	//- Interact
+	// Interact
 	UFUNCTION(BlueprintCallable)
 	void StartInteract();
 	UFUNCTION(BlueprintImplementableEvent)
@@ -270,13 +269,13 @@ public:
 
 	//- Transforms -------------------------------------------=
 	//
-	//- CharacterState
+	// CharacterState
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	static FString CharacterStateToFString(ETPSCharacterState state) {
 		return FString(ETPSCharacterStateToString(state));
 	};
 	//
-	//- LocomotionState
+	// LocomotionState
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	static FString LocomotionStateToFString(ETPSLocomotionState state) {
 		return FString(ETPSLocomotionStateToString(state));
@@ -295,13 +294,13 @@ public:
 
 	//- Modify Behavioral States --------------------------=
 	//
-	//- CharacterState
+	// CharacterState
 	UFUNCTION(BlueprintCallable)
 	void ApplyCharacterState(const ETPSCharacterState CharacterState);
 	UFUNCTION(BlueprintCallable)
 	void RevertCharacterState();
 	//
-	//- LocomotionState
+	// LocomotionState
 	UFUNCTION(BlueprintCallable)
 	void ApplyLocomotionState(const ETPSLocomotionState LocomotionState);
 	UFUNCTION(BlueprintCallable)
@@ -310,22 +309,22 @@ public:
 public:
 	//- Logic ---------------------------------------------=
 	// 
-	//- Determine what state we should be in.
+	// Determine what state we should be in.
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	ETPSLocomotionState EvaluateLocomotionStateForCurrentInput();
 	//
-	//- Calculate Speed
+	// Calculate Speed
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	float GetBaseSpeedForCharacterState(const ETPSCharacterState CharacterState);
 	//
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	float GetSpeedModifierForLocomotionState(const ETPSLocomotionState LocomotionState);
 	//
-	//- Apply calculated MovementSpeed
+	// Apply calculated MovementSpeed
 	UFUNCTION(BlueprintCallable)
 	float UpdateCharacterSpeedForCurrentState();
 	//
-	//- Swap out available Input Actions
+	// Swap out available Input Actions
 	UFUNCTION(BlueprintCallable)
 	void UpdateInputContextForCurrentState();
 
@@ -365,19 +364,22 @@ protected:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Inventory")
 	TObjectPtr<UTPSEquipmentManager> EquipmentManager;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Inventory")
 	TObjectPtr<UTPSCharacterInventory> Inventory;
 
+
 //~ ============================================================= ~//
-//  CONFIGURATION
+//  EVENT OVERRIDES
 //~ ============================================================= ~//
 
 public:
-	//------------------------------------------------------=
-	//
-	//- Use Actor's Eyes at Mesh Location for detection and docking sweeps
+
+	// Use Actor's Eyes at Mesh Location for detection and docking sweeps
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
 	FName EyeSocketName;
-	//
-	void GetActorEyesViewPoint(FVector& Location, FRotator& Rotation) const override;
+	virtual void GetActorEyesViewPoint(FVector& Location, FRotator& Rotation) const override;
+
+	// Apply damage via Ability System (if present)
+	//virtual float TakeDamage(float damage, struct FDamageEvent const& event, AController* instigator, AActor* causer) override;
 };

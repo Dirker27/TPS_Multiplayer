@@ -33,6 +33,9 @@ void UTPSEquipmentManager::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 
 void UTPSEquipmentManager::BeginPlay()
 {
+    Super::BeginPlay();
+
+    SetIsReplicated(true);
 }
 
 void UTPSEquipmentManager::Initialize()

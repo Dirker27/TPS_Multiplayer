@@ -39,14 +39,14 @@ void ATPSWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (IsFiring)
+	/*if (IsFiring)
 	{
 		if (CanFire())
 		{
 			Fire();
 		}
 		//else { UE_LOG(LogTemp, Log, TEXT("-<click>-")); }
-	}
+	}*/
 }
 
 void ATPSWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

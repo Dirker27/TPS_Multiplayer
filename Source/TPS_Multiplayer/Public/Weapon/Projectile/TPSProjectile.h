@@ -37,43 +37,57 @@ protected:
 #endif
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TArray<TSubclassOf<UTexture2D>> HitDecals;
+    TArray<UMaterial*> HitDecals;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    FVector HitDecalSize;
 
 //~ ============================================================= ~//
 //  ATTRIBUTES
 //~ ============================================================= ~//
 public:
     //- Identity -----------------------------------------=
-    //
-    //- Name
+    
+    // Name
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Identity")
     FName Name;
-    //- Type
+    // Type
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Identity")
     TEnumAsByte<ETPSAmmunitionType> Type;
 
 
     //- Configuration ------------------------------------=
     //
-    //- Initial Launch Velocity
+    // Initial Launch Velocity
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
     float InitialVelocity; // [m/s]
-    //- Lifetime Seconds (TTL)
+    //
+    // Lifetime Seconds (TTL)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
     float LifetimeSeconds = 5;
-    //- On-Hit Effects
+    //
+    // How much velocity is lost on hit (divides current velocity)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+    float OnHitVelocityDamper = 3.f;
+    //
+    // Should Destroy on first impact.
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+    bool ShouldDestroyOnHit = true;
+    //
+    // On-Hit Effects
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
     TArray<TSubclassOf<UGameplayEffect>> AppliedEffects;
-    //- On-Hit Effects
+    //
+    // Show Debug Collision Trace
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
     bool ShowCollisionTrace = true;
 
     //- State --------------------------------------------=
     //
-    //- EquipmentOwner (who shot me?)
+    // EquipmentOwner (who shot me?)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
     ATPSCharacter* OwningCharacter;
-    //- Lifetime
+    // Lifetime
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
     float ElapsedLifetimeSeconds;
 
@@ -97,7 +111,4 @@ protected:
     void SurfaceHit(AActor* actor, FHitResult hit);
     UFUNCTION(BlueprintImplementableEvent)
     void OnSurfaceHit(AActor* actor, FHitResult hit);
-
-    UFUNCTION(BlueprintCallable, BlueprintPure)
-    FVector CalculateImpulseJoules() const;
 };

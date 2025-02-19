@@ -88,28 +88,47 @@ void ATPSCharacter::Tick(float deltaTime)
 {
 	Super::Tick(deltaTime);
 
+	//- Sync State from Input ----------------------------=
+	//
 	SyncAttributesFromGAS();
-
+	//
+	// Sync Character direction from Controller
 	if (HasAuthority()) {
 		TargetLookRotation = GetViewRotation();
 	}
 
-	ETPSLocomotionState evaluatedState = EvaluateLocomotionStateForCurrentInput();
-	if (evaluatedState != CurrentLocomotionState)
-	{
-		ApplyLocomotionState(evaluatedState);
-	}
-
+	//- Extend Input to Weapons -------------------------=
+	//
 	// Extend targeting data to current weapon
 	ATPSWeapon* weapon = GetEquippedWeapon();
 	if (IsValid(weapon))
 	{
 		weapon->TargetDirection = TargetLookRotation;
-		weapon->TargetAccuracyTolerance = CurrentAccuracyTolerance();
+		weapon->TargetAccuracyTolerance = GetCurrentAccuracyTolerance();
+
+		if (IsFiring)
+		{
+			if (weapon->CanFire())
+			{
+				weapon->Fire();
+				OnFirePerformed();
+			}
+		}
 	}
 
+
+	//- Derive State from Input -------------------------=
+	//
+	ETPSLocomotionState evaluatedState = EvaluateLocomotionStateForCurrentInput();
+	if (evaluatedState != CurrentLocomotionState)
+	{
+		ApplyLocomotionState(evaluatedState);
+	}
 	SyncComponentsFromState();
 
+
+	//- Broadcast to UI Listeners -----------------------=
+	//
 	if (ShouldNotify) {
 		NotifyDisplayWidgets.Broadcast();
 		ShouldNotify = false;
@@ -143,10 +162,13 @@ bool ATPSCharacter::IsIdle() const
 	return false;
 }
 
-FVector2D ATPSCharacter::CurrentAccuracyTolerance()
+FVector2D ATPSCharacter::GetCurrentAccuracyTolerance() const
 {
-	float accuracyModifier =
-		GetAbilitySystemComponent()->GetSet<UWeaponAttributeSet>()->GetAccuracyModifier();
+	float accuracyModifier = 1.f;
+	UAbilitySystemComponent* asc = GetAbilitySystemComponent();
+	if (IsValid(asc)) {
+		accuracyModifier = asc->GetSet<UWeaponAttributeSet>()->GetAccuracyModifier();
+	}
 
 	return FVector2D(Configuration->BaseAccuracyTolerance, 
 					 Configuration->BaseAccuracyTolerance) / accuracyModifier;
@@ -563,14 +585,42 @@ void ATPSCharacter::SyncAttributesFromGAS() {
 		return;
 	}
 
-	CurrentHealth = asc->GetNumericAttribute(UCharacterHealthAttributeSet::GetHealthAttribute());
+	//CurrentHealth = asc->GetNumericAttribute(UCharacterHealthAttributeSet::GetHealthAttribute());
 	MaxHealth = asc->GetNumericAttribute(UCharacterHealthAttributeSet::GetHealthMaxAttribute());
 
-	CurrentArmor = asc->GetNumericAttribute(UCharacterHealthAttributeSet::GetArmorAttribute());
+	//CurrentArmor = asc->GetNumericAttribute(UCharacterHealthAttributeSet::GetArmorAttribute());
 	MaxArmor = asc->GetNumericAttribute(UCharacterHealthAttributeSet::GetArmorMaxAttribute());
 
 	MovementSpeedModifier = asc->GetNumericAttribute(UStandardAttributeSet::GetMovementSpeedModifierAttribute());
 }
+
+/*float ATPSCharacter::TakeDamage(float damage, struct FDamageEvent const& event, AController* instigator, AActor* causer)
+{
+	UAbilitySystemComponent* asc = GetAbilitySystemComponent();
+	if (IsValid(asc))
+	{
+		//swallow?
+	}
+	else
+	{
+		float healthDamage = damage;
+		if (CurrentArmor > 0)
+		{
+			healthDamage = damage - CurrentArmor;
+
+			CurrentArmor -= damage;
+			if (CurrentArmor < 0) { CurrentArmor = 0; }
+		}
+		if (healthDamage > 0)
+		{
+			CurrentHealth -= healthDamage;
+			if (CurrentHealth < 0) { CurrentHealth = 0; }
+		}
+	}
+
+	return damage;
+}*/
+
 
 //~ ============================================================= ~//
 //  END

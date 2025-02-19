@@ -3,6 +3,7 @@
 #include "Weapon/TPSProjectileLauncher.h"
 
 #include "Kismet/KismetMathLibrary.h"
+#include "Util/TPSFunctionLibrary.h"
 
 ATPSProjectileLauncher::ATPSProjectileLauncher()
 {
@@ -32,18 +33,26 @@ void ATPSProjectileLauncher::PerformFire()
 		FVector2D noise = CalculateAccuracyNoise();
 		adjustedDirection.Add(noise.X, noise.Y, 0);
 
+		FVector debugVector = adjustedDirection.Vector() * 200;
+		UTPSFunctionLibrary::DrawDebugTrace(this, Muzzle->GetComponentTransform().GetLocation(), debugVector,
+			FLinearColor::Yellow, FLinearColor::Yellow, 2.f);
+
+
 		int projectileCount = 1;
 		if (Configuration->ProjectileBehavior == Spread)
 		{
 			projectileCount = Configuration->SpreadCount;
 		}
-
 		for (int i = 0; i < projectileCount; i++)
 		{
 			// Adjust the weapon's spread.
 			FRotator spreadDirection = adjustedDirection;
 			noise = CalculateSpreadNoise();
 			spreadDirection.Add(noise.X, noise.Y, 0);
+
+			debugVector = spreadDirection.Vector() * 100;
+			UTPSFunctionLibrary::DrawDebugTrace(this, Muzzle->GetComponentTransform().GetLocation(), debugVector,
+				FLinearColor::Blue, FLinearColor::Blue, 2.f);
 			
 			LaunchProjectile(spreadDirection);
 		}
@@ -92,12 +101,20 @@ FVector2D ATPSProjectileLauncher::CalculateSpreadNoise()
 		yawDegrees = Configuration->SpreadDegrees.Y;
 	}
 
-	float deltaPitch = UKismetMathLibrary::RandomFloatInRange(-1 * pitchDegrees, pitchDegrees);
-	float deltaYaw = UKismetMathLibrary::RandomFloatInRange(-1 * yawDegrees, yawDegrees);
-	return FVector2D(deltaPitch, deltaYaw);
+	//float deltaPitch = UKismetMathLibrary::RandomFloatInRange(-1 * pitchDegrees, pitchDegrees);
+	//float deltaYaw = UKismetMathLibrary::RandomFloatInRange(-1 * yawDegrees, yawDegrees);
+	//return FVector2D(deltaPitch, deltaYaw);
 
 
 	FVector randomDirection = UKismetMathLibrary::RandomUnitVector();
 	FVector2D offsetDirection = FVector2D(randomDirection.X, randomDirection.Y).GetSafeNormal(0.00001);
-	return FVector2D(offsetDirection.X * pitchDegrees, offsetDirection.Y * yawDegrees);
+
+	float deltaPitch = UKismetMathLibrary::RandomFloatInRange(
+		randomDirection.X * pitchDegrees * -1,
+		randomDirection.X * pitchDegrees);
+	float deltaYaw = UKismetMathLibrary::RandomFloatInRange(
+		randomDirection.Y * yawDegrees * -1,
+		randomDirection.Y * yawDegrees);
+
+	return FVector2D(deltaPitch, deltaYaw);
 }
