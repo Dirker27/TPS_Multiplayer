@@ -76,6 +76,7 @@ void ATPSCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 void ATPSCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	EquipmentManager->BindToOwner(GetAbilitySystemComponent());
 
 	if (HasAuthority())
 	{

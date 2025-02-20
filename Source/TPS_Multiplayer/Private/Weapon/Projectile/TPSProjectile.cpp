@@ -56,16 +56,20 @@ void ATPSProjectile::Tick(float deltaSeconds)
 			// Apply Damage & Effects
 			if (HasAuthority())
 			{
-				FPointDamageEvent event = FPointDamageEvent();
-				event.Damage = 1.0f;
-				event.HitInfo = hitResult;
+				//FPointDamageEvent event = FPointDamageEvent();
+				//event.Damage = 1.0f;
+				//event.HitInfo = hitResult;
 
-				character->TakeDamage(1.f, event, nullptr, nullptr);
+				//character->TakeDamage(1.f, event, nullptr, nullptr);
 
 				for (TSubclassOf<UGameplayEffect> e: AppliedEffects)
 				{
 					UAbilitySystemComponent* asc = character->GetAbilitySystemComponent();
 					if (IsValid(asc)) {
+						//FGameplayTagContainer tags;
+						//e->GetAssetRegistryTags();
+						//asc->RemoveActiveEffectsWithTags(tags);
+
 						FGameplayEffectContextHandle context = asc->MakeEffectContext();
 						FGameplayEffectSpecHandle spec = asc->MakeOutgoingSpec(e, 1.f, context);
 						asc->ApplyGameplayEffectSpecToSelf(*spec.Data.Get(), asc->GetPredictionKeyForNewAction());

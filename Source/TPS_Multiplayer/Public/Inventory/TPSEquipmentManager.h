@@ -88,12 +88,17 @@ private:
     //- Back Holsters
     TObjectPtr<UTPSMountPoint> BackHolster;
 
+
+    TWeakObjectPtr<UAbilitySystemComponent> OwnerAsc;
+
 //~ ============================================================= ~//
 //  PUBLIC OPERATIONS
 //~ ============================================================= ~//
 public:
     //UFUNCTION(BlueprintCallable)
     void BindToMesh(USkeletalMeshComponent* mesh);
+
+    void BindToOwner(UAbilitySystemComponent* ownerAsc);
 
     UFUNCTION(BlueprintCallable)
     void Initialize();

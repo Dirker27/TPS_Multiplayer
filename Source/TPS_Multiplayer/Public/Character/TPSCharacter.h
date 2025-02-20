@@ -59,51 +59,51 @@ public:
 //~ ============================================================= ~//
 public:
 
-	//- Identity -----------------------------------------=
-	//
+	//- Identity ------------------------------------------//
+	
 	// Name
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Identity")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|Identity")
 	FString Name;
 
-	//- Configuration -------------------------------------=
-	//
+	//- Configuration -------------------------------------//
+
 	// Character Configuration
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|Configuration")
 	TObjectPtr<UTPSCharacterConfiguration> Configuration;
 
-	//- Attributes ----------------------------------------=
+	//- Attributes ----------------------------------------//
 	// (sync'd from GAS attributes where applicable)
-	//
+	
 	// Health
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Health", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Health", Replicated)
 	float CurrentHealth;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Health")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Health")
 	float MaxHealth;
-	//
+
 	// Armor
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Health", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Health", Replicated)
 	float CurrentArmor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Health")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Health")
 	float MaxArmor;
-	//
+
 	// Movement Speed
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Health", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Health", Replicated)
 	float MovementSpeedModifier;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Health")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Health")
 	float CurrentMaxWalkSpeed;
 
 	//- State ------------------------------------------------=
-	//
+
 	// Character State
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Character", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Character", Replicated)
 	TEnumAsByte<ETPSCharacterState> CurrentCharacterState;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Character")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Character")
 	TEnumAsByte<ETPSCharacterState> PreviousCharacterState;
 	//
 	// Locomotion State
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Locomotion", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Locomotion", Replicated)
 	TEnumAsByte<ETPSLocomotionState> CurrentLocomotionState;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Locomotion")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Locomotion")
 	TEnumAsByte<ETPSLocomotionState> PreviousLocomotionState;
 	//
 	// IsAlive (Synthetic)
@@ -132,45 +132,45 @@ public:
 
 	//- Controller Input ----------------------------------=
 	//
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Input", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Input", Replicated)
 	FRotator TargetLookRotation;
 	//
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Input", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Input", Replicated)
 	bool IsBoosting;
 	//
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Input", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Input", Replicated)
 	bool IsCrouchInputReceived;
 	//
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Input", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Input", Replicated)
 	bool IsAiming;
 	//
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Input", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Input", Replicated)
 	bool IsFiring;
 	//
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Input", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Input", Replicated)
 	bool IsEquipping;
 	//
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Input", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Input", Replicated)
 	bool IsReloading;
 	//
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Input", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Input", Replicated)
 	bool IsInteracting;
 	//
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Input", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Input", Replicated)
 	bool IsInMenu;
 
 	//- Visibility ---------------------------------------=
 	//
 	// Shows full diagnostic data to peer client/server
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Render")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Render")
 	bool IsDebugEnabled = false;
 	//
 	// Shows name/health data to peer client/server
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Render")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Render")
 	bool ShouldRenderUnitFrame = true;
 	//
 	// Shows simple debug data to peer client
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State|Render")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Render")
 	bool ShouldRenderDebugFrame = true;
 
 //~ ============================================================= ~//
@@ -344,10 +344,10 @@ public:
 	void SyncAttributesFromGAS();
 
 protected:
-	UPROPERTY(EditDefaultsOnly, Category = "Abilities")
+	UPROPERTY(EditDefaultsOnly, Category = "TPSCharacter|Abilities")
 	UAbilitySet* InitialAbilitySet{ nullptr };
 
-	UPROPERTY(EditDefaultsOnly, Category = "Abilities")
+	UPROPERTY(EditDefaultsOnly, Category = "TPSCharacter|Abilities")
 	TSubclassOf<UGameplayEffect> InitialGameplayEffect;
 
 	TArray<FGameplayAbilitySpecHandle> InitiallyGrantedAbilitySpecHandles;
@@ -362,10 +362,10 @@ protected:
 //  INVENTORY SYSTEM
 //~ ============================================================= ~//
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Inventory")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="TPSCharacter|Inventory")
 	TObjectPtr<UTPSEquipmentManager> EquipmentManager;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Inventory")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="TPSCharacter|Inventory")
 	TObjectPtr<UTPSCharacterInventory> Inventory;
 
 
@@ -376,7 +376,7 @@ public:
 public:
 
 	// Use Actor's Eyes at Mesh Location for detection and docking sweeps
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|Configuration")
 	FName EyeSocketName;
 	virtual void GetActorEyesViewPoint(FVector& Location, FRotator& Rotation) const override;
 

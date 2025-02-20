@@ -33,10 +33,9 @@ void ATPSProjectileLauncher::PerformFire()
 		FVector2D noise = CalculateAccuracyNoise();
 		adjustedDirection.Add(noise.X, noise.Y, 0);
 
-		FVector debugVector = adjustedDirection.Vector() * 200;
+		FVector debugVector = adjustedDirection.Vector() * 100;
 		UTPSFunctionLibrary::DrawDebugTrace(this, Muzzle->GetComponentTransform().GetLocation(), debugVector,
-			FLinearColor::Yellow, FLinearColor::Yellow, 2.f);
-
+			FLinearColor::Yellow, FLinearColor::Red, 2.f);
 
 		int projectileCount = 1;
 		if (Configuration->ProjectileBehavior == Spread)
@@ -52,7 +51,7 @@ void ATPSProjectileLauncher::PerformFire()
 
 			debugVector = spreadDirection.Vector() * 100;
 			UTPSFunctionLibrary::DrawDebugTrace(this, Muzzle->GetComponentTransform().GetLocation(), debugVector,
-				FLinearColor::Blue, FLinearColor::Blue, 2.f);
+				FLinearColor::Blue, FLinearColor::Red, 2.f);
 			
 			LaunchProjectile(spreadDirection);
 		}
@@ -68,9 +67,13 @@ void ATPSProjectileLauncher::LaunchProjectile(FRotator targetDirection)
 	p->SetReplicates(true);
 	p->SetReplicateMovement(true);
 
+	if (IsValid(OwnerAsc.Get()))
+	{
+		p->OwnerAsc = OwnerAsc;
+	}
+
 	if (IsValid(p)) {
 		p->Launch();
-		//UE_LOG(LogTemp, Log, TEXT("YEET?"));
 	}
 }
 

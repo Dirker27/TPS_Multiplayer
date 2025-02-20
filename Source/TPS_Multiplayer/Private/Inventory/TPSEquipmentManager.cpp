@@ -113,6 +113,12 @@ void UTPSEquipmentManager::BindToMesh(USkeletalMeshComponent* mesh)
     }
 }
 
+void UTPSEquipmentManager::BindToOwner(UAbilitySystemComponent* ownerAsc)
+{
+    OwnerAsc = ownerAsc;
+}
+
+
 
 //~ ============================================================= ~//
 //  EQUIPMENT OPERATIONS
@@ -125,22 +131,27 @@ void UTPSEquipmentManager::InstantiateLoadout()
     if (IsValid(Loadout->primaryWeapon)) {
         UE_LOG(LogTemp, Log, TEXT("Instantiating Primary Weapon [%s]..."), *Loadout->primaryWeapon->GetName());
         PrimaryWeaponInstance = GetWorld()->SpawnActor<ATPSEquipableItem>(Loadout->primaryWeapon);
+        PrimaryWeaponInstance->OwnerAsc = OwnerAsc;
     }
     if (IsValid(Loadout->secondaryWeapon)) {
         UE_LOG(LogTemp, Log, TEXT("Instantiating Secondary Weapon [%s]..."), *Loadout->secondaryWeapon->GetName());
         SecondaryWeaponInstance = GetWorld()->SpawnActor<ATPSEquipableItem>(Loadout->secondaryWeapon);
+        SecondaryWeaponInstance->OwnerAsc = OwnerAsc;
     }
     if (IsValid(Loadout->tertiaryWeapon)) {
         UE_LOG(LogTemp, Log, TEXT("Instantiating Tertiary Weapon [%s]..."), *Loadout->tertiaryWeapon->GetName());
         TertiaryWeaponInstance = GetWorld()->SpawnActor<ATPSEquipableItem>(Loadout->tertiaryWeapon);
+        TertiaryWeaponInstance->OwnerAsc = OwnerAsc;
     }
     if (IsValid(Loadout->tacticalEquipment)) {
         UE_LOG(LogTemp, Log, TEXT("Instantiating Tactical Equipment [%s]..."), *Loadout->tacticalEquipment->GetName());
         TacticalEquipmentInstance = GetWorld()->SpawnActor<ATPSEquipableItem>(Loadout->tacticalEquipment);
+        TacticalEquipmentInstance->OwnerAsc = OwnerAsc;
     }
     if (IsValid(Loadout->lethalEquipment)) {
         UE_LOG(LogTemp, Log, TEXT("Instantiating Lethal Equipment [%s]..."), *Loadout->lethalEquipment->GetName());
         LethalEquipmentInstance = GetWorld()->SpawnActor<ATPSEquipableItem>(Loadout->lethalEquipment);
+        LethalEquipmentInstance->OwnerAsc = OwnerAsc;
     }
 }
 

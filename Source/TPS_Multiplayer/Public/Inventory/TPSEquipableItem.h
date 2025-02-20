@@ -36,6 +36,10 @@ protected:
     TObjectPtr<UArrowComponent> ArrowComponent;
 #endif
 
+public:
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+    TWeakObjectPtr<UAbilitySystemComponent> OwnerAsc;
+
 //~ ============================================================= ~//
 //  ATTRIBUTES
 //~ ============================================================= ~//

@@ -15,7 +15,7 @@ class TPS_MULTIPLAYER_API UCharacterHealthAttributeSet : public UAttributeSet
 public:
     //- Health -------------------------------------------=
     //
-    //- Current Health
+    // Current Health
     UPROPERTY(BlueprintReadOnly, Category = "Health", ReplicatedUsing=OnRep_Health)
     FGameplayAttributeData Health;
     ATTRIBUTE_ACCESSORS(UCharacterHealthAttributeSet, Health);
@@ -23,7 +23,7 @@ public:
     UFUNCTION()
     void OnRep_Health(const FGameplayAttributeData& OldHealth);
     //
-    //- Max Health
+    // Max Health
     UPROPERTY(BlueprintReadOnly, Category = "Health", ReplicatedUsing=OnRep_HealthMax)
     FGameplayAttributeData HealthMax;
     ATTRIBUTE_ACCESSORS(UCharacterHealthAttributeSet, HealthMax);
@@ -31,16 +31,16 @@ public:
     UFUNCTION()
     void OnRep_HealthMax(const FGameplayAttributeData& OldHealthMax);
     //
-    //- Damage
+    // Damage
     //   (server-side only)
-    UPROPERTY(BlueprintReadOnly, Category = "Health.Damage")
+    UPROPERTY(BlueprintReadOnly, Category = "Health|Damage")
     FGameplayAttributeData HealthDamage;
     ATTRIBUTE_ACCESSORS(UCharacterHealthAttributeSet, HealthDamage);
     
 
     //- Current Armor -------------------------------------=
-    //
-    //- Armor
+    
+    // Armor
     UPROPERTY(BlueprintReadOnly, Category = "Armor", ReplicatedUsing = OnRep_Armor)
     FGameplayAttributeData Armor;
     ATTRIBUTE_ACCESSORS(UCharacterHealthAttributeSet, Armor);
@@ -48,7 +48,7 @@ public:
     UFUNCTION()
     void OnRep_Armor(const FGameplayAttributeData& OldArmor);
     //
-    //- Max Armor
+    // Max Armor
     UPROPERTY(BlueprintReadOnly, Category = "Armor", ReplicatedUsing = OnRep_ArmorMax)
     FGameplayAttributeData ArmorMax;
     ATTRIBUTE_ACCESSORS(UCharacterHealthAttributeSet, ArmorMax);
@@ -56,27 +56,27 @@ public:
     UFUNCTION()
     void OnRep_ArmorMax(const FGameplayAttributeData& OldArmorhMax);
     //
-    //- Damage
+    // Damage
     //   (server-side only)
-    UPROPERTY(BlueprintReadOnly, Category = "Armor.Damage")
+    UPROPERTY(BlueprintReadOnly, Category = "Armor|Damage")
     FGameplayAttributeData ArmorDamage;
     ATTRIBUTE_ACCESSORS(UCharacterHealthAttributeSet, ArmorDamage);
-    //- Armor Regeneration Rate
+    // Armor Regeneration Rate
     //   (server-side only)
-    UPROPERTY(BlueprintReadOnly, Category = "Armor.Regen")
+    UPROPERTY(BlueprintReadOnly, Category = "Armor|Regen")
     FGameplayAttributeData ArmorRegenRate;
     ATTRIBUTE_ACCESSORS(UCharacterHealthAttributeSet, ArmorRegenRate);
     //
-    //- Armor Regeneration Delay
+    // Armor Regeneration Delay
     //   (server-side only)
-    UPROPERTY(BlueprintReadOnly, Category = "Armor.Regen")
+    UPROPERTY(BlueprintReadOnly, Category = "Armor|Regen")
     FGameplayAttributeData ArmorRegenDelay;
     ATTRIBUTE_ACCESSORS(UCharacterHealthAttributeSet, ArmorRegenDelay);
 
 
     //- Stamina -------------------------------------------=
-    //
-    //- Current Stamina
+    
+    // Current Stamina
     UPROPERTY(BlueprintReadOnly, Category = "Stamina", ReplicatedUsing = OnRep_Stamina)
     FGameplayAttributeData Stamina;
     ATTRIBUTE_ACCESSORS(UCharacterHealthAttributeSet, Stamina);
@@ -84,7 +84,7 @@ public:
     UFUNCTION()
     void OnRep_Stamina(const FGameplayAttributeData& OldStamina);
     //
-    //- Max Stamina
+    // Max Stamina
     UPROPERTY(BlueprintReadOnly, Category = "Stamina", ReplicatedUsing = OnRep_StaminaMax)
     FGameplayAttributeData StaminaMax;
     ATTRIBUTE_ACCESSORS(UCharacterHealthAttributeSet, StaminaMax);
@@ -92,15 +92,15 @@ public:
     UFUNCTION()
     void OnRep_StaminaMax(const FGameplayAttributeData& OldStaminaMax);
     //
-    //- Stamina Regeneration Rate
+    // Stamina Regeneration Rate
     //   (server-side only)
-    UPROPERTY(BlueprintReadOnly, Category = "Stamina.Regen")
+    UPROPERTY(BlueprintReadOnly, Category = "Stamina|Regen")
     FGameplayAttributeData StaminaRegenRate;
     ATTRIBUTE_ACCESSORS(UCharacterHealthAttributeSet, StaminaRegenRate);
     //
-    //- Stamina Regeneration Delay
+    // Stamina Regeneration Delay
     //   (server-side only)
-    UPROPERTY(BlueprintReadOnly, Category = "Stamina.Regen")
+    UPROPERTY(BlueprintReadOnly, Category = "Stamina|Regen")
     FGameplayAttributeData StaminaRegenDelay;
     ATTRIBUTE_ACCESSORS(UCharacterHealthAttributeSet, StaminaRegenDelay);
 

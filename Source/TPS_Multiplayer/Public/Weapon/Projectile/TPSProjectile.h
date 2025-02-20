@@ -42,6 +42,10 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FVector HitDecalSize;
 
+public:
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+    TWeakObjectPtr<UAbilitySystemComponent> OwnerAsc;
+
 //~ ============================================================= ~//
 //  ATTRIBUTES
 //~ ============================================================= ~//
@@ -49,46 +53,48 @@ public:
     //- Identity -----------------------------------------=
     
     // Name
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Identity")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSProjectile|Identity")
     FName Name;
+    //
     // Type
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Identity")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSProjectile|Identity")
     TEnumAsByte<ETPSAmmunitionType> Type;
 
 
     //- Configuration ------------------------------------=
-    //
-    // Initial Launch Velocity
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
-    float InitialVelocity; // [m/s]
+    
+    // Initial Launch Velocity [m/s]
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSProjectile|Configuration")
+    float InitialVelocity; 
     //
     // Lifetime Seconds (TTL)
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSProjectile|Configuration")
     float LifetimeSeconds = 5;
     //
     // How much velocity is lost on hit (divides current velocity)
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSProjectile|Configuration", meta = (EditCondition = "ShouldDestroyOnHit == false", EditConditionHides))
     float OnHitVelocityDamper = 3.f;
     //
     // Should Destroy on first impact.
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSProjectile|Configuration")
     bool ShouldDestroyOnHit = true;
     //
     // On-Hit Effects
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSProjectile|Configuration")
     TArray<TSubclassOf<UGameplayEffect>> AppliedEffects;
     //
     // Show Debug Collision Trace
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSProjectile|Configuration")
     bool ShowCollisionTrace = true;
 
+
     //- State --------------------------------------------=
-    //
+    
     // EquipmentOwner (who shot me?)
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSProjectile|State")
     ATPSCharacter* OwningCharacter;
     // Lifetime
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TPSProjectile|State")
     float ElapsedLifetimeSeconds;
 
 //~ ============================================================= ~//

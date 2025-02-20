@@ -13,6 +13,11 @@ class TPS_MULTIPLAYER_API ATPSMountableActor : public AActor
 {
     GENERATED_BODY()
 
+public:
+    ATPSMountableActor();
+
+    virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 protected:
     virtual void Tick(float DeltaSeconds) override;
 
@@ -23,21 +28,21 @@ public:
     //- Configuration -----------------------------------=
     //
     //- Offset from Mount target
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Configuration")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Mountable|Configuration")
     FVector MountOffset = FVector::Zero();
     //
     //- Should Rotate?
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Configuration")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Mountable|Configuration")
     bool ShouldApplyRotation = true;
     //
     //- Use initial offsets on Mount?
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Configuration")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Mountable|Configuration")
     bool ShouldCaptureOffsetOnStart = true;
 
     //- State ---------------------------------------------=
     //
     //- Active(?) Mount Point
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "State")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Mountable|State", Replicated)
     TObjectPtr<UTPSMountPoint> MountPoint = nullptr;
 
 //~ ============================================================= ~//

@@ -2,6 +2,20 @@
 
 #include "Behavior/TPSMountable.h"
 
+#include "Net/UnrealNetwork.h"
+
+ATPSMountableActor::ATPSMountableActor()
+{
+    bReplicates = true;
+}
+
+
+void ATPSMountableActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+    DOREPLIFETIME(ATPSMountableActor, MountPoint);
+}
+
 void ATPSMountableActor::Tick(float DeltaSeconds)
 {
     /*if (IsValid(MountPoint))
