@@ -2,7 +2,6 @@
 
 #include "Weapon/TPSProjectileLauncher.h"
 
-#include "Kismet/KismetMathLibrary.h"
 #include "Util/TPSFunctionLibrary.h"
 
 ATPSProjectileLauncher::ATPSProjectileLauncher()
@@ -33,7 +32,7 @@ void ATPSProjectileLauncher::PerformFire()
 		FVector2D noise = CalculateAccuracyNoise();
 		adjustedDirection.Add(noise.X, noise.Y, 0);
 
-		FVector debugVector = adjustedDirection.Vector() * 100;
+		FVector debugVector = adjustedDirection.Vector() * 200;
 		UTPSFunctionLibrary::DrawDebugTrace(this, Muzzle->GetComponentTransform().GetLocation(), debugVector,
 			FLinearColor::Yellow, FLinearColor::Red, 2.f);
 
@@ -49,9 +48,9 @@ void ATPSProjectileLauncher::PerformFire()
 			noise = CalculateSpreadNoise();
 			spreadDirection.Add(noise.X, noise.Y, 0);
 
-			debugVector = spreadDirection.Vector() * 100;
+			debugVector = spreadDirection.Vector() * 400;
 			UTPSFunctionLibrary::DrawDebugTrace(this, Muzzle->GetComponentTransform().GetLocation(), debugVector,
-				FLinearColor::Blue, FLinearColor::Red, 2.f);
+				FLinearColor::Gray, FLinearColor::Red, 2.f);
 			
 			LaunchProjectile(spreadDirection);
 		}
@@ -78,17 +77,13 @@ void ATPSProjectileLauncher::LaunchProjectile(FRotator targetDirection)
 }
 
 
-FVector2D ATPSProjectileLauncher::CalculateAccuracyNoise()
+FVector2D ATPSProjectileLauncher::CalculateAccuracyNoise() const
 {
-	// Apply MOA Noise (independent of character's accuracy, this is just the Weapon's spread)
-	float deltaPitch = UKismetMathLibrary::RandomIntegerInRange(-1 * TargetAccuracyTolerance.X, TargetAccuracyTolerance.X);
-	float deltaYaw = UKismetMathLibrary::RandomIntegerInRange(-1 * TargetAccuracyTolerance.Y, TargetAccuracyTolerance.Y);
-
-	return FVector2D(deltaPitch, deltaYaw);
+	return UTPSFunctionLibrary::CalculateNoise2D(TargetAccuracyTolerance.X, TargetAccuracyTolerance.Y);
 }
 
 // Apply MOA Noise (independent of character's accuracy, this is just the Weapon's spread)
-FVector2D ATPSProjectileLauncher::CalculateSpreadNoise()
+FVector2D ATPSProjectileLauncher::CalculateSpreadNoise() const
 {
 	// MOA == "Minute of Angle" -> 1/60 of a 360-degree.
 	//  1 MOA ~= 1 inch @ 100 yards
@@ -104,20 +99,5 @@ FVector2D ATPSProjectileLauncher::CalculateSpreadNoise()
 		yawDegrees = Configuration->SpreadDegrees.Y;
 	}
 
-	//float deltaPitch = UKismetMathLibrary::RandomFloatInRange(-1 * pitchDegrees, pitchDegrees);
-	//float deltaYaw = UKismetMathLibrary::RandomFloatInRange(-1 * yawDegrees, yawDegrees);
-	//return FVector2D(deltaPitch, deltaYaw);
-
-
-	FVector randomDirection = UKismetMathLibrary::RandomUnitVector();
-	FVector2D offsetDirection = FVector2D(randomDirection.X, randomDirection.Y).GetSafeNormal(0.00001);
-
-	float deltaPitch = UKismetMathLibrary::RandomFloatInRange(
-		randomDirection.X * pitchDegrees * -1,
-		randomDirection.X * pitchDegrees);
-	float deltaYaw = UKismetMathLibrary::RandomFloatInRange(
-		randomDirection.Y * yawDegrees * -1,
-		randomDirection.Y * yawDegrees);
-
-	return FVector2D(deltaPitch, deltaYaw);
+	return UTPSFunctionLibrary::CalculateNoise2D(pitchDegrees, yawDegrees);
 }

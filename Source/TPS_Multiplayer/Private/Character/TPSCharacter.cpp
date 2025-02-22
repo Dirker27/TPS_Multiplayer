@@ -117,7 +117,6 @@ void ATPSCharacter::Tick(float deltaTime)
 		}
 	}
 
-
 	//- Derive State from Input -------------------------=
 	//
 	ETPSLocomotionState evaluatedState = EvaluateLocomotionStateForCurrentInput();
@@ -127,6 +126,14 @@ void ATPSCharacter::Tick(float deltaTime)
 	}
 	SyncComponentsFromState();
 
+	if (IsActionActive() || GetVelocity().Size() > 0.1)
+	{
+		IdleSeconds = 0;
+	}
+	else
+	{
+		IdleSeconds += deltaTime;
+	}
 
 	//- Broadcast to UI Listeners -----------------------=
 	//
@@ -159,8 +166,7 @@ bool ATPSCharacter::IsCrouching() const
 }
 bool ATPSCharacter::IsIdle() const
 {
-	// TODO: Determine what "Idle" means.
-	return false;
+	return IdleSeconds >= Configuration->IdleThresholdSeconds;
 }
 
 FVector2D ATPSCharacter::GetCurrentAccuracyTolerance() const

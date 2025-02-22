@@ -32,16 +32,18 @@ protected:
 	UAbilitySystemComponent* AbilitySystemComponent{ nullptr };
 
 public:
+
     virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override; // IAbilitySystemInterface
 
-    //- GAS Attributes ------------------------------------=
-    //
+    //////////////////////////////////////////////////////
+    // GAS Attributes
+
 	UPROPERTY(VisibleAnywhere, Category = "Abilities|Attributes", Transient)
 	UStandardAttributeSet* StandardAttributes{ nullptr };
-    //
+
 	UPROPERTY(VisibleAnywhere, Category = "Abilities|Attributes", Transient)
     UCharacterHealthAttributeSet* CharacterHealthAttributes{ nullptr };
-    //
+
     UPROPERTY(VisibleAnywhere, Category = "Abilities|Attributes", Transient)
     UWeaponAttributeSet* WeaponAttributes{ nullptr };
 };

@@ -19,5 +19,8 @@ public:
     TEnumAsByte<ETPSCharacterBodyType> CharacterBodyType;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float BaseAccuracyTolerance;
+    float BaseAccuracyTolerance = 1.f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float IdleThresholdSeconds = 3.f;
 };

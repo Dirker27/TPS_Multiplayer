@@ -28,4 +28,7 @@ public:
 	//  Mass = kg
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Physics")
 	static FVector CalculateImpulseJoules(const FVector velocity, const float mass);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Physics")
+	static FVector2D CalculateNoise2D(const float pitchDegrees, const float yawDegrees);
 };

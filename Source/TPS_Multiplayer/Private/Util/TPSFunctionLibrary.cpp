@@ -5,6 +5,8 @@
 
 #include <Kismet/GameplayStatics.h>
 
+#include "Kismet/KismetMathLibrary.h"
+
 AActor* UTPSFunctionLibrary::GetNearestActorOfClass(const UObject* WorldContextObject, TSubclassOf<AActor> ActorClass, FVector Location, float Radius)
 {
     AActor* NearestActor = NULL;
@@ -25,6 +27,21 @@ AActor* UTPSFunctionLibrary::GetNearestActorOfClass(const UObject* WorldContextO
     }
 
     return NearestActor;
+}
+
+FVector2D UTPSFunctionLibrary::CalculateNoise2D(const float pitchDegrees, const float yawDegrees)
+{
+    FVector randomDirection = UKismetMathLibrary::RandomUnitVector();
+    FVector2D offsetDirection = FVector2D(randomDirection.X, randomDirection.Y).GetSafeNormal(0.00001);
+
+    float deltaPitch = UKismetMathLibrary::RandomFloatInRange(
+        randomDirection.X * pitchDegrees * -1,
+        randomDirection.X * pitchDegrees);
+    float deltaYaw = UKismetMathLibrary::RandomFloatInRange(
+        randomDirection.Y * yawDegrees * -1,
+        randomDirection.Y * yawDegrees);
+
+    return FVector2D(deltaPitch, deltaYaw);
 }
 
 FVector UTPSFunctionLibrary::CalculateImpulseJoules(const FVector velocity, const float mass)

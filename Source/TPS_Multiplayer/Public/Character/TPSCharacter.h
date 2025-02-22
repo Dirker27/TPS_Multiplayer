@@ -59,20 +59,23 @@ public:
 //~ ============================================================= ~//
 public:
 
-	//- Identity ------------------------------------------//
+	//////////////////////////////////////////////////////
+	// Identity
 	
 	// Name
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|Identity")
 	FString Name;
 
-	//- Configuration -------------------------------------//
+	//////////////////////////////////////////////////////
+	// Configuration
 
 	// Character Configuration
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|Configuration")
 	TObjectPtr<UTPSCharacterConfiguration> Configuration;
 
-	//- Attributes ----------------------------------------//
-	// (sync'd from GAS attributes where applicable)
+	//////////////////////////////////////////////////////
+	// Attributes
+	//   (sync'd from GAS attributes where applicable)
 	
 	// Health
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Health", Replicated)
@@ -92,7 +95,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Health")
 	float CurrentMaxWalkSpeed;
 
-	//- State ------------------------------------------------=
+	//////////////////////////////////////////////////////
+	// State
 
 	// Character State
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Character", Replicated)
@@ -107,31 +111,36 @@ public:
 	TEnumAsByte<ETPSLocomotionState> PreviousLocomotionState;
 	//
 	// IsAlive (Synthetic)
-	// True if Character is not Incapacitated.
-	UFUNCTION(BlueprintGetter)
+	//   True if Character is not Incapacitated.
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool IsAlive() const;
 	//
 	// IsCrouching (Synthetic)
-	// True if Crouching OR Prone.
-	UFUNCTION(BlueprintGetter)
+	//   True if Crouching OR Prone.
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool IsCrouching() const;
 	//
 	// IsIdle (Synthetic)
-	UFUNCTION(BlueprintGetter)
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool IsIdle() const;
 	//
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float IdleSeconds;
+	//
 	// Current Accuracy Tolerance
-	UFUNCTION(BlueprintGetter)
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	FVector2D GetCurrentAccuracyTolerance() const;
 
-	//- Weapon State --------------------------------------=
-	//
-	//- Current Equipped Weapon (Synthetic)
+	//////////////////////////////////////////////////////
+	// Equipment State
+
+	// Current Equipped Weapon (Synthetic)
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	ATPSWeapon* GetEquippedWeapon() const;
 
-	//- Controller Input ----------------------------------=
-	//
+	//////////////////////////////////////////////////////
+	// Controller Input
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Input", Replicated)
 	FRotator TargetLookRotation;
 	//
@@ -159,8 +168,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Input", Replicated)
 	bool IsInMenu;
 
-	//- Visibility ---------------------------------------=
-	//
+	//////////////////////////////////////////////////////
+	// UI Visibility
+
 	// Shows full diagnostic data to peer client/server
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Render")
 	bool IsDebugEnabled = false;

@@ -39,31 +39,32 @@ public:
 //  CONFIGURATION
 //~ ============================================================= ~//
 public:
-    //- Equipment Slot Bones ------------------------------=
-    //
-    //- Parent Mesh
+    //////////////////////////////////////////////////////
+    // Target Mesh Configuration
+
+    // Parent Mesh
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EquipmentManager|Configuration")
     TWeakObjectPtr<USkeletalMeshComponent> TargetMesh;
     //
-    //- Weapon Hands
+    // Weapon Hands
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EquipmentManager|Configuration")
     FName PrimaryWeaponHandBone;
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EquipmentManager|Configuration")
     FName SecondaryWeaponHandBone;
     //
-    //- Hip Holsters
+    // Hip Holsters
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EquipmentManager|Configuration")
     FName LeftHipHolsterBone;
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EquipmentManager|Configuration")
     FName RightHipHolsterBone;
     //
-    //- Leg Holsters
+    // Leg Holsters
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EquipmentManager|Configuration")
     FName LeftLegHolsterBone;
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EquipmentManager|Configuration")
     FName RightLegHolsterBone;
     //
-    //- Back Holsters
+    // Back Holsters
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EquipmentManager|Configuration")
     FName BackHolsterBone;
 
@@ -71,22 +72,24 @@ public:
 //  COMPONENTS
 //~ ============================================================= ~//
 private:
-    //- Equipment Slot Mounts ------------------------------=
-    //
-    //- Weapon Hands
+    //////////////////////////////////////////////////////
+    // Mount Targets
+    
+    // Weapon Hands
     TObjectPtr<UTPSMountPoint> PrimaryWeaponHand;
     TObjectPtr<UTPSMountPoint> SecondaryWeaponHand;
     //
-    //- Hip Holsters
+    // Hip Holsters
     TObjectPtr<UTPSMountPoint> LeftHipHolster;
     TObjectPtr<UTPSMountPoint> RightHipHolster;
     //
-    //- Leg Holsters
+    // Leg Holsters
     TObjectPtr<UTPSMountPoint> LeftLegHolster;
     TObjectPtr<UTPSMountPoint> RightLegHolster;
     //
-    //- Back Holsters
+    // Back Holsters
     TObjectPtr<UTPSMountPoint> BackHolster;
+
 
 
     TWeakObjectPtr<UAbilitySystemComponent> OwnerAsc;

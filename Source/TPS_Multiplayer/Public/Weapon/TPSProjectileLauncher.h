@@ -44,6 +44,6 @@ public:
     virtual void StopUse() override;
 
 private:
-    FVector2D CalculateAccuracyNoise();
-    FVector2D CalculateSpreadNoise();
+    FVector2D CalculateAccuracyNoise() const;
+    FVector2D CalculateSpreadNoise() const;
 };
