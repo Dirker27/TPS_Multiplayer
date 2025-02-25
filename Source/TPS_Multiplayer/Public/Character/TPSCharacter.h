@@ -70,6 +70,7 @@ public:
 	// Configuration
 
 	// Character Configuration
+	//   Will be overridden by PlayerState on Possession.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|Configuration")
 	TObjectPtr<UTPSCharacterConfiguration> Configuration;
 
@@ -131,14 +132,14 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	FVector2D GetCurrentAccuracyTolerance() const;
 
-	//////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////
 	// Equipment State
 
 	// Current Equipped Weapon (Synthetic)
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	ATPSWeapon* GetEquippedWeapon() const;
 
-	//////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////
 	// Controller Input
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TPSCharacter|State|Input", Replicated)
@@ -188,8 +189,9 @@ public:
 //~ ============================================================= ~//
 public:
 
-	//- Ability Extensions ------------------------------=
-	//
+	////////////////////////////////////////////////////////
+	// Ability Extensions
+	
 	// Boost
 	UFUNCTION(BlueprintCallable)
 	void StartBoost();
@@ -271,14 +273,16 @@ public:
 	void OnInteractAbilityEnd();
 
 
-	//- Behavior Overrides --------------------------------=
-	//
+	////////////////////////////////////////////////////////
+	// Behavior Overrides
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnFellOutOfWorld();
 
 
-	//- Transforms -------------------------------------------=
-	//
+	////////////////////////////////////////////////////////
+	// Type Transforms
+
 	// CharacterState
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	static FString CharacterStateToFString(ETPSCharacterState state) {
@@ -292,7 +296,7 @@ public:
 	}
 
 //~ ================================================================ ~//
-//  Character Logic
+//  Character Business Logic
 //~ ================================================================ ~//
 
 private:
@@ -302,8 +306,9 @@ private:
 
 public:
 
-	//- Modify Behavioral States --------------------------=
-	//
+	////////////////////////////////////////////////////////
+	// State Modifiers
+
 	// CharacterState
 	UFUNCTION(BlueprintCallable)
 	void ApplyCharacterState(const ETPSCharacterState CharacterState);
@@ -316,9 +321,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void RevertLocomotionState();
 
-public:
-	//- Logic ---------------------------------------------=
-	// 
+
+	////////////////////////////////////////////////////////
+	// Business Logic
+
 	// Determine what state we should be in.
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	ETPSLocomotionState EvaluateLocomotionStateForCurrentInput();

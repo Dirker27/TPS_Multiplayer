@@ -32,7 +32,7 @@ void ATPSProjectileLauncher::PerformFire()
 		FVector2D noise = CalculateAccuracyNoise();
 		adjustedDirection.Add(noise.X, noise.Y, 0);
 
-		FVector debugVector = adjustedDirection.Vector() * 200;
+		FVector debugVector = adjustedDirection.Vector() * 400;
 		UTPSFunctionLibrary::DrawDebugTrace(this, Muzzle->GetComponentTransform().GetLocation(), debugVector,
 			FLinearColor::Yellow, FLinearColor::Red, 2.f);
 
@@ -48,7 +48,7 @@ void ATPSProjectileLauncher::PerformFire()
 			noise = CalculateSpreadNoise();
 			spreadDirection.Add(noise.X, noise.Y, 0);
 
-			debugVector = spreadDirection.Vector() * 400;
+			debugVector = spreadDirection.Vector() * 200;
 			UTPSFunctionLibrary::DrawDebugTrace(this, Muzzle->GetComponentTransform().GetLocation(), debugVector,
 				FLinearColor::Gray, FLinearColor::Red, 2.f);
 			

@@ -2,6 +2,9 @@
 
 #include "Game/TPSGameMode.h"
 
+#include "Character/TPSPlayerCharacter.h"
+#include "Kismet/GameplayStatics.h"
+
 //~ ====================================================================== ~//
 //- CONSOLE CONFIGURATION
 //~ ====================================================================== ~//
@@ -29,7 +32,7 @@ void _OnGameConfiugrationConsoleInput(IConsoleVariable* Var) {
 		CVarGlobalFogDensity->GetFloat()
 	};
 	UE_LOG(LogTemp, Log, TEXT("INPUT CharacterDEBUG: %i\nINPUT FogDensity: %f"),
-		configuration.globalCharacterDebugMode, configuration.globalFogDensity);
+		configuration.GlobalCharacterDebugMode, configuration.GlobalFogDensity);
 	ATPSGameMode::UpdateGameConfiguration(&configuration);
 }
 void ATPSGameMode::BindConsoleCallbacks() {
@@ -40,10 +43,10 @@ void ATPSGameMode::BindConsoleCallbacks() {
 
 	_OnGameConfiugrationConsoleInput(nullptr); // <- perform initial read (hacky)
 }
-FTPSGameConfiguration* ATPSGameMode::configuration = new FTPSGameConfiguration(); //{ 0, 0.2f };
+FTPSGameConfiguration* ATPSGameMode::Configuration = new FTPSGameConfiguration(); //{ 0, 0.2f };
 void ATPSGameMode::UpdateGameConfiguration(FTPSGameConfiguration* config) {
-	configuration->globalCharacterDebugMode = config->globalCharacterDebugMode;
-	configuration->globalFogDensity = config->globalFogDensity;
+	Configuration->GlobalCharacterDebugMode = config->GlobalCharacterDebugMode;
+	Configuration->GlobalFogDensity = config->GlobalFogDensity;
 }
 
 
@@ -74,10 +77,76 @@ void ATPSGameMode::PerformRespawn(ATPSPlayerController playerController) {
 
 void ATPSGameMode::TPS_ToggleDebugForAllCharacters() {
 	IsDebugEnabled = (!IsDebugEnabled);
-	configuration->globalCharacterDebugMode = (configuration->globalCharacterDebugMode == 1)
+	Configuration->GlobalCharacterDebugMode = (Configuration->GlobalCharacterDebugMode == 1)
 		? 0
 		: 1;
 }
 void ATPSGameMode::DebugGlobal() {
 	TPS_ToggleDebugForAllCharacters();
+}
+
+
+void ATPSGameMode::TPS_SpawnNewPlayerCharacter()
+{
+	if (IsValid(PlayerCharacterTemplate))
+	{
+		APlayerStart* spawnPoint = FindSpawnPoint();
+		if (IsValid(spawnPoint))
+		{
+			GetWorld()->SpawnActor<ATPSPlayerCharacter>(PlayerCharacterTemplate,
+				spawnPoint->GetTransform().GetLocation(), spawnPoint->GetTransform().Rotator());
+		}
+		else
+		{
+			GetWorld()->SpawnActor<ATPSPlayerCharacter>(PlayerCharacterTemplate);
+		}
+	}
+}
+void ATPSGameMode::SpawnPlayer() {
+	TPS_SpawnNewPlayerCharacter();
+}
+void ATPSGameMode::SpawnPlayers(int numPlayers)
+{
+	for (int i = 0; i < numPlayers; i++)
+	{
+		SpawnPlayer();
+	}
+}
+
+void ATPSGameMode::TPS_SpawnNewBot()
+{
+	if (IsValid(BotTemplate))
+	{
+		APlayerStart* spawnPoint = FindSpawnPoint();
+		if (IsValid(spawnPoint))
+		{
+			GetWorld()->SpawnActor<ATPSAICharacter>(BotTemplate,
+				spawnPoint->GetTransform().GetLocation(), spawnPoint->GetTransform().Rotator());
+		}
+		else
+		{
+			GetWorld()->SpawnActor<ATPSAICharacter>(BotTemplate);
+		}
+	}
+}
+void ATPSGameMode::SpawnBot() {
+	TPS_SpawnNewBot();
+}
+void ATPSGameMode::SpawnBots(int numBots)
+{
+	for (int i = 0; i < numBots; i++)
+	{
+		SpawnBot();
+	}
+}
+
+APlayerStart* ATPSGameMode::FindSpawnPoint()
+{
+	TArray<AActor*> OutActors;
+	UGameplayStatics::GetAllActorsOfClass(this, APlayerStart::StaticClass(), OutActors);
+
+	int32 RandomIndex = FMath::RandRange(0, OutActors.Num() - 1);
+
+	// Return the element at the random index
+	return Cast<APlayerStart>(OutActors[RandomIndex]);
 }
