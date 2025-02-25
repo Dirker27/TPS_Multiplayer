@@ -1,4 +1,4 @@
-// (C) ToasterCat Studios 2024
+// (C) ToasterCat Studios 2025
 
 
 #include "Util/TPSFunctionLibrary.h"
@@ -7,26 +7,31 @@
 
 #include "Kismet/KismetMathLibrary.h"
 
-AActor* UTPSFunctionLibrary::GetNearestActorOfClass(const UObject* WorldContextObject, TSubclassOf<AActor> ActorClass, FVector Location, float Radius)
+AActor* UTPSFunctionLibrary::GetNearestActorOfClass(const UObject* worldContextObject, TSubclassOf<AActor> actorClass, FVector location, float radius)
 {
-    AActor* NearestActor = NULL;
+    return GetNearestActorOfClassAndIgnore(worldContextObject, actorClass, location, radius, TArray<AActor*>());
+}
 
-    float NearestDistance = Radius;
+AActor* UTPSFunctionLibrary::GetNearestActorOfClassAndIgnore(const UObject* worldContextObject, TSubclassOf<AActor> actorClass, FVector location, float radius, TArray<AActor*> toIgnore)
+{
+    AActor* nearestActor = NULL;
+
+    float nearestDistance = radius;
 
     TArray<AActor*> OutActors;
-    UGameplayStatics::GetAllActorsOfClass(WorldContextObject, ActorClass, OutActors);
+    UGameplayStatics::GetAllActorsOfClass(worldContextObject, actorClass, OutActors);
 
-    for (AActor* Actor : OutActors) {
-        float Distance = FVector::Distance(Location, Actor->GetActorLocation());
+    for (AActor* actor : OutActors) {
+        float distance = FVector::Distance(location, actor->GetActorLocation());
 
-        if (Distance < NearestDistance)
+        if (distance < nearestDistance && !toIgnore.Contains(actor))
         {
-            NearestActor = Actor;
-            NearestDistance = Distance;
+            nearestActor = actor;
+            nearestDistance = distance;
         }
     }
 
-    return NearestActor;
+    return nearestActor;
 }
 
 FVector2D UTPSFunctionLibrary::CalculateNoise2D(const float pitchDegrees, const float yawDegrees)

@@ -6,17 +6,17 @@
 
 #include "TPSControllerConfiguration.generated.h"
 
-// "Controller" configuration?
+// "Controller" Configuration?
 USTRUCT(BlueprintType)
 struct TPS_MULTIPLAYER_API FTPSControllerConfiguration
 {
 	GENERATED_USTRUCT_BODY()
 public:
 	UPROPERTY(BlueprintReadOnly)
-	int localCharacterDebugMode = 0;
+	int LocalCharacterDebugMode = 0;
 
 	UPROPERTY(BlueprintReadOnly)
-	bool godModeEnabled = false;
+	bool GodModeEnabled = false;
 
 	UPROPERTY(BlueprintReadOnly)
 	bool crouchToggle = true;

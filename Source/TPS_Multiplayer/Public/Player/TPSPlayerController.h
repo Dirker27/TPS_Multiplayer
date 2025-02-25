@@ -1,4 +1,4 @@
-// (C) ToasterCat Studios 2024
+// (C) ToasterCat Studios 2025
 
 #pragma once
 
@@ -21,12 +21,14 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	bool IsDebugEnabled = false;
 
-	//~ ==================================================================== ~//
-	//  CONSOLE COMMANDS (Developer-only API)
-	//~ ==================================================================== ~//
-	
-	//- Override Character State ---------------------------------------=
-	//
+//~ ==================================================================== ~//
+//  CONSOLE COMMANDS (Developer-only API)
+//~ ==================================================================== ~//
+public:
+
+	////////////////////////////////////////////////////////
+	// Override Character State
+
 	UFUNCTION(Exec, Category="Debug|Overrides")
 	void TPS_OverrideCurrentCharacterStateFromInt(int32 state);
 	//
@@ -45,25 +47,42 @@ public:
 	UFUNCTION(Exec, Category = "Debug|Overrides")
 	void ExitCombat();
 
-	//- Control Configuration -----------------------------=
-	//
+
+	////////////////////////////////////////////////////////
+	// Override Controller Configurations
+
 	UFUNCTION(Exec, Category="Config|Controls")
 	void TPS_ToggleCrouchForLocalPlayer();
-	//
 	UFUNCTION(Exec, Category = "Config|Controls")
 	void ToggleCrouch();
 
-	//- Visual Debugging ----------------------------------=
-	//
+
+	////////////////////////////////////////////////////////
+	// Visual Debugging
+
 	UFUNCTION(Exec, Category="Debug|Visibility")
 	void TPS_ToggleDebugForLocalPlayer();
-	//
 	UFUNCTION(Exec, Category = "Debug|Visibility")
 	void DebugLocal();
 
-	//~ ==================================================================== ~//
-	//  CONFIGURATION
-	//~ ==================================================================== ~//
+
+	////////////////////////////////////////////////////////
+	// Character / Pawn Controls
+
+	UFUNCTION(Exec, Category = "Pawn|Possess")
+	void TPS_PossessNearestPlayablePawn();
+	UFUNCTION(Exec, Category = "Pawn|Possess")
+	void PossessPawn();
+
+	UFUNCTION(Exec, Category = "Pawn|Possess")
+	void TPS_UnPossessCurrentPawn();
+	UFUNCTION(Exec, Category = "Pawn|Possess")
+	void UnPossessPawn();
+
+//~ ==================================================================== ~//
+//  CONFIGURATION
+//~ ==================================================================== ~//
+public:
 
 	UFUNCTION(BlueprintCallable)
 	void BindConsoleCallbacks();

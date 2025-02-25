@@ -3,6 +3,9 @@
 
 #include "Player/TPSPlayerController.h"
 
+#include "Character/TPSPlayerCharacter.h"
+#include "Util/TPSFunctionLibrary.h"
+
 //~ ====================================================================== ~//
 //- CONSOLE CONFIGURATION
 //~ ====================================================================== ~//
@@ -13,7 +16,7 @@ static TAutoConsoleVariable<int32> CVarLocalPlayerDebugMode(
 	TEXT("Shows debug mode for local player.\n")
 	TEXT("<=0: OFF\n")
 	TEXT("  1: ON\n"));
-static TAutoConsoleVariable<int32> CVarLocalPlayerCourchToggleMode(
+static TAutoConsoleVariable<int32> CVarLocalPlayerCrouchToggleMode(
 	TEXT("TPS.LocalPlayerGodMode"),
 	0,
 	TEXT("Enables GOD MODE for local player.\n")
@@ -32,16 +35,16 @@ void _OnControllerConfiugrationConsoleInput(IConsoleVariable* Var) {
 	FTPSControllerConfiguration configuration = {
 		CVarLocalPlayerDebugMode->GetInt(),
 		CVarLocalPlayerGodMode->GetBool(),
-		CVarLocalPlayerCourchToggleMode->GetBool()
+		CVarLocalPlayerCrouchToggleMode->GetBool()
 	};
 	UE_LOG(LogTemp, Log, TEXT("INPUT CharacterDEBUG: %i\nINPUT GodMode: %b"),
-		configuration.localCharacterDebugMode, configuration.godModeEnabled);
+		configuration.LocalCharacterDebugMode, configuration.GodModeEnabled);
 	ATPSPlayerController::UpdateControllerConfiguration(&configuration);
 }
 void ATPSPlayerController::BindConsoleCallbacks() {
 	CVarLocalPlayerDebugMode.AsVariable()
 		->SetOnChangedCallback(FConsoleVariableDelegate::CreateLambda(&_OnControllerConfiugrationConsoleInput));
-	CVarLocalPlayerCourchToggleMode.AsVariable()
+	CVarLocalPlayerCrouchToggleMode.AsVariable()
 		->SetOnChangedCallback(FConsoleVariableDelegate::CreateStatic(&_OnControllerConfiugrationConsoleInput));
 	CVarLocalPlayerGodMode.AsVariable()
 		->SetOnChangedCallback(FConsoleVariableDelegate::CreateStatic(&_OnControllerConfiugrationConsoleInput));
@@ -50,8 +53,8 @@ void ATPSPlayerController::BindConsoleCallbacks() {
 }
 FTPSControllerConfiguration* ATPSPlayerController::configuration = new FTPSControllerConfiguration();
 void ATPSPlayerController::UpdateControllerConfiguration(FTPSControllerConfiguration* config) {
-	configuration->localCharacterDebugMode = config->localCharacterDebugMode;
-	configuration->godModeEnabled = config->godModeEnabled;
+	configuration->LocalCharacterDebugMode = config->LocalCharacterDebugMode;
+	configuration->GodModeEnabled = config->GodModeEnabled;
 }
 
 //~ ====================================================================== ~//
@@ -83,7 +86,7 @@ void ATPSPlayerController::ExitCombat() {
 
 void ATPSPlayerController::TPS_ToggleDebugForLocalPlayer() {	
 	IsDebugEnabled = (!IsDebugEnabled);
-	configuration->localCharacterDebugMode = (configuration->localCharacterDebugMode == 1)
+	configuration->LocalCharacterDebugMode = (configuration->LocalCharacterDebugMode == 1)
 		? 0
 		: 1;
 }
@@ -100,4 +103,33 @@ void ATPSPlayerController::TPS_ToggleCrouchForLocalPlayer() {
 }
 void ATPSPlayerController::ToggleCrouch() {
 	TPS_ToggleCrouchForLocalPlayer();
+}
+
+
+void ATPSPlayerController::TPS_PossessNearestPlayablePawn()
+{
+	TArray<AActor*> exclusionList = TArray<AActor*>();
+	if (IsValid(GetPawn()))
+	{
+		exclusionList.Add(GetPawn());
+	}
+
+	AActor* c = UTPSFunctionLibrary::GetNearestActorOfClassAndIgnore(
+		this, ATPSPlayerCharacter::StaticClass(),
+						GetTransformComponent()->GetRelativeLocation(), 10000,
+						exclusionList);
+
+	ATPSCharacter* character = Cast<ATPSCharacter>(c);
+	Possess(character);
+}
+void ATPSPlayerController::PossessPawn() {
+	TPS_PossessNearestPlayablePawn();
+}
+
+void ATPSPlayerController::TPS_UnPossessCurrentPawn()
+{
+	UnPossess();
+}
+void ATPSPlayerController::UnPossessPawn() {
+	TPS_UnPossessCurrentPawn();
 }

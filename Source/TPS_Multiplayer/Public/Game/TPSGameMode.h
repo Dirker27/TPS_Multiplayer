@@ -28,7 +28,7 @@ public:
 //~ ============================================================= ~//
 public:
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Debug")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Game|Debug")
 	bool IsDebugEnabled = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Game|Configuration")
